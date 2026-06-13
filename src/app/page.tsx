@@ -26,7 +26,26 @@ import {
   Mail,
   Phone,
   MapPin,
+  Facebook,
+  Instagram,
+  Linkedin,
 } from 'lucide-react';
+
+// Custom TikTok icon since Lucide doesn't have one
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+  </svg>
+);
 
 export default function Home() {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -99,6 +118,44 @@ export default function Home() {
               <button onClick={() => scrollTo('contact')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Contact
               </button>
+              <div className="flex items-center gap-1 ml-2 border-l border-border/50 pl-4">
+                <a
+                  href="https://web.facebook.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-full text-muted-foreground hover:text-[#1877F2] hover:bg-[#1877F2]/10 transition-all duration-300"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-full text-muted-foreground hover:text-[#dc2743] hover:bg-[#dc2743]/10 transition-all duration-300"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.tiktok.com/@capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-300"
+                  aria-label="TikTok"
+                >
+                  <TikTokIcon className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-full text-muted-foreground hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-all duration-300"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
               <Button
                 size="sm"
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0"
@@ -132,6 +189,44 @@ export default function Home() {
               <button onClick={() => scrollTo('contact')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
                 Contact
               </button>
+              <div className="flex items-center gap-3 px-3 pt-2">
+                <a
+                  href="https://web.facebook.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-gradient-to-br hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1882] hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.tiktok.com/@capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-black hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="TikTok"
+                >
+                  <TikTokIcon className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#0A66C2] hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
             </div>
           )}
         </div>
@@ -546,6 +641,52 @@ export default function Home() {
                   <p className="text-muted-foreground text-sm">Casablanca, Maroc</p>
                 </div>
               </div>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shrink-0">
+                  <Sparkles className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Réseaux Sociaux</h3>
+                  <div className="flex items-center gap-2 mt-2">
+                    <a
+                      href="https://web.facebook.com/capimindofficial"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground transition-all duration-300"
+                      aria-label="Facebook"
+                    >
+                      <Facebook className="h-4 w-4" />
+                    </a>
+                    <a
+                      href="https://www.instagram.com/capimindofficial"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-gradient-to-br hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1882] hover:text-white text-muted-foreground transition-all duration-300"
+                      aria-label="Instagram"
+                    >
+                      <Instagram className="h-4 w-4" />
+                    </a>
+                    <a
+                      href="https://www.tiktok.com/@capimindofficial"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-black hover:text-white text-muted-foreground transition-all duration-300"
+                      aria-label="TikTok"
+                    >
+                      <TikTokIcon className="h-4 w-4" />
+                    </a>
+                    <a
+                      href="https://www.linkedin.com/in/capimindofficial"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#0A66C2] hover:text-white text-muted-foreground transition-all duration-300"
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Contact Form */}
@@ -646,7 +787,7 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Contact */}
+            {/* Contact & Réseaux Sociaux */}
             <div>
               <h4 className="font-semibold mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -663,6 +804,46 @@ export default function Home() {
                   Casablanca, Maroc
                 </li>
               </ul>
+
+              <h4 className="font-semibold mb-3 mt-6">Réseaux Sociaux</h4>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://web.facebook.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-gradient-to-br hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.tiktok.com/@capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-black hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="TikTok"
+                >
+                  <TikTokIcon className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#0A66C2] hover:text-white text-muted-foreground transition-all duration-300"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
             </div>
           </div>
 
@@ -670,8 +851,48 @@ export default function Home() {
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} CapiMind. Tous droits réservés.
             </p>
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              Fait avec <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500 mx-0.5" /> au Maroc
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://web.facebook.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-[#1877F2] transition-colors"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.instagram.com/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-[#dc2743] transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.tiktok.com/@capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="TikTok"
+                >
+                  <TikTokIcon className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/capimindofficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-[#0A66C2] transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              </div>
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                Fait avec <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500 mx-0.5" /> au Maroc
+              </div>
             </div>
           </div>
         </div>

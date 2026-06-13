@@ -1,0 +1,695 @@
+     1→     1→'use client';
+     2→     2→
+     3→     3→import { useState, useEffect } from 'react';
+     4→     4→import { courses, Course } from '@/lib/courses';
+     5→     5→import { CourseCard } from '@/components/course-card';
+     6→     6→import { CourseDetailDialog } from '@/components/course-detail-dialog';
+     7→     7→import { EnrollmentDialog } from '@/components/enrollment-dialog';
+     8→     8→import { Button } from '@/components/ui/button';
+     9→     9→import { Input } from '@/components/ui/input';
+    10→    10→import { Badge } from '@/components/ui/badge';
+    11→    11→import {
+    12→    12→  Users,
+    13→    13→  Award,
+    14→    14→  BookOpen,
+    15→    15→  Star,
+    16→    16→  ArrowRight,
+    17→    17→  Play,
+    18→    18→  Search,
+    19→    19→  Sparkles,
+    20→    20→  Target,
+    21→    21→  Clock,
+    22→    22→  Shield,
+    23→    23→  Menu,
+    24→    24→  X,
+    25→    25→  Heart,
+    26→    26→  Mail,
+    27→    27→  Phone,
+    28→    28→  MapPin,
+    29→    29→} from 'lucide-react';
+    30→    30→
+    31→    31→export default function Home() {
+    32→    32→  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+    33→    33→  const [detailOpen, setDetailOpen] = useState(false);
+    34→    34→  const [enrollOpen, setEnrollOpen] = useState(false);
+    35→    35→  const [searchQuery, setSearchQuery] = useState('');
+    36→    36→  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    37→    37→  const [scrolled, setScrolled] = useState(false);
+    38→    38→
+    39→    39→  useEffect(() => {
+    40→    40→    const handleScroll = () => setScrolled(window.scrollY > 20);
+    41→    41→    window.addEventListener('scroll', handleScroll);
+    42→    42→    return () => window.removeEventListener('scroll', handleScroll);
+    43→    43→  }, []);
+    44→    44→
+    45→    45→  const filteredCourses = courses.filter(
+    46→    46→    (c) =>
+    47→    47→      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    48→    48→      c.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    49→    49→      c.audience.some((a) => a.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    50→    50→      c.modules.some((m) => m.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    51→    51→  );
+    52→    52→
+    53→    53→  const handleSelectCourse = (course: Course) => {
+    54→    54→    setSelectedCourse(course);
+    55→    55→    setDetailOpen(true);
+    56→    56→  };
+    57→    57→
+    58→    58→  const handleEnroll = (course: Course) => {
+    59→    59→    setDetailOpen(false);
+    60→    60→    setSelectedCourse(course);
+    61→    61→    setEnrollOpen(true);
+    62→    62→  };
+    63→    63→
+    64→    64→  const scrollTo = (id: string) => {
+    65→    65→    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    66→    66→    setMobileMenuOpen(false);
+    67→    67→  };
+    68→    68→
+    69→    69→  return (
+    70→    70→    <div className="min-h-screen flex flex-col bg-background">
+    71→    71→      {/* Navigation */}
+    72→    72→      <nav
+    73→    73→        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    74→    74→          scrolled ? 'bg-background/95 backdrop-blur-md shadow-sm border-b border-border/50' : 'bg-transparent'
+    75→    75→        }`}
+    76→    76→      >
+    77→    77→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    78→    78→          <div className="flex items-center justify-between h-32">
+    79→    79→            {/* Logo */}
+    80→    80→            <div className="flex items-center">
+    81→    81→              <img
+    82→    82→                src="/images/logo-cropped.png"
+    83→    83→                alt="CapiMind Logo"
+    84→    84→                className="h-28 w-auto object-contain"
+    85→    85→              />
+    86→    86→            </div>
+    87→    87→
+    88→    88→            {/* Desktop Nav */}
+    89→    89→            <div className="hidden md:flex items-center gap-6">
+    90→    90→              <button onClick={() => scrollTo('courses')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+    91→    91→                Formations
+    92→    92→              </button>
+    93→    93→              <button onClick={() => scrollTo('features')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+    94→    94→                Pourquoi nous
+    95→    95→              </button>
+    96→    96→              <button onClick={() => scrollTo('testimonials')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+    97→    97→                Témoignages
+    98→    98→              </button>
+    99→    99→              <button onClick={() => scrollTo('contact')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+   100→   100→                Contact
+   101→   101→              </button>
+   102→   102→              <Button
+   103→   103→                size="sm"
+   104→   104→                className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0"
+   105→   105→                onClick={() => scrollTo('courses')}
+   106→   106→              >
+   107→   107→                S&apos;inscrire
+   108→   108→              </Button>
+   109→   109→            </div>
+   110→   110→
+   111→   111→            {/* Mobile Menu Toggle */}
+   112→   112→            <button
+   113→   113→              className="md:hidden p-2"
+   114→   114→              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+   115→   115→            >
+   116→   116→              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+   117→   117→            </button>
+   118→   118→          </div>
+   119→   119→
+   120→   120→          {/* Mobile Menu */}
+   121→   121→          {mobileMenuOpen && (
+   122→   122→            <div className="md:hidden pb-4 space-y-2 border-t border-border/50 pt-4">
+   123→   123→              <button onClick={() => scrollTo('courses')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   124→   124→                Formations
+   125→   125→              </button>
+   126→   126→              <button onClick={() => scrollTo('features')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   127→   127→                Pourquoi nous
+   128→   128→              </button>
+   129→   129→              <button onClick={() => scrollTo('testimonials')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   130→   130→                Témoignages
+   131→   131→              </button>
+   132→   132→              <button onClick={() => scrollTo('contact')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   133→   133→                Contact
+   134→   134→              </button>
+   135→   135→            </div>
+   136→   136→          )}
+   137→   137→        </div>
+   138→   138→      </nav>
+   139→   139→
+   140→   140→      {/* Hero Section */}
+   141→   141→      <section className="relative overflow-hidden pt-16">
+   142→   142→        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-background" />
+   143→   143→        <div className="absolute top-20 right-0 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-800/10 rounded-full blur-3xl" />
+   144→   144→        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-200/30 dark:bg-teal-800/10 rounded-full blur-3xl" />
+   145→   145→
+   146→   146→        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36">
+   147→   147→          <div className="grid lg:grid-cols-2 gap-12 items-center">
+   148→   148→            {/* Left Content */}
+   149→   149→            <div className="space-y-8">
+   150→   150→              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-medium">
+   151→   151→                <Sparkles className="h-4 w-4" />
+   152→   152→                Plateforme #1 au Maroc
+   153→   153→              </div>
+   154→   154→
+   155→   155→              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+   156→   156→                Investissez dans{' '}
+   157→   157→                <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   158→   158→                  votre avenir
+   159→   159→                </span>{' '}
+   160→   160→                avec nos formations
+   161→   161→              </h1>
+   162→   162→
+   163→   163→              <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+   164→   164→                Découvrez nos 10 formations premium en IA, data, cybersécurité, business et plus encore. 
+   165→   165→                Des programmes conçus pour les professionnels qui veulent se démarquer.
+   166→   166→              </p>
+   167→   167→
+   168→   168→              <div className="flex flex-col sm:flex-row gap-4">
+   169→   169→                <Button
+   170→   170→                  size="lg"
+   171→   171→                  className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg hover:shadow-xl transition-all text-base"
+   172→   172→                  onClick={() => scrollTo('courses')}
+   173→   173→                >
+   174→   174→                  Explorer les formations
+   175→   175→                  <ArrowRight className="h-5 w-5 ml-2" />
+   176→   176→                </Button>
+   177→   177→                <Button size="lg" variant="outline" className="text-base gap-2">
+   178→   178→                  <Play className="h-5 w-5" />
+   179→   179→                  Voir la démo
+   180→   180→                </Button>
+   181→   181→              </div>
+   182→   182→
+   183→   183→              {/* Stats in hero */}
+   184→   184→              <div className="grid grid-cols-3 gap-6 pt-4">
+   185→   185→                <div>
+   186→   186→                  <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">10+</p>
+   187→   187→                  <p className="text-sm text-muted-foreground">Formations</p>
+   188→   188→                </div>
+   189→   189→                <div>
+   190→   190→                  <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">8K+</p>
+   191→   191→                  <p className="text-sm text-muted-foreground">Étudiants</p>
+   192→   192→                </div>
+   193→   193→                <div>
+   194→   194→                  <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">4.8</p>
+   195→   195→                  <p className="text-sm text-muted-foreground">Note moyenne</p>
+   196→   196→                </div>
+   197→   197→              </div>
+   198→   198→            </div>
+   199→   199→
+   200→   200→            {/* Right Image */}
+   201→   201→            <div className="relative hidden lg:block">
+   202→   202→              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+   203→   203→                <img
+   204→   204→                  src="/images/hero-banner.png"
+   205→   205→                  alt="E-learning platform"
+   206→   206→                  className="w-full h-auto object-cover"
+   207→   207→                />
+   208→   208→                <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent" />
+   209→   209→              </div>
+   210→   210→
+   211→   211→              {/* Floating cards */}
+   212→   212→              <div className="absolute -left-6 top-1/4 bg-card p-3 rounded-xl shadow-lg border border-border/50 flex items-center gap-3">
+   213→   213→                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+   214→   214→                  <Star className="h-5 w-5 text-white fill-white" />
+   215→   215→                </div>
+   216→   216→                <div>
+   217→   217→                  <p className="text-sm font-semibold">4.8/5</p>
+   218→   218→                  <p className="text-xs text-muted-foreground">Satisfaction</p>
+   219→   219→                </div>
+   220→   220→              </div>
+   221→   221→
+   222→   222→              <div className="absolute -right-4 bottom-1/4 bg-card p-3 rounded-xl shadow-lg border border-border/50 flex items-center gap-3">
+   223→   223→                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+   224→   224→                  <Users className="h-5 w-5 text-white" />
+   225→   225→                </div>
+   226→   226→                <div>
+   227→   227→                  <p className="text-sm font-semibold">8 603</p>
+   228→   228→                  <p className="text-xs text-muted-foreground">Apprennants</p>
+   229→   229→                </div>
+   230→   230→              </div>
+   231→   231→            </div>
+   232→   232→          </div>
+   233→   233→        </div>
+   234→   234→
+   235→   235→        {/* Wave Divider */}
+   236→   236→        <div className="absolute bottom-0 left-0 right-0">
+   237→   237→          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+   238→   238→            <path d="M0 80V20C240 60 480 0 720 30C960 60 1200 10 1440 40V80H0Z" fill="hsl(var(--background))" />
+   239→   239→          </svg>
+   240→   240→        </div>
+   241→   241→      </section>
+   242→   242→
+   243→   243→      {/* Trusted By / Logos */}
+   244→   244→      <section className="py-12 border-b border-border/30">
+   245→   245→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   246→   246→          <p className="text-center text-sm text-muted-foreground mb-6">Ils nous font confiance</p>
+   247→   247→          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 opacity-60">
+   248→   248→            {['OCP Group', 'Maroc Telecom', 'Attijariwafa Bank', 'BMCE Bank', 'RAM', 'CIH Bank'].map((name) => (
+   249→   249→              <span key={name} className="text-lg font-bold text-muted-foreground/60 tracking-wider">{name}</span>
+   250→   250→            ))}
+   251→   251→          </div>
+   252→   252→        </div>
+   253→   253→      </section>
+   254→   254→
+   255→   255→      {/* Courses Section */}
+   256→   256→      <section id="courses" className="py-20">
+   257→   257→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   258→   258→          {/* Section Header */}
+   259→   259→          <div className="text-center max-w-2xl mx-auto mb-12">
+   260→   260→            <Badge variant="secondary" className="mb-4">Nos Formations</Badge>
+   261→   261→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   262→   262→              10 formations pour{' '}
+   263→   263→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   264→   264→                transformer votre carrière
+   265→   265→              </span>
+   266→   266→            </h2>
+   267→   267→            <p className="text-muted-foreground text-lg">
+   268→   268→              Des programmes conçus par des experts, pour des professionnels ambitieux.
+   269→   269→            </p>
+   270→   270→          </div>
+   271→   271→
+   272→   272→          {/* Search */}
+   273→   273→          <div className="max-w-md mx-auto mb-10">
+   274→   274→            <div className="relative">
+   275→   275→              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+   276→   276→              <Input
+   277→   277→                placeholder="Rechercher une formation..."
+   278→   278→                value={searchQuery}
+   279→   279→                onChange={(e) => setSearchQuery(e.target.value)}
+   280→   280→                className="pl-10 h-12 rounded-xl"
+   281→   281→              />
+   282→   282→            </div>
+   283→   283→          </div>
+   284→   284→
+   285→   285→          {/* Course Grid */}
+   286→   286→          {filteredCourses.length > 0 ? (
+   287→   287→            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   288→   288→              {filteredCourses.map((course) => (
+   289→   289→                <CourseCard
+   290→   290→                  key={course.id}
+   291→   291→                  course={course}
+   292→   292→                  onSelect={handleSelectCourse}
+   293→   293→                />
+   294→   294→              ))}
+   295→   295→            </div>
+   296→   296→          ) : (
+   297→   297→            <div className="text-center py-16">
+   298→   298→              <p className="text-muted-foreground text-lg">Aucune formation trouvée pour &laquo; {searchQuery} &raquo;</p>
+   299→   299→              <Button variant="outline" className="mt-4" onClick={() => setSearchQuery('')}>
+   300→   300→                Effacer la recherche
+   301→   301→              </Button>
+   302→   302→            </div>
+   303→   303→          )}
+   304→   304→        </div>
+   305→   305→      </section>
+   306→   306→
+   307→   307→      {/* Features Section */}
+   308→   308→      <section id="features" className="py-20 bg-muted/30">
+   309→   309→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   310→   310→          <div className="text-center max-w-2xl mx-auto mb-12">
+   311→   311→            <Badge variant="secondary" className="mb-4">Pourquoi CapiMind</Badge>
+   312→   312→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   313→   313→              Ce qui nous{' '}
+   314→   314→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   315→   315→                distingue
+   316→   316→              </span>
+   317→   317→            </h2>
+   318→   318→            <p className="text-muted-foreground text-lg">
+   319→   319→              Une approche innovante et pratique pour garantir votre succès.
+   320→   320→            </p>
+   321→   321→          </div>
+   322→   322→
+   323→   323→          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   324→   324→            {[
+   325→   325→              {
+   326→   326→                icon: Target,
+   327→   327→                title: 'Formation sur mesure',
+   328→   328→                description: 'Des programmes adaptés à votre niveau et vos objectifs professionnels, avec un suivi personnalisé.',
+   329→   329→                color: 'from-emerald-500 to-teal-600',
+   330→   330→              },
+   331→   331→              {
+   332→   332→                icon: Users,
+   333→   333→                title: 'Experts praticiens',
+   334→   334→                description: 'Nos formateurs sont des experts du marché avec une expérience terrain vérifiée de +10 ans.',
+   335→   335→                color: 'from-amber-500 to-orange-600',
+   336→   336→              },
+   337→   337→              {
+   338→   338→                icon: Award,
+   339→   339→                title: 'Certification reconnue',
+   340→   340→                description: 'Obtenez une certification valorisée par les entreprises du Maroc et de l\'international.',
+   341→   341→                color: 'from-violet-500 to-purple-600',
+   342→   342→              },
+   343→   343→              {
+   344→   344→                icon: Clock,
+   345→   345→                title: 'Flexibilité totale',
+   346→   346→                description: 'Apprenez à votre rythme avec nos formats en ligne, hybrides ou en présentiel.',
+   347→   347→                color: 'from-sky-500 to-cyan-600',
+   348→   348→              },
+   349→   349→              {
+   350→   350→                icon: Shield,
+   351→   351→                title: 'Garantie satisfaction',
+   352→   352→                description: 'Satisfait ou remboursé. Nous croyons en la qualité de nos formations à 100%.',
+   353→   353→                color: 'from-rose-500 to-pink-600',
+   354→   354→              },
+   355→   355→              {
+   356→   356→                icon: BookOpen,
+   357→   357→                title: 'Ressources incluses',
+   358→   358→                description: 'Accès à vie aux supports de cours, exercices pratiques et communauté d\'alumni.',
+   359→   359→                color: 'from-green-500 to-emerald-600',
+   360→   360→              },
+   361→   361→            ].map((feature, i) => (
+   362→   362→              <div
+   363→   363→                key={i}
+   364→   364→                className="group p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
+   365→   365→              >
+   366→   366→                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4`}>
+   367→   367→                  <feature.icon className="h-6 w-6 text-white" />
+   368→   368→                </div>
+   369→   369→                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+   370→   370→                <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+   371→   371→              </div>
+   372→   372→            ))}
+   373→   373→          </div>
+   374→   374→        </div>
+   375→   375→      </section>
+   376→   376→
+   377→   377→      {/* Testimonials Section */}
+   378→   378→      <section id="testimonials" className="py-20">
+   379→   379→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   380→   380→          <div className="text-center max-w-2xl mx-auto mb-12">
+   381→   381→            <Badge variant="secondary" className="mb-4">Témoignages</Badge>
+   382→   382→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   383→   383→              Ce que disent nos{' '}
+   384→   384→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   385→   385→                apprennants
+   386→   386→              </span>
+   387→   387→            </h2>
+   388→   388→          </div>
+   389→   389→
+   390→   390→          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   391→   391→            {[
+   392→   392→              {
+   393→   393→                name: 'Youssef El Amrani',
+   394→   394→                role: 'CEO, TechMaroc',
+   395→   395→                text: 'La formation IA pour Décideurs a transformé notre vision stratégique. Nous avons automatisé 40% de nos processus en 3 mois.',
+   396→   396→                rating: 5,
+   397→   397→                course: 'IA pour Décideurs',
+   398→   398→              },
+   399→   399→              {
+   400→   400→                name: 'Fatima Zahra Bennani',
+   401→   401→                role: 'Data Analyst, OCP',
+   402→   402→                text: 'La formation Data Analytics m\'a permis de passer de simple analyste à lead BI. Power BI n\'a plus de secrets pour moi.',
+   403→   403→                rating: 5,
+   404→   404→                course: 'Data Analytics & BI',
+   405→   405→              },
+   406→   406→              {
+   407→   407→                name: 'Ahmed Tazi',
+   408→   408→                role: 'CTO, StartupCasablanca',
+   409→   409→                text: 'La formation Cybersécurité est la meilleure investissement que nous ayons fait. Nos systèmes sont maintenant conformes aux standards internationaux.',
+   410→   410→                rating: 5,
+   411→   411→                course: 'Cybersécurité',
+   412→   412→              },
+   413→   413→              {
+   414→   414→                name: 'Salma Idrissi',
+   415→   415→                role: 'Entrepreneure',
+   416→   416→                text: 'Grâce à la formation Création d\'Entreprise, j\'ai lancé mon business en 2 mois avec un modèle viable. Les formateurs sont exceptionnels.',
+   417→   417→                rating: 5,
+   418→   418→                course: 'Création d\'Entreprise',
+   419→   419→              },
+   420→   420→              {
+   421→   421→                name: 'Karim Oujdi',
+   422→   422→                role: 'Manager, Banque Populaire',
+   423→   423→                text: 'La formation Leadership à distance m\'a donné les outils pour manager mon équipe hybride efficacement. Résultats visibles immédiatement.',
+   424→   424→                rating: 5,
+   425→   425→                course: 'Leadership & Management',
+   426→   426→              },
+   427→   427→              {
+   428→   428→                name: 'Nadia Fassi',
+   429→   429→                role: 'Développeuse, Freelance',
+   430→   430→                text: 'La formation Programmation m\'a ouvert les portes du cloud computing. J\'ai triplé mes revenus en 6 mois grâce aux compétences acquises.',
+   431→   431→                rating: 5,
+   432→   432→                course: 'Programmation & Développement',
+   433→   433→              },
+   434→   434→            ].map((testimonial, i) => (
+   435→   435→              <div
+   436→   436→                key={i}
+   437→   437→                className="p-6 rounded-2xl bg-card border border-border/50 hover:shadow-md transition-all"
+   438→   438→              >
+   439→   439→                <div className="flex items-center gap-1 mb-3">
+   440→   440→                  {Array.from({ length: testimonial.rating }).map((_, j) => (
+   441→   441→                    <Star key={j} className="h-4 w-4 fill-amber-400 text-amber-400" />
+   442→   442→                  ))}
+   443→   443→                </div>
+   444→   444→                <p className="text-sm text-muted-foreground leading-relaxed mb-4 italic">
+   445→   445→                  &ldquo;{testimonial.text}&rdquo;
+   446→   446→                </p>
+   447→   447→                <div className="flex items-center gap-3">
+   448→   448→                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm">
+   449→   449→                    {testimonial.name.split(' ').map(n => n[0]).join('')}
+   450→   450→                  </div>
+   451→   451→                  <div>
+   452→   452→                    <p className="font-semibold text-sm">{testimonial.name}</p>
+   453→   453→                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+   454→   454→                  </div>
+   455→   455→                </div>
+   456→   456→                <Badge variant="secondary" className="mt-3 text-xs">
+   457→   457→                  {testimonial.course}
+   458→   458→                </Badge>
+   459→   459→              </div>
+   460→   460→            ))}
+   461→   461→          </div>
+   462→   462→        </div>
+   463→   463→      </section>
+   464→   464→
+   465→   465→      {/* CTA Section */}
+   466→   466→      <section className="py-20 bg-gradient-to-br from-emerald-600 to-teal-700 relative overflow-hidden">
+   467→   467→        <div className="absolute inset-0">
+   468→   468→          <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+   469→   469→          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+   470→   470→        </div>
+   471→   471→        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+   472→   472→          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+   473→   473→            Prêt à transformer votre carrière ?
+   474→   474→          </h2>
+   475→   475→          <p className="text-lg text-emerald-100 max-w-2xl mx-auto mb-8">
+   476→   476→            Rejoignez plus de 8 000 professionnels qui ont déjà boosté leur carrière grâce à nos formations. 
+   477→   477→            Votre succès commence ici.
+   478→   478→          </p>
+   479→   479→          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+   480→   480→            <Button
+   481→   481→              size="lg"
+   482→   482→              className="bg-white text-emerald-700 hover:bg-white/90 shadow-lg text-base"
+   483→   483→              onClick={() => scrollTo('courses')}
+   484→   484→            >
+   485→   485→              Voir les formations
+   486→   486→              <ArrowRight className="h-5 w-5 ml-2" />
+   487→   487→            </Button>
+   488→   488→            <Button
+   489→   489→              size="lg"
+   490→   490→              variant="outline"
+   491→   491→              className="border-white/30 text-white hover:bg-white/10 text-base"
+   492→   492→              onClick={() => scrollTo('contact')}
+   493→   493→            >
+   494→   494→              Nous contacter
+   495→   495→            </Button>
+   496→   496→          </div>
+   497→   497→        </div>
+   498→   498→      </section>
+   499→   499→
+   500→   500→      {/* Contact Section */}
+   501→   501→      <section id="contact" className="py-20">
+   502→   502→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   503→   503→          <div className="text-center max-w-2xl mx-auto mb-12">
+   504→   504→            <Badge variant="secondary" className="mb-4">Contact</Badge>
+   505→   505→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   506→   506→              Une question ?{' '}
+   507→   507→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   508→   508→                Parlons-en
+   509→   509→              </span>
+   510→   510→            </h2>
+   511→   511→            <p className="text-muted-foreground text-lg">
+   512→   512→              Notre équipe est là pour vous accompagner dans votre parcours de formation.
+   513→   513→            </p>
+   514→   514→          </div>
+   515→   515→
+   516→   516→          <div className="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+   517→   517→            {/* Contact Info */}
+   518→   518→            <div className="space-y-6">
+   519→   519→              <div className="flex items-start gap-4">
+   520→   520→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shrink-0">
+   521→   521→                  <Mail className="h-5 w-5 text-white" />
+   522→   522→                </div>
+   523→   523→                <div>
+   524→   524→                  <h3 className="font-semibold mb-1">Email</h3>
+   525→   525→                  <p className="text-muted-foreground text-sm">contact@capimind.com</p>
+   526→   526→                  <p className="text-muted-foreground text-sm">support@capimind.com</p>
+   527→   527→                </div>
+   528→   528→              </div>
+   529→   529→              <div className="flex items-start gap-4">
+   530→   530→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0">
+   531→   531→                  <Phone className="h-5 w-5 text-white" />
+   532→   532→                </div>
+   533→   533→                <div>
+   534→   534→                  <h3 className="font-semibold mb-1">Téléphone</h3>
+   535→   535→                  <p className="text-muted-foreground text-sm">+212 5XX-XXXXXX</p>
+   536→   536→                  <p className="text-muted-foreground text-sm">Lun-Ven: 9h-18h</p>
+   537→   537→                </div>
+   538→   538→              </div>
+   539→   539→              <div className="flex items-start gap-4">
+   540→   540→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0">
+   541→   541→                  <MapPin className="h-5 w-5 text-white" />
+   542→   542→                </div>
+   543→   543→                <div>
+   544→   544→                  <h3 className="font-semibold mb-1">Adresse</h3>
+   545→   545→                  <p className="text-muted-foreground text-sm">Boulevard Mohammed V</p>
+   546→   546→                  <p className="text-muted-foreground text-sm">Casablanca, Maroc</p>
+   547→   547→                </div>
+   548→   548→              </div>
+   549→   549→            </div>
+   550→   550→
+   551→   551→            {/* Contact Form */}
+   552→   552→            <form
+   553→   553→              className="space-y-4"
+   554→   554→              onSubmit={(e) => {
+   555→   555→                e.preventDefault();
+   556→   556→                const form = e.target as HTMLFormElement;
+   557→   557→                const formData = new FormData(form);
+   558→   558→                fetch('/api/contact', {
+   559→   559→                  method: 'POST',
+   560→   560→                  headers: { 'Content-Type': 'application/json' },
+   561→   561→                  body: JSON.stringify({
+   562→   562→                    name: formData.get('name'),
+   563→   563→                    email: formData.get('email'),
+   564→   564→                    subject: formData.get('subject'),
+   565→   565→                    message: formData.get('message'),
+   566→   566→                  }),
+   567→   567→                }).then(() => {
+   568→   568→                  form.reset();
+   569→   569→                });
+   570→   570→              }}
+   571→   571→            >
+   572→   572→              <div className="space-y-2">
+   573→   573→                <label htmlFor="name" className="text-sm font-medium">Nom</label>
+   574→   574→                <Input id="name" name="name" placeholder="Votre nom" required />
+   575→   575→              </div>
+   576→   576→              <div className="space-y-2">
+   577→   577→                <label htmlFor="email" className="text-sm font-medium">Email</label>
+   578→   578→                <Input id="email" name="email" type="email" placeholder="votre@email.com" required />
+   579→   579→              </div>
+   580→   580→              <div className="space-y-2">
+   581→   581→                <label htmlFor="subject" className="text-sm font-medium">Sujet</label>
+   582→   582→                <Input id="subject" name="subject" placeholder="Sujet de votre message" required />
+   583→   583→              </div>
+   584→   584→              <div className="space-y-2">
+   585→   585→                <label htmlFor="message" className="text-sm font-medium">Message</label>
+   586→   586→                <textarea
+   587→   587→                  id="message"
+   588→   588→                  name="message"
+   589→   589→                  rows={4}
+   590→   590→                  placeholder="Votre message..."
+   591→   591→                  required
+   592→   592→                  className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+   593→   593→                />
+   594→   594→              </div>
+   595→   595→              <Button
+   596→   596→                type="submit"
+   597→   597→                className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0"
+   598→   598→              >
+   599→   599→                Envoyer le message
+   600→   600→                <Mail className="h-4 w-4 ml-2" />
+   601→   601→              </Button>
+   602→   602→            </form>
+   603→   603→          </div>
+   604→   604→        </div>
+   605→   605→      </section>
+   606→   606→
+   607→   607→      {/* Footer */}
+   608→   608→      <footer className="mt-auto bg-card border-t border-border/50">
+   609→   609→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+   610→   610→          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+   611→   611→            {/* Brand */}
+   612→   612→            <div className="space-y-4">
+   613→   613→              <div className="flex items-center gap-2.5">
+   614→   614→                <img
+   615→   615→                  src="/images/logo-cropped.png"
+   616→   616→                  alt="CapiMind Logo"
+   617→   617→                  className="h-28 w-auto object-contain"
+   618→   618→                />
+   619→   619→              </div>
+   620→   620→              <p className="text-sm text-muted-foreground leading-relaxed">
+   621→   621→                Designed for Exceptional Minds. La plateforme de formation premium pour les professionnels ambitieux au Maroc et en Afrique.
+   622→   622→              </p>
+   623→   623→            </div>
+   624→   624→
+   625→   625→            {/* Formations */}
+   626→   626→            <div>
+   627→   627→              <h4 className="font-semibold mb-4">Formations</h4>
+   628→   628→              <ul className="space-y-2 text-sm text-muted-foreground">
+   629→   629→                {courses.slice(0, 5).map((c) => (
+   630→   630→                  <li key={c.id} className="hover:text-foreground cursor-pointer transition-colors" onClick={() => handleSelectCourse(c)}>
+   631→   631→                    {c.title}
+   632→   632→                  </li>
+   633→   633→                ))}
+   634→   634→              </ul>
+   635→   635→            </div>
+   636→   636→
+   637→   637→            {/* Plus */}
+   638→   638→            <div>
+   639→   639→              <h4 className="font-semibold mb-4">Plus</h4>
+   640→   640→              <ul className="space-y-2 text-sm text-muted-foreground">
+   641→   641→                {courses.slice(5).map((c) => (
+   642→   642→                  <li key={c.id} className="hover:text-foreground cursor-pointer transition-colors" onClick={() => handleSelectCourse(c)}>
+   643→   643→                    {c.title}
+   644→   644→                  </li>
+   645→   645→                ))}
+   646→   646→              </ul>
+   647→   647→            </div>
+   648→   648→
+   649→   649→            {/* Contact */}
+   650→   650→            <div>
+   651→   651→              <h4 className="font-semibold mb-4">Contact</h4>
+   652→   652→              <ul className="space-y-2 text-sm text-muted-foreground">
+   653→   653→                <li className="flex items-center gap-2">
+   654→   654→                  <Mail className="h-3.5 w-3.5" />
+   655→   655→                  contact@capimind.com
+   656→   656→                </li>
+   657→   657→                <li className="flex items-center gap-2">
+   658→   658→                  <Phone className="h-3.5 w-3.5" />
+   659→   659→                  +212 5XX-XXXXXX
+   660→   660→                </li>
+   661→   661→                <li className="flex items-center gap-2">
+   662→   662→                  <MapPin className="h-3.5 w-3.5" />
+   663→   663→                  Casablanca, Maroc
+   664→   664→                </li>
+   665→   665→              </ul>
+   666→   666→            </div>
+   667→   667→          </div>
+   668→   668→
+   669→   669→          <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+   670→   670→            <p className="text-sm text-muted-foreground">
+   671→   671→              © {new Date().getFullYear()} CapiMind. Tous droits réservés.
+   672→   672→            </p>
+   673→   673→            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+   674→   674→              Fait avec <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500 mx-0.5" /> au Maroc
+   675→   675→            </div>
+   676→   676→          </div>
+   677→   677→        </div>
+   678→   678→      </footer>
+   679→   679→
+   680→   680→      {/* Dialogs */}
+   681→   681→      <CourseDetailDialog
+   682→   682→        course={selectedCourse}
+   683→   683→        open={detailOpen}
+   684→   684→        onClose={() => setDetailOpen(false)}
+   685→   685→        onEnroll={handleEnroll}
+   686→   686→      />
+   687→   687→      <EnrollmentDialog
+   688→   688→        course={selectedCourse}
+   689→   689→        open={enrollOpen}
+   690→   690→        onClose={() => setEnrollOpen(false)}
+   691→   691→      />
+   692→   692→    </div>
+   693→   693→  );
+   694→   694→}
+   695→   695→
