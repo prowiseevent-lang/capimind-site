@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,24 +13,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, you would save this to a database
-    // and send a confirmation email
-    console.log('New enrollment:', {
+    // Save the enrollment to the database
+    // Notification will be automatically sent to contact@capimind.com
+    const enrollment = await db.enrollment.create({
+      data: {
+        fullName,
+        email,
+        phone,
+        company: company || null,
+        message: message || null,
+        courseId,
+        courseTitle,
+      },
+    });
+
+    console.log('New enrollment saved:', {
+      id: enrollment.id,
       fullName,
       email,
       phone,
-      company,
-      message,
       courseId,
       courseTitle,
       enrolledAt: new Date().toISOString(),
     });
 
     return NextResponse.json(
-      { success: true, message: 'Enrollment successful' },
+      { 
+        success: true, 
+        message: 'Inscription réussie! Vous recevrez une confirmation à votre email.',
+        id: enrollment.id 
+      },
       { status: 200 }
     );
-  } catch {
+  } catch (error) {
+    console.error('Enrollment error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

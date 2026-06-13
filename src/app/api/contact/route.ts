@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,21 +13,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, you would save this to a database
-    // and send a notification email
-    console.log('New contact message:', {
+    // Save the contact message to the database
+    // It will be automatically available to contact@capimind.com
+    const contactMessage = await db.contactMessage.create({
+      data: {
+        name,
+        email,
+        subject,
+        message,
+        sentTo: 'contact@capimind.com',
+      },
+    });
+
+    console.log('New contact message saved:', {
+      id: contactMessage.id,
       name,
       email,
       subject,
-      message,
+      sentTo: 'contact@capimind.com',
       sentAt: new Date().toISOString(),
     });
 
     return NextResponse.json(
-      { success: true, message: 'Message sent successfully' },
+      { 
+        success: true, 
+        message: 'Message envoyé avec succès à contact@capimind.com',
+        id: contactMessage.id 
+      },
       { status: 200 }
     );
-  } catch {
+  } catch (error) {
+    console.error('Contact form error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
