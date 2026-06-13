@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+const GOOGLE_SHEETS_SCRIPT_URL = process.env.GOOGLE_SHEETS_SCRIPT_URL || '';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -14,7 +16,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Save the enrollment to the database
-    // Notification will be automatically sent to contact@capimind.com
     const enrollment = await db.enrollment.create({
       data: {
         fullName,
@@ -37,11 +38,41 @@ export async function POST(request: NextRequest) {
       enrolledAt: new Date().toISOString(),
     });
 
+    // Forward to Google Sheets (non-blocking)
+    if (GOOGLE_SHEETS_SCRIPT_URL) {
+      try {
+        const sheetsRes = await fetch(GOOGLE_SHEETS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'inscription',
+            name: fullName,
+            email,
+            phone,
+            company: company || '',
+            course: courseTitle,
+            message: message || '',
+            date: new Date().toISOString(),
+            destination: 'contact@capimind.com',
+          }),
+        });
+        if (sheetsRes.ok) {
+          console.log('Enrollment forwarded to Google Sheets successfully');
+        } else {
+          console.error('Google Sheets forwarding failed:', sheetsRes.status);
+        }
+      } catch (sheetsError) {
+        console.error('Google Sheets forwarding error:', sheetsError);
+      }
+    } else {
+      console.warn('GOOGLE_SHEETS_SCRIPT_URL not configured — skipping Sheets forwarding');
+    }
+
     return NextResponse.json(
-      { 
-        success: true, 
+      {
+        success: true,
         message: 'Inscription réussie! Vous recevrez une confirmation à votre email.',
-        id: enrollment.id 
+        id: enrollment.id,
       },
       { status: 200 }
     );
