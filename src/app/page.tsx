@@ -553,19 +553,6 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Search */}
-          <div className="max-w-md mx-auto mb-10">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Rechercher une formation..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 rounded-xl"
-              />
-            </div>
-          </div>
-
           {/* Course Grid */}
           {filteredCourses.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
