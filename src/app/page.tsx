@@ -1288,6 +1288,23 @@ export default function Home() {
           <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
         </span>
       </a>
+
+      {/* Email Floating Button */}
+      <a
+        href="mailto:contact@capimind.com"
+        className="fixed bottom-6 right-40 sm:right-48 z-50 flex items-center gap-2 bg-[#EA4335] hover:bg-[#D33426] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+        aria-label="Envoyer un email"
+      >
+        <Mail className="h-6 w-6" />
+        <span className="text-sm font-semibold hidden sm:inline group-hover:inline">
+          Email
+        </span>
+        {/* Pulse animation */}
+        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+        </span>
+      </a>
     </div>
   );
 }
