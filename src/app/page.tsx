@@ -75,13 +75,13 @@ export default function Home() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-32">
             {/* Logo */}
             <div className="flex items-center">
               <img
-                src="/images/logo.jpg"
+                src="/images/logo-cropped.png"
                 alt="CapiMind Logo"
-                className="h-12 w-auto object-contain"
+                className="h-28 w-auto object-contain"
               />
             </div>
 
@@ -612,9 +612,9 @@ export default function Home() {
             <div className="space-y-4">
               <div className="flex items-center gap-2.5">
                 <img
-                  src="/images/logo.jpg"
+                  src="/images/logo-cropped.png"
                   alt="CapiMind Logo"
-                  className="h-14 w-auto object-contain"
+                  className="h-28 w-auto object-contain"
                 />
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
