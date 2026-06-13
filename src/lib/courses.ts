@@ -1,0 +1,237 @@
+export interface CourseModule {
+  title: string;
+  description: string;
+}
+
+export interface Course {
+  id: string;
+  number: number;
+  title: string;
+  subtitle: string;
+  audience: string[];
+  modules: CourseModule[];
+  price: string;
+  priceNote?: string;
+  demandNote?: string;
+  image: string;
+  icon: string;
+  color: string;
+  duration: string;
+  level: string;
+  rating: number;
+  students: number;
+}
+
+export const courses: Course[] = [
+  {
+    id: "ia-decideurs",
+    number: 1,
+    title: "IA pour Décideurs",
+    subtitle: "Formation pour dirigeants",
+    audience: ["CEO", "Dirigeants", "Managers"],
+    modules: [
+      { title: "Stratégie IA pour entreprise", description: "Définir une vision IA alignée avec les objectifs business et élaborer une feuille de route stratégique" },
+      { title: "Automatisation des processus", description: "Identifier et automatiser les processus métier clés grâce à l'intelligence artificielle" },
+      { title: "Agents IA pour business", description: "Déployer des agents IA autonomes pour optimiser les opérations et la prise de décision" },
+      { title: "Prise de décision basée sur la data", description: "Transformer les données en insights actionnables pour des décisions éclairées" },
+    ],
+    price: "10 000 – 50 000 MAD",
+    demandNote: "Les dirigeants veulent comprendre comment utiliser l'IA dans leurs entreprises.",
+    image: "/images/course-ai-leadership.png",
+    icon: "Brain",
+    color: "from-violet-500 to-purple-600",
+    duration: "4 semaines",
+    level: "Dirigeants",
+    rating: 4.9,
+    students: 342,
+  },
+  {
+    id: "data-analytics",
+    number: 2,
+    title: "Data Analytics & Business Intelligence",
+    subtitle: "Maîtrisez l'art de la data",
+    audience: ["Managers", "Analystes", "Entrepreneurs"],
+    modules: [
+      { title: "Power BI", description: "Créer des tableaux de bord interactifs et des rapports visuels percutants" },
+      { title: "Analyse de données", description: "Maîtriser les techniques d'analyse quantitative et qualitative des données" },
+      { title: "Data storytelling", description: "Transformer les données en récits visuels convaincants pour les parties prenantes" },
+      { title: "Prise de décision data-driven", description: "Intégrer l'analyse de données dans le processus décisionnel de l'entreprise" },
+    ],
+    price: "8 000 – 35 000 MAD",
+    demandNote: "Très demandé par les entreprises pour la transformation digitale.",
+    image: "/images/course-data-analytics.png",
+    icon: "BarChart3",
+    color: "from-emerald-500 to-teal-600",
+    duration: "6 semaines",
+    level: "Intermédiaire",
+    rating: 4.8,
+    students: 567,
+  },
+  {
+    id: "cybersecurite",
+    number: 3,
+    title: "Cybersécurité",
+    subtitle: "Protégez vos actifs numériques",
+    audience: ["Entreprises", "IT", "Administrations"],
+    modules: [
+      { title: "Sécurité informatique", description: "Comprendre les fondamentaux de la sécurité des systèmes d'information" },
+      { title: "Protection des données", description: "Mettre en place des stratégies de protection conforme au RGPD et aux standards" },
+      { title: "Cyberattaques", description: "Identifier, prévenir et répondre aux différentes formes de cyberattaques" },
+      { title: "Sécurité cloud", description: "Sécuriser les infrastructures et les services cloud de l'entreprise" },
+    ],
+    price: "12 000 – 45 000 MAD",
+    demandNote: "Demande mondiale énorme face à la multiplication des menaces.",
+    image: "/images/course-cybersecurity.png",
+    icon: "Shield",
+    color: "from-red-500 to-rose-600",
+    duration: "8 semaines",
+    level: "Tous niveaux",
+    rating: 4.9,
+    students: 891,
+  },
+  {
+    id: "creation-entreprise",
+    number: 4,
+    title: "Création d'Entreprise",
+    subtitle: "De l'idée au lancement",
+    audience: ["Entrepreneurs", "Freelances", "Étudiants"],
+    modules: [
+      { title: "Business model", description: "Concevoir un business model viable et scalable avec le Lean Canvas" },
+      { title: "Validation d'idée", description: "Tester et valider votre idée de marché avant d'investir" },
+      { title: "Financement", description: "Explorer les options de financement : bootstrapping, VC, crowdfunding" },
+      { title: "Stratégie de croissance", description: "Élaborer une stratégie de croissance durable et mesurable" },
+    ],
+    price: "5 000 – 20 000 MAD",
+    image: "/images/course-entrepreneuriat.png",
+    icon: "Rocket",
+    color: "from-amber-500 to-orange-600",
+    duration: "5 semaines",
+    level: "Débutant",
+    rating: 4.7,
+    students: 1203,
+  },
+  {
+    id: "automatisation-business",
+    number: 5,
+    title: "Automatisation Business",
+    subtitle: "No-code & IA",
+    audience: ["Entrepreneurs", "Entreprises", "Freelances"],
+    modules: [
+      { title: "Automatisation avec IA", description: "Utiliser l'IA pour automatiser les tâches répétitives et créatives" },
+      { title: "n8n / Zapier", description: "Maîtriser les plateformes d'automatisation no-code les plus puissantes" },
+      { title: "Automatisation marketing", description: "Créer des workflows marketing automatisés et personnalisés" },
+      { title: "Agents IA", description: "Construire et déployer des agents IA pour automatiser les processus métier" },
+    ],
+    price: "7 000 – 30 000 MAD",
+    demandNote: "Compétence très recherchée sur le marché du travail.",
+    image: "/images/course-automation.png",
+    icon: "Workflow",
+    color: "from-fuchsia-500 to-pink-600",
+    duration: "5 semaines",
+    level: "Intermédiaire",
+    rating: 4.8,
+    students: 456,
+  },
+  {
+    id: "finance-investissement",
+    number: 6,
+    title: "Finance & Investissement",
+    subtitle: "Faites fructifier votre capital",
+    audience: ["Entrepreneurs", "Cadres", "Investisseurs"],
+    modules: [
+      { title: "Investissement immobilier", description: "Maîtriser les stratégies d'investissement immobilier rentable" },
+      { title: "Gestion patrimoine", description: "Construire et optimiser un patrimoine diversifié" },
+      { title: "Analyse financière", description: "Analyser les états financiers et évaluer la performance d'une entreprise" },
+      { title: "Marchés financiers", description: "Comprendre et investir dans les marchés financiers en toute confiance" },
+    ],
+    price: "8 000 – 40 000 MAD",
+    image: "/images/course-finance.png",
+    icon: "TrendingUp",
+    color: "from-green-500 to-emerald-600",
+    duration: "6 semaines",
+    level: "Intermédiaire",
+    rating: 4.7,
+    students: 678,
+  },
+  {
+    id: "leadership-management",
+    number: 7,
+    title: "Leadership & Management à Distance",
+    subtitle: "Managez avec excellence",
+    audience: ["Managers", "Cadres"],
+    modules: [
+      { title: "Leadership moderne", description: "Développer un style de leadership adapté au monde du travail actuel" },
+      { title: "Gestion d'équipe à distance", description: "Fédérer et motiver une équipe distribuée efficacement" },
+      { title: "Communication stratégique", description: "Maîtriser la communication interne et externe pour inspirer son équipe" },
+    ],
+    price: "6 000 – 25 000 MAD",
+    image: "/images/course-leadership.png",
+    icon: "Users",
+    color: "from-sky-500 to-cyan-600",
+    duration: "4 semaines",
+    level: "Managers",
+    rating: 4.6,
+    students: 534,
+  },
+  {
+    id: "productivite-organisation",
+    number: 8,
+    title: "Productivité & Organisation Digitale",
+    subtitle: "Optimisez votre efficacité",
+    audience: ["Entrepreneurs", "Freelances", "Managers"],
+    modules: [
+      { title: "Gestion du temps", description: "Maîtriser les techniques de gestion du temps et de priorisation" },
+      { title: "Systèmes de productivité", description: "Mettre en place des systèmes productifs adaptés à votre style de travail" },
+      { title: "Automatisation du travail", description: "Automatiser les tâches quotidiennes pour gagner en efficacité" },
+    ],
+    price: "4 000 – 15 000 MAD",
+    image: "/images/course-productivite.png",
+    icon: "Zap",
+    color: "from-yellow-500 to-amber-500",
+    duration: "3 semaines",
+    level: "Tous niveaux",
+    rating: 4.8,
+    students: 987,
+  },
+  {
+    id: "programmation-developpement",
+    number: 9,
+    title: "Programmation & Développement",
+    subtitle: "Codez votre avenir",
+    audience: ["Étudiants", "Reconversion professionnelle"],
+    modules: [
+      { title: "Développement web", description: "Maîtriser les technologies web modernes : React, Next.js, Node.js" },
+      { title: "IA engineering", description: "Développer et déployer des solutions d'intelligence artificielle" },
+      { title: "Cloud computing", description: "Concevoir et gérer des infrastructures cloud scalables" },
+    ],
+    price: "10 000 – 45 000 MAD",
+    image: "/images/course-programmation.png",
+    icon: "Code",
+    color: "from-slate-600 to-zinc-700",
+    duration: "12 semaines",
+    level: "Débutant à Avancé",
+    rating: 4.9,
+    students: 2156,
+  },
+  {
+    id: "competences-futur",
+    number: 10,
+    title: "Compétences du Futur",
+    subtitle: "Préparez demain aujourd'hui",
+    audience: ["Professionnels", "Étudiants"],
+    modules: [
+      { title: "Pensée critique", description: "Développer une pensée analytique et critique face à la surinformation" },
+      { title: "Résolution de problèmes complexes", description: "Maîtriser les méthodologies de résolution de problèmes innovantes" },
+      { title: "Créativité", description: "Libérer son potentiel créatif pour innover et se différencier" },
+      { title: "Collaboration digitale", description: "Exceller dans la collaboration à distance avec les outils numériques" },
+    ],
+    price: "5 000 – 20 000 MAD",
+    image: "/images/course-competences-futur.png",
+    icon: "Lightbulb",
+    color: "from-indigo-500 to-violet-600",
+    duration: "4 semaines",
+    level: "Tous niveaux",
+    rating: 4.7,
+    students: 789,
+  },
+];
