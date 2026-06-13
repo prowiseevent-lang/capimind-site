@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { courses, Course } from '@/lib/courses';
 import { CourseCard } from '@/components/course-card';
 import { CourseDetailDialog } from '@/components/course-detail-dialog';
@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
-  GraduationCap,
   Users,
   Award,
   BookOpen,
@@ -17,12 +16,10 @@ import {
   ArrowRight,
   Play,
   Search,
-  CheckCircle2,
   Sparkles,
   Target,
   Clock,
   Shield,
-  ChevronDown,
   Menu,
   X,
   Heart,
@@ -80,11 +77,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-                <GraduationCap className="h-5 w-5 text-white" />
-              </div>
-              <span className="font-bold text-xl">FormaPro</span>
+            <div className="flex items-center">
+              <img
+                src="/images/logo.jpg"
+                alt="CapiMind Logo"
+                className="h-12 w-auto object-contain"
+              />
             </div>
 
             {/* Desktop Nav */}
@@ -310,7 +308,7 @@ export default function Home() {
       <section id="features" className="py-20 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <Badge variant="secondary" className="mb-4">Pourquoi FormaPro</Badge>
+            <Badge variant="secondary" className="mb-4">Pourquoi CapiMind</Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Ce qui nous{' '}
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
@@ -524,8 +522,8 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Email</h3>
-                  <p className="text-muted-foreground text-sm">contact@formapro.ma</p>
-                  <p className="text-muted-foreground text-sm">support@formapro.ma</p>
+                  <p className="text-muted-foreground text-sm">contact@capimind.com</p>
+                  <p className="text-muted-foreground text-sm">support@capimind.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -612,14 +610,15 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
             <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-                  <GraduationCap className="h-5 w-5 text-white" />
-                </div>
-                <span className="font-bold text-xl">FormaPro</span>
+              <div className="flex items-center gap-2.5">
+                <img
+                  src="/images/logo.jpg"
+                  alt="CapiMind Logo"
+                  className="h-14 w-auto object-contain"
+                />
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                La plateforme de formation premium pour les professionnels ambitieux au Maroc et en Afrique.
+                Designed for Exceptional Minds. La plateforme de formation premium pour les professionnels ambitieux au Maroc et en Afrique.
               </p>
             </div>
 
@@ -653,7 +652,7 @@ export default function Home() {
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <Mail className="h-3.5 w-3.5" />
-                  contact@formapro.ma
+                  contact@capimind.com
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="h-3.5 w-3.5" />
@@ -669,7 +668,7 @@ export default function Home() {
 
           <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} FormaPro. Tous droits réservés.
+              © {new Date().getFullYear()} CapiMind. Tous droits réservés.
             </p>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               Fait avec <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500 mx-0.5" /> au Maroc

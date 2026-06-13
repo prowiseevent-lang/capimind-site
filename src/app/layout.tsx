@@ -14,22 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FormaPro - Formations Premium pour Professionnels",
-  description: "Plateforme de formation e-learning premium au Maroc. IA, Data Analytics, Cybersécurité, Business et plus encore. Investissez dans votre avenir.",
-  keywords: ["Formation", "E-learning", "IA", "Data Analytics", "Cybersécurité", "Business", "Maroc", "FormaPro"],
-  authors: [{ name: "FormaPro" }],
+  title: "CapiMind - Designed for Exceptional Minds",
+  description: "Plateforme de formation e-learning premium au Maroc. IA, Data Analytics, Cybersécurité, Business et plus encore. Designed for Exceptional Minds.",
+  keywords: ["Formation", "E-learning", "IA", "Data Analytics", "Cybersécurité", "Business", "Maroc", "CapiMind"],
+  authors: [{ name: "CapiMind" }],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/images/logo.jpg",
   },
   openGraph: {
-    title: "FormaPro - Formations Premium pour Professionnels",
+    title: "CapiMind - Designed for Exceptional Minds",
     description: "Investissez dans votre avenir avec nos formations premium en IA, data, cybersécurité et business.",
-    siteName: "FormaPro",
+    siteName: "CapiMind",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "FormaPro - Formations Premium",
+    title: "CapiMind - Designed for Exceptional Minds",
     description: "Investissez dans votre avenir avec nos formations premium",
   },
 };
@@ -40,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
