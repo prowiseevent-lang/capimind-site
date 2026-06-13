@@ -105,8 +105,8 @@ export default function Home() {
       answer: 'Vous pouvez nous contacter par email à contact@capimind.com, par téléphone au +212 786-249306, ou directement sur WhatsApp pour une réponse rapide. Notre équipe est disponible du lundi au vendredi de 9h à 18h pour vous accompagner dans votre parcours de formation.',
     },
     {
-      question: 'Les formations CapiMind sont-elles éligibles au CPF ou à des financements ?',
-      answer: 'Oui, certaines de nos formations sont éligibles aux dispositifs de financement professionnels (OFPPT, OPC, plan de formation entreprise). Notre équipe vous accompagne dans les démarches administratives pour obtenir la prise en charge. Contactez-nous pour vérifier l\'éligibilité de votre projet.',
+      question: 'Les étudiants bénéficient-ils d\'une réduction sur les formations CapiMind ?',
+      answer: 'Oui. CapiMind accorde une réduction de 15 % sur l\'ensemble de ses formations aux étudiants, sur présentation d\'un justificatif de scolarité ou d\'une carte étudiant en cours de validité. Cette offre vise à faciliter l\'accès à des formations de qualité et à soutenir le développement des compétences des futurs professionnels. Contactez notre équipe pour connaître les modalités d\'application de cette réduction.',
     },
     {
       question: 'Quels débouchés après une formation CapiMind ?',
