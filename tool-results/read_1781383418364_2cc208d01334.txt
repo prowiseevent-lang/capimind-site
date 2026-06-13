@@ -1,0 +1,1289 @@
+     1→'use client';
+     2→
+     3→import { useState, useEffect } from 'react';
+     4→import { courses, Course } from '@/lib/courses';
+     5→import { CourseCard } from '@/components/course-card';
+     6→import { CourseDetailDialog } from '@/components/course-detail-dialog';
+     7→import { EnrollmentDialog } from '@/components/enrollment-dialog';
+     8→import { Button } from '@/components/ui/button';
+     9→import { Input } from '@/components/ui/input';
+    10→import { Badge } from '@/components/ui/badge';
+    11→import {
+    12→  Users,
+    13→  Award,
+    14→  BookOpen,
+    15→  Star,
+    16→  ArrowRight,
+    17→  Play,
+    18→  Search,
+    19→  Sparkles,
+    20→  Target,
+    21→  Clock,
+    22→  Shield,
+    23→  Menu,
+    24→  X,
+    25→  Heart,
+    26→  Mail,
+    27→  Phone,
+    28→  MapPin,
+    29→  Facebook,
+    30→  Instagram,
+    31→  Linkedin,
+    32→  MessageCircle,
+    33→  CheckCircle2,
+    34→  Lightbulb,
+    35→  Globe,
+    36→  TrendingUp,
+    37→  GraduationCap,
+    38→  Eye,
+    39→  ChevronDown,
+    40→  HelpCircle,
+    41→} from 'lucide-react';
+    42→
+    43→const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=212786249306&source=FB_Post&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3ODE0NjY1NTAsInBob25lIjoiMjEyNzg2MjQ5MzA2IiwidGV4dCI6IkxpZW5cdTAwYTA6XG5odHRwczpcL1wvZmIubWVcLzZkY3NGcDhvSFxuXG5Cb25qb3VyXHUwMGEwISBQdWlzLWplIGVuIHNhdm9pciBwbHVzIFx1MDBlMCBjZSBzdWpldFx1MDBhMD8iLCJzb3VyY2VfdXJsIjoiaHR0cHM6XC9cL2ZiLm1lXC82ZGNzRnA4b0giLCJpY2VicmVha2VyIjoiQm9uam91clx1MDBhMCEgUHVpcy1qZSBlbiBzYXZvaXIgcGx1cyBcdTAwZTAgY2Ugc3VqZXRcdTAwYTA_IiwiYXBwIjoiZmFjZWJvb2siLCJlbnRyeV9wb2ludCI6InBvc3RfY3RhIiwiamlkIjoiMjEyNzg2MjQ5MzA2XHUwMDQwcy53aGF0c2FwcC5uZXQiLCJsaWQiOiI5NDkxNTIwMzcxOTI4Mlx1MDA0MGxpZCIsInNvdXJjZV9pZCI6IjEyMjA5NDAwMDk4MDQzNzUyNyIsImNoYXRfZHJhZnQiOjEsInNob3dfYWRfYXR0cmlidXRpb24iOjEsInNvdXJjZSI6IkZCX1Bvc3QiLCJjb250ZXh0IjoiQWZpWkFwLXB2QTNyU09seEVhOEtaRkgtamQtY0lTejkyUmNtT3BldUJnclQzLXZvVEttNmNwOHhpV0RjWTJhYVBjdUhaSEhydzk4MUNuekpweVo5Y2g4ZlkwR3RBSnlMcnREeFpLTTlqTDZWMFpFV25RM0JZSHRObnR5VDZEVk01YlZrcTg5V01HaXJtSlp6eEppSUwzNmxXWFNzMEtpbkEwR0J1QzdMTVZWd1ZxVHdjMEpNWTdzdXpmNlZ0WTJacDU0bnlfVmpZaktXRzVmbHJlQXBOaUY4R0JUWXd6QmJ4NGpMWTJzUGVtUEtHQ2tZM1c4dWJtWlllMG92TUtfd3hZSXBMSkc4TlZ6M3BqOXo4YjE1TjQyaHJacWlFaWJGUjZRbHhGNUZRTDhfdnZwZ3U4a3ZzZm5JaDNTaXExZW5Wb0VaUXBhb1ZHb0g3YW1xckxINVpJVnd5QW1SRXQxcExJZ3F0X2dmVkZYdVlWelVWWlhHRVdkamFQNmdhdzB6TFIxZUtkYURTMjFjMUhGWmxORWZ3SnQ4WW5rZWhhYjFqVEJpd0dTYTdNWWtrMGZDIn0.r6fUv68rc8kXaJNZ_o1E2ysv7rqOO6XGsZon9WX9jg2Zc4K48o2kVW_uT9pXtln01Bm1zmn9SQ1Ab0w6EVb4XQ&fbclid=IwY2xjawSak5BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeBdg4dHzXCvg7aVAUmi3BQjwtSRU2iVvw641O3PaPQLbZXAoOCwI9oim-zsU_aem_hJ-rZ1KZj5PDmcyQINW9tg';
+    44→
+    45→// Custom TikTok icon since Lucide doesn't have one
+    46→const TikTokIcon = ({ className }: { className?: string }) => (
+    47→  <svg
+    48→    xmlns="http://www.w3.org/2000/svg"
+    49→    viewBox="0 0 24 24"
+    50→    fill="none"
+    51→    stroke="currentColor"
+    52→    strokeWidth="2"
+    53→    strokeLinecap="round"
+    54→    strokeLinejoin="round"
+    55→    className={className}
+    56→  >
+    57→    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    58→  </svg>
+    59→);
+    60→
+    61→export default function Home() {
+    62→  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+    63→  const [detailOpen, setDetailOpen] = useState(false);
+    64→  const [enrollOpen, setEnrollOpen] = useState(false);
+    65→  const [searchQuery, setSearchQuery] = useState('');
+    66→  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    67→  const [scrolled, setScrolled] = useState(false);
+    68→  const [openFaq, setOpenFaq] = useState<number | null>(0);
+    69→
+    70→  const faqs = [
+    71→    {
+    72→      question: 'Qu\'est-ce que CapiMind ?',
+    73→      answer: 'CapiMind est la plateforme de formation e-learning premium au Maroc, dédiée aux professionnels ambitieux qui souhaitent se former aux compétences du futur : Intelligence Artificielle, Data Analytics, Cybersécurité, Business, Leadership et plus encore. Notre mission est de démocratiser l\'accès à l\'excellence éducative en Afrique.',
+    74→    },
+    75→    {
+    76→      question: 'Quelles formations propose CapiMind ?',
+    77→      answer: 'CapiMind propose 10 formations certifiantes : IA pour Décideurs, Data Analytics & BI, Cybersécurité & Protection des Données, Création d\'Entreprise, Automatisation Business, Finance & Investissement, Leadership & Management, Productivité & Organisation Digitale, Programmation & Développement, et Compétences du Futur. Chaque formation est conçue par des experts praticiens avec une expérience terrain de +10 ans.',
+    78→    },
+    79→    {
+    80→      question: 'Les formations CapiMind sont-elles certifiantes ?',
+    81→      answer: 'Oui, toutes nos formations délivrent une certification reconnue par les entreprises au Maroc et à l\'international. Notre certification atteste des compétences acquises et est valorisée sur le marché de l\'emploi. Plus de 85% de nos diplômés constatent une progression de carrière dans les 6 mois suivant leur formation.',
+    82→    },
+    83→    {
+    84→      question: 'Comment se déroulent les formations en ligne ?',
+    85→      answer: 'Nos formations se déroulent en 3 formats : 100% en ligne (vidéos HD, exercices interactifs, projets pratiques), hybride (en ligne + sessions en présentiel), ou en présentiel à Marrakech. Chaque apprenant bénéficie d\'un mentor dédié, d\'un suivi personnalisé et d\'un accès à vie aux ressources pédagogiques.',
+    86→    },
+    87→    {
+    88→      question: 'Quel est le prix des formations CapiMind ?',
+    89→      answer: 'Nos formations commencent à partir de 2 900 MAD. Le prix varie selon la formation et le format choisi (en ligne, hybride, présentiel). Nous proposons des facilités de paiement en 3 ou 6 fois. Contactez-nous sur WhatsApp pour obtenir un devis personnalisé et connaître les offres promotionnelles en cours.',
+    90→    },
+    91→    {
+    92→      question: 'Puis-je suivre une formation tout en travaillant ?',
+    93→      answer: 'Absolument ! CapiMind est conçu pour les professionnels actifs. Nos formations sont flexibles avec des sessions le soir et le week-end. Le format en ligne vous permet d\'apprendre à votre rythme, avec une moyenne de 5 à 8 heures par semaine. Plus de 90% de nos apprenants sont des professionnels en activité.',
+    94→    },
+    95→    {
+    96→      question: 'Quelle est la garantie de satisfaction ?',
+    97→      answer: 'CapiMind offre une garantie satisfait ou remboursé. Si vous n\'êtes pas satisfait de la qualité de la formation dans les 7 premiers jours, nous vous remboursons intégralement, sans conditions. Nous croyons en l\'excellence de nos programmes et le prouvons par cette garantie.',
+    98→    },
+    99→    {
+   100→      question: 'Comment contacter CapiMind pour s\'inscrire ?',
+   101→      answer: 'Vous pouvez nous contacter par email à contact@capimind.com, par téléphone au +212 786-249306, ou directement sur WhatsApp pour une réponse rapide. Notre équipe est disponible du lundi au vendredi de 9h à 18h pour vous accompagner dans votre parcours de formation.',
+   102→    },
+   103→    {
+   104→      question: 'Les formations CapiMind sont-elles éligibles au CPF ou à des financements ?',
+   105→      answer: 'Oui, certaines de nos formations sont éligibles aux dispositifs de financement professionnels (OFPPT, OPC, plan de formation entreprise). Notre équipe vous accompagne dans les démarches administratives pour obtenir la prise en charge. Contactez-nous pour vérifier l\'éligibilité de votre projet.',
+   106→    },
+   107→    {
+   108→      question: 'Quels débouchés après une formation CapiMind ?',
+   109→      answer: 'Nos formations ouvrent les portes vers des métiers en forte demande : Data Analyst, Consultant Cybersécurité, Chef de Projet IA, Entrepreneur, Automatisation Specialist, et bien d\'autres. Nous proposons un accompagnement vers l\'emploi avec notre réseau de +200 entreprises partenaires au Maroc et en Afrique. 85% de nos diplômés trouvent un emploi ou obtiennent une promotion dans les 6 mois.',
+   110→    },
+   111→  ];
+   112→
+   113→  // JSON-LD Structured Data for FAQ (SEO/GEO/AEO)
+   114→  const faqJsonLd = {
+   115→    '@context': 'https://schema.org',
+   116→    '@type': 'FAQPage',
+   117→    'mainEntity': faqs.map((faq) => ({
+   118→      '@type': 'Question',
+   119→      'name': faq.question,
+   120→      'acceptedAnswer': {
+   121→        '@type': 'Answer',
+   122→        'text': faq.answer,
+   123→      },
+   124→    })),
+   125→  };
+   126→
+   127→  useEffect(() => {
+   128→    const handleScroll = () => setScrolled(window.scrollY > 20);
+   129→    window.addEventListener('scroll', handleScroll);
+   130→    return () => window.removeEventListener('scroll', handleScroll);
+   131→  }, []);
+   132→
+   133→  const filteredCourses = courses.filter(
+   134→    (c) =>
+   135→      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+   136→      c.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+   137→      c.audience.some((a) => a.toLowerCase().includes(searchQuery.toLowerCase())) ||
+   138→      c.modules.some((m) => m.title.toLowerCase().includes(searchQuery.toLowerCase()))
+   139→  );
+   140→
+   141→  const handleSelectCourse = (course: Course) => {
+   142→    setSelectedCourse(course);
+   143→    setDetailOpen(true);
+   144→  };
+   145→
+   146→  const handleEnroll = (course: Course) => {
+   147→    setDetailOpen(false);
+   148→    setSelectedCourse(course);
+   149→    setEnrollOpen(true);
+   150→  };
+   151→
+   152→  const scrollTo = (id: string) => {
+   153→    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+   154→    setMobileMenuOpen(false);
+   155→  };
+   156→
+   157→  return (
+   158→    <div className="min-h-screen flex flex-col bg-background">
+   159→      {/* JSON-LD Structured Data for FAQ (GEO/AEO SEO) */}
+   160→      <script
+   161→        type="application/ld+json"
+   162→        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+   163→      />
+   164→      {/* Navigation */}
+   165→      <nav
+   166→        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+   167→          scrolled ? 'bg-background/95 backdrop-blur-md shadow-sm border-b border-border/50' : 'bg-transparent'
+   168→        }`}
+   169→      >
+   170→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   171→          <div className="flex items-center justify-between h-32">
+   172→            {/* Logo */}
+   173→            <div className="flex items-center">
+   174→              <img
+   175→                src="/images/logo-cropped.png"
+   176→                alt="CapiMind Logo"
+   177→                className="h-28 w-auto object-contain"
+   178→              />
+   179→            </div>
+   180→
+   181→            {/* Desktop Nav */}
+   182→            <div className="hidden md:flex items-center gap-6">
+   183→              <button onClick={() => scrollTo('about')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+   184→                À propos
+   185→              </button>
+   186→              <button onClick={() => scrollTo('courses')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+   187→                Formations
+   188→              </button>
+   189→              <button onClick={() => scrollTo('features')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+   190→                Pourquoi nous
+   191→              </button>
+   192→              <button onClick={() => scrollTo('faq')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+   193→                FAQ
+   194→              </button>
+   195→              <button onClick={() => scrollTo('contact')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+   196→                Contact
+   197→              </button>
+   198→              <div className="flex items-center gap-1 ml-2 border-l border-border/50 pl-4">
+   199→                <a
+   200→                  href="https://web.facebook.com/capimindofficial"
+   201→                  target="_blank"
+   202→                  rel="noopener noreferrer"
+   203→                  className="p-1.5 rounded-full text-muted-foreground hover:text-[#1877F2] hover:bg-[#1877F2]/10 transition-all duration-300"
+   204→                  aria-label="Facebook"
+   205→                >
+   206→                  <Facebook className="h-4 w-4" />
+   207→                </a>
+   208→                <a
+   209→                  href="https://www.instagram.com/capimindofficial"
+   210→                  target="_blank"
+   211→                  rel="noopener noreferrer"
+   212→                  className="p-1.5 rounded-full text-muted-foreground hover:text-[#dc2743] hover:bg-[#dc2743]/10 transition-all duration-300"
+   213→                  aria-label="Instagram"
+   214→                >
+   215→                  <Instagram className="h-4 w-4" />
+   216→                </a>
+   217→                <a
+   218→                  href="https://www.tiktok.com/@capimindofficial"
+   219→                  target="_blank"
+   220→                  rel="noopener noreferrer"
+   221→                  className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-300"
+   222→                  aria-label="TikTok"
+   223→                >
+   224→                  <TikTokIcon className="h-4 w-4" />
+   225→                </a>
+   226→                <a
+   227→                  href="https://www.linkedin.com/in/capimindofficial"
+   228→                  target="_blank"
+   229→                  rel="noopener noreferrer"
+   230→                  className="p-1.5 rounded-full text-muted-foreground hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-all duration-300"
+   231→                  aria-label="LinkedIn"
+   232→                >
+   233→                  <Linkedin className="h-4 w-4" />
+   234→                </a>
+   235→              </div>
+   236→              <Button
+   237→                size="sm"
+   238→                className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0"
+   239→                onClick={() => scrollTo('courses')}
+   240→              >
+   241→                S&apos;inscrire
+   242→              </Button>
+   243→            </div>
+   244→
+   245→            {/* Mobile Menu Toggle */}
+   246→            <button
+   247→              className="md:hidden p-2"
+   248→              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+   249→            >
+   250→              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+   251→            </button>
+   252→          </div>
+   253→
+   254→          {/* Mobile Menu */}
+   255→          {mobileMenuOpen && (
+   256→            <div className="md:hidden pb-4 space-y-2 border-t border-border/50 pt-4">
+   257→              <button onClick={() => scrollTo('about')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   258→                À propos
+   259→              </button>
+   260→              <button onClick={() => scrollTo('courses')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   261→                Formations
+   262→              </button>
+   263→              <button onClick={() => scrollTo('features')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   264→                Pourquoi nous
+   265→              </button>
+   266→              <button onClick={() => scrollTo('faq')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   267→                FAQ
+   268→              </button>
+   269→              <button onClick={() => scrollTo('contact')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+   270→                Contact
+   271→              </button>
+   272→              <div className="flex items-center gap-3 px-3 pt-2">
+   273→                <a
+   274→                  href="https://web.facebook.com/capimindofficial"
+   275→                  target="_blank"
+   276→                  rel="noopener noreferrer"
+   277→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground transition-all duration-300"
+   278→                  aria-label="Facebook"
+   279→                >
+   280→                  <Facebook className="h-4 w-4" />
+   281→                </a>
+   282→                <a
+   283→                  href="https://www.instagram.com/capimindofficial"
+   284→                  target="_blank"
+   285→                  rel="noopener noreferrer"
+   286→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-gradient-to-br hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1882] hover:text-white text-muted-foreground transition-all duration-300"
+   287→                  aria-label="Instagram"
+   288→                >
+   289→                  <Instagram className="h-4 w-4" />
+   290→                </a>
+   291→                <a
+   292→                  href="https://www.tiktok.com/@capimindofficial"
+   293→                  target="_blank"
+   294→                  rel="noopener noreferrer"
+   295→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-black hover:text-white text-muted-foreground transition-all duration-300"
+   296→                  aria-label="TikTok"
+   297→                >
+   298→                  <TikTokIcon className="h-4 w-4" />
+   299→                </a>
+   300→                <a
+   301→                  href="https://www.linkedin.com/in/capimindofficial"
+   302→                  target="_blank"
+   303→                  rel="noopener noreferrer"
+   304→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#0A66C2] hover:text-white text-muted-foreground transition-all duration-300"
+   305→                  aria-label="LinkedIn"
+   306→                >
+   307→                  <Linkedin className="h-4 w-4" />
+   308→                </a>
+   309→              </div>
+   310→            </div>
+   311→          )}
+   312→        </div>
+   313→      </nav>
+   314→
+   315→      {/* Hero Section */}
+   316→      <section className="relative overflow-hidden pt-16">
+   317→        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-background" />
+   318→        <div className="absolute top-20 right-0 w-96 h-96 bg-emerald-200/30 dark:bg-emerald-800/10 rounded-full blur-3xl" />
+   319→        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-200/30 dark:bg-teal-800/10 rounded-full blur-3xl" />
+   320→
+   321→        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36">
+   322→          <div className="grid lg:grid-cols-2 gap-12 items-center">
+   323→            {/* Left Content */}
+   324→            <div className="space-y-8">
+   325→              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-medium">
+   326→                <Sparkles className="h-4 w-4" />
+   327→                Plateforme #1 au Maroc
+   328→              </div>
+   329→
+   330→              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+   331→                Designed for{' '}
+   332→                <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   333→                  Exceptional Minds
+   334→                </span>
+   335→              </h1>
+   336→
+   337→              <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
+   338→                CapiMind est la plateforme de formation premium au Maroc qui accompagne les professionnels ambitieux dans leur transformation digitale. IA, Data, Cybersécurité, Business — boostez votre carrière avec des experts.
+   339→              </p>
+   340→
+   341→              <div className="flex flex-col sm:flex-row gap-4">
+   342→                <Button
+   343→                  size="lg"
+   344→                  className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg hover:shadow-xl transition-all text-base"
+   345→                  onClick={() => scrollTo('courses')}
+   346→                >
+   347→                  Explorer les formations
+   348→                  <ArrowRight className="h-5 w-5 ml-2" />
+   349→                </Button>
+   350→                <a
+   351→                  href={WHATSAPP_URL}
+   352→                  target="_blank"
+   353→                  rel="noopener noreferrer"
+   354→                  className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-md border border-input bg-background hover:bg-[#25D366] hover:text-white hover:border-[#25D366] text-base font-medium transition-all duration-300"
+   355→                >
+   356→                  <MessageCircle className="h-5 w-5" />
+   357→                  Passer à l'action
+   358→                </a>
+   359→              </div>
+   360→
+   361→              {/* Stats in hero */}
+   362→              <div className="grid grid-cols-3 gap-6 pt-4">
+   363→                <div>
+   364→                  <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">10+</p>
+   365→                  <p className="text-sm text-muted-foreground">Formations</p>
+   366→                </div>
+   367→                <div>
+   368→                  <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">8K+</p>
+   369→                  <p className="text-sm text-muted-foreground">Étudiants</p>
+   370→                </div>
+   371→                <div>
+   372→                  <p className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">4.8</p>
+   373→                  <p className="text-sm text-muted-foreground">Note moyenne</p>
+   374→                </div>
+   375→              </div>
+   376→            </div>
+   377→
+   378→            {/* Right Image */}
+   379→            <div className="relative hidden lg:block">
+   380→              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+   381→                <img
+   382→                  src="/images/hero-banner.png"
+   383→                  alt="E-learning platform"
+   384→                  className="w-full h-auto object-cover"
+   385→                />
+   386→                <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent" />
+   387→              </div>
+   388→
+   389→              {/* Floating cards */}
+   390→              <div className="absolute -left-6 top-1/4 bg-card p-3 rounded-xl shadow-lg border border-border/50 flex items-center gap-3">
+   391→                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+   392→                  <Star className="h-5 w-5 text-white fill-white" />
+   393→                </div>
+   394→                <div>
+   395→                  <p className="text-sm font-semibold">4.8/5</p>
+   396→                  <p className="text-xs text-muted-foreground">Satisfaction</p>
+   397→                </div>
+   398→              </div>
+   399→
+   400→              <div className="absolute -right-4 bottom-1/4 bg-card p-3 rounded-xl shadow-lg border border-border/50 flex items-center gap-3">
+   401→                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+   402→                  <Users className="h-5 w-5 text-white" />
+   403→                </div>
+   404→                <div>
+   405→                  <p className="text-sm font-semibold">8 603</p>
+   406→                  <p className="text-xs text-muted-foreground">Apprennants</p>
+   407→                </div>
+   408→              </div>
+   409→            </div>
+   410→          </div>
+   411→        </div>
+   412→
+   413→        {/* Wave Divider */}
+   414→        <div className="absolute bottom-0 left-0 right-0">
+   415→          <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+   416→            <path d="M0 80V20C240 60 480 0 720 30C960 60 1200 10 1440 40V80H0Z" fill="hsl(var(--background))" />
+   417→          </svg>
+   418→        </div>
+   419→      </section>
+   420→
+   421→      {/* Trusted By / Partners */}
+   422→      <section className="py-12 border-b border-border/30">
+   423→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   424→          <p className="text-center text-sm text-muted-foreground mb-6">Ils nous font confiance</p>
+   425→          <div className="flex justify-center">
+   426→            <img
+   427→              src="/images/trusted-by.png"
+   428→              alt="Nos partenaires de confiance : ProWise Solutions, JA14 Informatique Plus, Arabian Desert Home, Association Nationale des Métiers d'Arts et des Médias, Psyped, Sundial, Hosteen"
+   429→              className="w-full max-w-4xl h-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+   430→            />
+   431→          </div>
+   432→        </div>
+   433→      </section>
+   434→
+   435→      {/* À propos / Mission Section */}
+   436→      <section id="about" className="py-20">
+   437→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   438→          {/* Mission Header */}
+   439→          <div className="text-center max-w-3xl mx-auto mb-16">
+   440→            <Badge variant="secondary" className="mb-4">Notre Mission</Badge>
+   441→            <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+   442→              Qui est{' '}
+   443→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   444→                CapiMind
+   445→              </span>
+   446→              {' '}?
+   447→            </h2>
+   448→            <p className="text-lg text-muted-foreground leading-relaxed">
+   449→              CapiMind est née d'une conviction forte : les talents d'Afrique et du Maroc méritent un accompagnement à la hauteur de leur ambition. Nous créons les passerelles entre le potentiel humain et les opportunités du monde digital.
+   450→            </p>
+   451→          </div>
+   452→
+   453→          {/* Vision & Mission Cards */}
+   454→          <div className="grid md:grid-cols-2 gap-8 mb-16">
+   455→            <div className="p-8 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-200/50 dark:border-emerald-800/30">
+   456→              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-6">
+   457→                <Eye className="h-7 w-7 text-white" />
+   458→              </div>
+   459→              <h3 className="text-2xl font-bold mb-4">Notre Vision</h3>
+   460→              <p className="text-muted-foreground leading-relaxed">
+   461→                Devenir la référence en formation professionnelle en Afrique, en offrant des programmes qui transforment durablement les carrières et créent un impact économique mesurable. Nous croyons que l'éducation est le levier le plus puissant du changement.
+   462→              </p>
+   463→            </div>
+   464→            <div className="p-8 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200/50 dark:border-amber-800/30">
+   465→              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-6">
+   466→                <Target className="h-7 w-7 text-white" />
+   467→              </div>
+   468→              <h3 className="text-2xl font-bold mb-4">Notre Mission</h3>
+   469→              <p className="text-muted-foreground leading-relaxed">
+   470→                Démocratiser l'accès aux compétences du futur en proposant des formations pratiques, accessibles et certifiantes. Nous accompagnons chaque apprenant avec une pédagogie active et un suivi personnalisé vers la réussite professionnelle.
+   471→              </p>
+   472→            </div>
+   473→          </div>
+   474→
+   475→          {/* Méthodologie Pédagogique */}
+   476→          <div className="mb-16">
+   477→            <div className="text-center max-w-2xl mx-auto mb-10">
+   478→              <h3 className="text-2xl sm:text-3xl font-bold mb-4">
+   479→                Notre{' '}
+   480→                <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   481→                  Méthodologie Pédagogique
+   482→                </span>
+   483→              </h3>
+   484→              <p className="text-muted-foreground">
+   485→                Une approche en 4 piliers conçue pour garantir l'acquisition réelle des compétences et leur application immédiate en entreprise.
+   486→              </p>
+   487→            </div>
+   488→            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+   489→              {[
+   490→                {
+   491→                  step: '01',
+   492→                  icon: Lightbulb,
+   493→                  title: 'Comprendre',
+   494→                  description: 'Évaluation des besoins et définition d\'un parcours personnalisé selon votre niveau et vos objectifs.',
+   495→                  color: 'from-amber-500 to-orange-600',
+   496→                },
+   497→                {
+   498→                  step: '02',
+   499→                  icon: GraduationCap,
+   500→                  title: 'Apprendre',
+   501→                  description: 'Formation pratique avec des cas réels du marché marocain et africain, animée par des experts praticiens.',
+   502→                  color: 'from-emerald-500 to-teal-600',
+   503→                },
+   504→                {
+   505→                  step: '03',
+   506→                  icon: TrendingUp,
+   507→                  title: 'Pratiquer',
+   508→                  description: 'Projets concrets, workshops et mise en situation professionnelle pour ancrer les compétences.',
+   509→                  color: 'from-violet-500 to-purple-600',
+   510→                },
+   511→                {
+   512→                  step: '04',
+   513→                  icon: Award,
+   514→                  title: 'Certifier',
+   515→                  description: 'Obtention d\'une certification reconnue et accompagnement vers l\'emploi ou l\'entrepreneuriat.',
+   516→                  color: 'from-rose-500 to-pink-600',
+   517→                },
+   518→              ].map((item, i) => (
+   519→                <div key={i} className="group p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+   520→                  <div className="absolute top-3 right-4 text-5xl font-black text-muted-foreground/10">{item.step}</div>
+   521→                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}>
+   522→                    <item.icon className="h-6 w-6 text-white" />
+   523→                  </div>
+   524→                  <h4 className="font-bold text-lg mb-2">{item.title}</h4>
+   525→                  <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+   526→                </div>
+   527→              ))}
+   528→            </div>
+   529→          </div>
+   530→
+   531→          {/* Avantages & Opportunités */}
+   532→          <div className="p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 relative overflow-hidden">
+   533→            <div className="absolute inset-0">
+   534→              <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+   535→              <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+   536→            </div>
+   537→            <div className="relative">
+   538→              <div className="text-center mb-10">
+   539→                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+   540→                  Avantages & Opportunités
+   541→                </h3>
+   542→                <p className="text-emerald-100 max-w-2xl mx-auto">
+   543→                  Pourquoi des milliers de professionnels choisissent CapiMind pour accélérer leur carrière.
+   544→                </p>
+   545→              </div>
+   546→              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   547→                {[
+   548→                  {
+   549→                    icon: Globe,
+   550→                    title: 'Accès international',
+   551→                    description: 'Des certifications reconnues à l\'international qui ouvrent les portes du marché global.',
+   552→                  },
+   553→                  {
+   554→                    icon: TrendingUp,
+   555→                    title: '+85% de progression',
+   556→                    description: 'Nos apprenants constatent une progression salariale moyenne de 85% dans les 12 mois suivant la formation.',
+   557→                  },
+   558→                  {
+   559→                    icon: Users,
+   560→                    title: 'Réseau d\'alumni',
+   561→                    description: 'Rejoignez une communauté de +8 000 professionnels connectés à travers le Maroc et l\'Afrique.',
+   562→                  },
+   563→                  {
+   564→                    icon: Shield,
+   565→                    title: 'Garantie satisfaction',
+   566→                    description: 'Satisfait ou remboursé. Nous croyons en nos formations à 100% et le démontrons.',
+   567→                  },
+   568→                  {
+   569→                    icon: Clock,
+   570→                    title: 'Flexibilité totale',
+   571→                    description: 'En ligne, hybride ou en présentiel — apprenez à votre rythme, selon votre emploi du temps.',
+   572→                  },
+   573→                  {
+   574→                    icon: Sparkles,
+   575→                    title: 'Accompagnement personnalisé',
+   576→                    description: 'Un mentor dédié, un suivi individuel et un plan de carrière sur-mesure pour chaque apprenant.',
+   577→                  },
+   578→                ].map((item, i) => (
+   579→                  <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm">
+   580→                    <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+   581→                      <item.icon className="h-5 w-5 text-white" />
+   582→                    </div>
+   583→                    <div>
+   584→                      <h4 className="font-semibold text-white mb-1">{item.title}</h4>
+   585→                      <p className="text-sm text-emerald-100 leading-relaxed">{item.description}</p>
+   586→                    </div>
+   587→                  </div>
+   588→                ))}
+   589→              </div>
+   590→              <div className="text-center mt-10">
+   591→                <a
+   592→                  href={WHATSAPP_URL}
+   593→                  target="_blank"
+   594→                  rel="noopener noreferrer"
+   595→                  className="inline-flex items-center gap-2 h-12 px-8 rounded-lg bg-white text-emerald-700 hover:bg-white/90 font-semibold text-base shadow-lg transition-all duration-300"
+   596→                >
+   597→                  <MessageCircle className="h-5 w-5" />
+   598→                  Discutons de votre projet
+   599→                </a>
+   600→              </div>
+   601→            </div>
+   602→          </div>
+   603→        </div>
+   604→      </section>
+   605→
+   606→      {/* Courses Section */}
+   607→      <section id="courses" className="py-20">
+   608→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   609→          {/* Section Header */}
+   610→          <div className="text-center max-w-2xl mx-auto mb-12">
+   611→            <Badge variant="secondary" className="mb-4">Nos Formations</Badge>
+   612→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   613→              10 formations pour{' '}
+   614→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   615→                transformer votre carrière
+   616→              </span>
+   617→            </h2>
+   618→            <p className="text-muted-foreground text-lg">
+   619→              Des programmes conçus par des experts, pour des professionnels ambitieux.
+   620→            </p>
+   621→          </div>
+   622→
+   623→          {/* Course Grid */}
+   624→          {filteredCourses.length > 0 ? (
+   625→            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   626→              {filteredCourses.map((course) => (
+   627→                <CourseCard
+   628→                  key={course.id}
+   629→                  course={course}
+   630→                  onSelect={handleSelectCourse}
+   631→                />
+   632→              ))}
+   633→            </div>
+   634→          ) : (
+   635→            <div className="text-center py-16">
+   636→              <p className="text-muted-foreground text-lg">Aucune formation trouvée pour &laquo; {searchQuery} &raquo;</p>
+   637→              <Button variant="outline" className="mt-4" onClick={() => setSearchQuery('')}>
+   638→                Effacer la recherche
+   639→              </Button>
+   640→            </div>
+   641→          )}
+   642→        </div>
+   643→      </section>
+   644→
+   645→      {/* Features Section */}
+   646→      <section id="features" className="py-20 bg-muted/30">
+   647→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   648→          <div className="text-center max-w-2xl mx-auto mb-12">
+   649→            <Badge variant="secondary" className="mb-4">Pourquoi CapiMind</Badge>
+   650→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   651→              Ce qui nous{' '}
+   652→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   653→                distingue
+   654→              </span>
+   655→            </h2>
+   656→            <p className="text-muted-foreground text-lg">
+   657→              Une approche innovante et pratique pour garantir votre succès.
+   658→            </p>
+   659→          </div>
+   660→
+   661→          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   662→            {[
+   663→              {
+   664→                icon: Target,
+   665→                title: 'Formation sur mesure',
+   666→                description: 'Des programmes adaptés à votre niveau et vos objectifs professionnels, avec un suivi personnalisé.',
+   667→                color: 'from-emerald-500 to-teal-600',
+   668→              },
+   669→              {
+   670→                icon: Users,
+   671→                title: 'Experts praticiens',
+   672→                description: 'Nos formateurs sont des experts du marché avec une expérience terrain vérifiée de +10 ans.',
+   673→                color: 'from-amber-500 to-orange-600',
+   674→              },
+   675→              {
+   676→                icon: Award,
+   677→                title: 'Certification reconnue',
+   678→                description: 'Obtenez une certification valorisée par les entreprises du Maroc et de l\'international.',
+   679→                color: 'from-violet-500 to-purple-600',
+   680→              },
+   681→              {
+   682→                icon: Clock,
+   683→                title: 'Flexibilité totale',
+   684→                description: 'Apprenez à votre rythme avec nos formats en ligne, hybrides ou en présentiel.',
+   685→                color: 'from-sky-500 to-cyan-600',
+   686→              },
+   687→              {
+   688→                icon: Shield,
+   689→                title: 'Garantie satisfaction',
+   690→                description: 'Satisfait ou remboursé. Nous croyons en la qualité de nos formations à 100%.',
+   691→                color: 'from-rose-500 to-pink-600',
+   692→              },
+   693→              {
+   694→                icon: BookOpen,
+   695→                title: 'Ressources incluses',
+   696→                description: 'Accès à vie aux supports de cours, exercices pratiques et communauté d\'alumni.',
+   697→                color: 'from-green-500 to-emerald-600',
+   698→              },
+   699→            ].map((feature, i) => (
+   700→              <div
+   701→                key={i}
+   702→                className="group p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
+   703→              >
+   704→                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4`}>
+   705→                  <feature.icon className="h-6 w-6 text-white" />
+   706→                </div>
+   707→                <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+   708→                <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+   709→              </div>
+   710→            ))}
+   711→          </div>
+   712→        </div>
+   713→      </section>
+   714→
+   715→      {/* Testimonials Section */}
+   716→      <section id="testimonials" className="py-20">
+   717→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   718→          <div className="text-center max-w-2xl mx-auto mb-12">
+   719→            <Badge variant="secondary" className="mb-4">Témoignages</Badge>
+   720→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   721→              Ce que disent nos{' '}
+   722→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   723→                apprennants
+   724→              </span>
+   725→            </h2>
+   726→          </div>
+   727→
+   728→          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+   729→            {[
+   730→              {
+   731→                name: 'Rachid El Fassi',
+   732→                role: 'Directeur Général, ProWise Solutions',
+   733→                text: 'La formation IA pour Décideurs a transformé notre vision stratégique. Grâce à CapiMind, nous avons automatisé 40% de nos processus consultings en 3 mois. Un investissement rentabilisé dès le premier mois.',
+   734→                rating: 5,
+   735→                course: 'IA pour Décideurs',
+   736→              },
+   737→              {
+   738→                name: 'Amina Tazi',
+   739→                role: 'Responsable IT, JA14 Informatique Plus',
+   740→                text: 'La formation Data Analytics a révolutionné notre approche technique. Nos rapports BI sont passés de jours à quelques heures. L\'expertise pratique des formateurs CapiMind est inégalée.',
+   741→                rating: 5,
+   742→                course: 'Data Analytics & BI',
+   743→              },
+   744→              {
+   745→                name: 'Hassan Bennani',
+   746→                role: 'Fondateur, Arabian Desert Home',
+   747→                text: 'La formation Création d\'Entreprise m\'a permis de structurer mon projet hôtelier à Agafay. De l\'idée au business plan viable en 8 semaines. CapiMind comprend les défis des entrepreneurs marocains.',
+   748→                rating: 5,
+   749→                course: 'Création d\'Entreprise',
+   750→              },
+   751→              {
+   752→                name: 'Khadija Amrani',
+   753→                role: 'Présidente, Association Nationale des Métiers d\'Arts',
+   754→                text: 'La formation Automatisation Business a digitalisé nos processus associatifs. Nous gérons maintenant nos 500+ membres avec une efficacité décuplée. Merci CapiMind pour cette transformation.',
+   755→                rating: 5,
+   756→                course: 'Automatisation Business',
+   757→              },
+   758→              {
+   759→                name: 'Mehdi Alaoui',
+   760→                role: 'CEO, Psyped',
+   761→                text: 'La formation Cybersécurité a sécurisé toute notre infrastructure. En tant que startup tech, la confiance de nos clients dépend de notre sécurité. CapiMind nous a donné cet avantage concurrentiel.',
+   762→                rating: 5,
+   763→                course: 'Cybersécurité',
+   764→              },
+   765→              {
+   766→                name: 'Yasmine Oujdi',
+   767→                role: 'Directrice Opérations, Sundial',
+   768→                text: 'La formation Leadership & Management m\'a donné les outils pour manager mon équipe hybride de 30 personnes. Productivité +45% en 2 mois. Les formateurs partagent une expérience terrain authentique.',
+   769→                rating: 5,
+   770→                course: 'Leadership & Management',
+   771→              },
+   772→              {
+   773→                name: 'Omar Idrissi',
+   774→                role: 'CTO, Hosteen',
+   775→                text: 'La formation Programmation nous a permis de migrer notre infrastructure vers le cloud en interne. Économie de 60% sur nos coûts d\'hébergement. Les compétences acquises sont immédiatement applicables.',
+   776→                rating: 5,
+   777→                course: 'Programmation & Développement',
+   778→              },
+   779→            ].map((testimonial, i) => (
+   780→              <div
+   781→                key={i}
+   782→                className="p-6 rounded-2xl bg-card border border-border/50 hover:shadow-md transition-all"
+   783→              >
+   784→                <div className="flex items-center gap-1 mb-3">
+   785→                  {Array.from({ length: testimonial.rating }).map((_, j) => (
+   786→                    <Star key={j} className="h-4 w-4 fill-amber-400 text-amber-400" />
+   787→                  ))}
+   788→                </div>
+   789→                <p className="text-sm text-muted-foreground leading-relaxed mb-4 italic">
+   790→                  &ldquo;{testimonial.text}&rdquo;
+   791→                </p>
+   792→                <div className="flex items-center gap-3">
+   793→                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm">
+   794→                    {testimonial.name.split(' ').map(n => n[0]).join('')}
+   795→                  </div>
+   796→                  <div>
+   797→                    <p className="font-semibold text-sm">{testimonial.name}</p>
+   798→                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+   799→                  </div>
+   800→                </div>
+   801→                <Badge variant="secondary" className="mt-3 text-xs">
+   802→                  {testimonial.course}
+   803→                </Badge>
+   804→              </div>
+   805→            ))}
+   806→          </div>
+   807→        </div>
+   808→      </section>
+   809→
+   810→      {/* FAQ / Q&R Section */}
+   811→      <section id="faq" className="py-20 bg-muted/30">
+   812→        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+   813→          <div className="text-center max-w-2xl mx-auto mb-12">
+   814→            <Badge variant="secondary" className="mb-4">
+   815→              <HelpCircle className="h-3.5 w-3.5 mr-1" />
+   816→              Questions & Réponses
+   817→            </Badge>
+   818→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   819→              Vos questions{' '}
+   820→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   821→                fréquentes
+   822→              </span>
+   823→            </h2>
+   824→            <p className="text-muted-foreground text-lg">
+   825→              Tout ce que vous devez savoir sur CapiMind. Si votre question n&apos;est pas ici, contactez-nous directement.
+   826→            </p>
+   827→          </div>
+   828→
+   829→          <div className="space-y-3">
+   830→            {faqs.map((faq, i) => (
+   831→              <div
+   832→                key={i}
+   833→                className="rounded-xl bg-card border border-border/50 overflow-hidden transition-all duration-300 hover:border-primary/20"
+   834→              >
+   835→                <button
+   836→                  className="w-full flex items-center justify-between gap-4 p-5 text-left"
+   837→                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+   838→                  aria-expanded={openFaq === i}
+   839→                >
+   840→                  <div className="flex items-center gap-3">
+   841→                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-300 ${openFaq === i ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white' : 'bg-muted text-muted-foreground'}`}>
+   842→                      <span className="text-sm font-bold">Q</span>
+   843→                    </div>
+   844→                    <h3 className="font-semibold text-sm sm:text-base pr-2">{faq.question}</h3>
+   845→                  </div>
+   846→                  <ChevronDown className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} />
+   847→                </button>
+   848→                <div
+   849→                  className={`overflow-hidden transition-all duration-300 ${openFaq === i ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+   850→                >
+   851→                  <div className="px-5 pb-5 pl-16">
+   852→                    <p className="text-muted-foreground text-sm leading-relaxed">{faq.answer}</p>
+   853→                  </div>
+   854→                </div>
+   855→              </div>
+   856→            ))}
+   857→          </div>
+   858→
+   859→          <div className="text-center mt-10 p-6 rounded-2xl bg-card border border-border/50">
+   860→            <p className="text-muted-foreground mb-4">Vous avez d&apos;autres questions ?</p>
+   861→            <a
+   862→              href={WHATSAPP_URL}
+   863→              target="_blank"
+   864→              rel="noopener noreferrer"
+   865→              className="inline-flex items-center gap-2 h-11 px-6 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium hover:shadow-lg transition-all duration-300"
+   866→            >
+   867→              <MessageCircle className="h-4 w-4" />
+   868→              Posez votre question sur WhatsApp
+   869→            </a>
+   870→          </div>
+   871→        </div>
+   872→      </section>
+   873→
+   874→      {/* CTA Section */}
+   875→      <section className="py-20 bg-gradient-to-br from-emerald-600 to-teal-700 relative overflow-hidden">
+   876→        <div className="absolute inset-0">
+   877→          <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+   878→          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+   879→        </div>
+   880→        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+   881→          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+   882→            Prêt à transformer votre carrière ?
+   883→          </h2>
+   884→          <p className="text-lg text-emerald-100 max-w-2xl mx-auto mb-8">
+   885→            Rejoignez plus de 8 000 professionnels qui ont déjà boosté leur carrière grâce à nos formations. 
+   886→            Votre succès commence ici.
+   887→          </p>
+   888→          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+   889→            <Button
+   890→              size="lg"
+   891→              className="bg-white text-emerald-700 hover:bg-white/90 shadow-lg text-base"
+   892→              onClick={() => scrollTo('courses')}
+   893→            >
+   894→              Voir les formations
+   895→              <ArrowRight className="h-5 w-5 ml-2" />
+   896→            </Button>
+   897→            <Button
+   898→              size="lg"
+   899→              variant="outline"
+   900→              className="border-white/30 text-white hover:bg-white/10 text-base"
+   901→              onClick={() => scrollTo('contact')}
+   902→            >
+   903→              Nous contacter
+   904→            </Button>
+   905→          </div>
+   906→        </div>
+   907→      </section>
+   908→
+   909→      {/* Contact Section */}
+   910→      <section id="contact" className="py-20">
+   911→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   912→          <div className="text-center max-w-2xl mx-auto mb-12">
+   913→            <Badge variant="secondary" className="mb-4">Contact</Badge>
+   914→            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+   915→              Une question ?{' '}
+   916→              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+   917→                Parlons-en
+   918→              </span>
+   919→            </h2>
+   920→            <p className="text-muted-foreground text-lg">
+   921→              Notre équipe est là pour vous accompagner dans votre parcours de formation.
+   922→            </p>
+   923→          </div>
+   924→
+   925→          <div className="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+   926→            {/* Contact Info */}
+   927→            <div className="space-y-6">
+   928→              <div className="flex items-start gap-4">
+   929→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shrink-0">
+   930→                  <Mail className="h-5 w-5 text-white" />
+   931→                </div>
+   932→                <div>
+   933→                  <h3 className="font-semibold mb-1">Email</h3>
+   934→                  <a href="mailto:contact@capimind.com" className="text-muted-foreground text-sm hover:text-emerald-600 transition-colors">contact@capimind.com</a>
+   935→                </div>
+   936→              </div>
+   937→              <div className="flex items-start gap-4">
+   938→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0">
+   939→                  <Phone className="h-5 w-5 text-white" />
+   940→                </div>
+   941→                <div>
+   942→                  <h3 className="font-semibold mb-1">Téléphone</h3>
+   943→                  <a href="tel:+212786249306" className="text-muted-foreground text-sm hover:text-emerald-600 transition-colors">+212 786-249306</a>
+   944→                  <p className="text-muted-foreground text-sm">Lun-Ven: 9h-18h</p>
+   945→                </div>
+   946→              </div>
+   947→              <div className="flex items-start gap-4">
+   948→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0">
+   949→                  <MapPin className="h-5 w-5 text-white" />
+   950→                </div>
+   951→                <div>
+   952→                  <h3 className="font-semibold mb-1">Adresse</h3>
+   953→                  <p className="text-muted-foreground text-sm">APPT 15 IMM 12 LOT SINE</p>
+   954→                  <p className="text-muted-foreground text-sm">Avenue Allal El Fassi, Marrakech</p>
+   955→                  <p className="text-muted-foreground text-sm">40000, Maroc</p>
+   956→                </div>
+   957→              </div>
+   958→              <div className="flex items-start gap-4">
+   959→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#25D366] to-emerald-600 flex items-center justify-center shrink-0">
+   960→                  <MessageCircle className="h-5 w-5 text-white" />
+   961→                </div>
+   962→                <div>
+   963→                  <h3 className="font-semibold mb-1">WhatsApp</h3>
+   964→                  <a
+   965→                    href={WHATSAPP_URL}
+   966→                    target="_blank"
+   967→                    rel="noopener noreferrer"
+   968→                    className="text-muted-foreground text-sm hover:text-[#25D366] transition-colors"
+   969→                  >
+   970→                    Discuter maintenant →
+   971→                  </a>
+   972→                  <p className="text-muted-foreground text-sm">Réponse rapide garantie</p>
+   973→                </div>
+   974→              </div>
+   975→              <div className="flex items-start gap-4">
+   976→                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shrink-0">
+   977→                  <Sparkles className="h-5 w-5 text-white" />
+   978→                </div>
+   979→                <div>
+   980→                  <h3 className="font-semibold mb-1">Réseaux Sociaux</h3>
+   981→                  <div className="flex items-center gap-2 mt-2">
+   982→                    <a
+   983→                      href="https://web.facebook.com/capimindofficial"
+   984→                      target="_blank"
+   985→                      rel="noopener noreferrer"
+   986→                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground transition-all duration-300"
+   987→                      aria-label="Facebook"
+   988→                    >
+   989→                      <Facebook className="h-4 w-4" />
+   990→                    </a>
+   991→                    <a
+   992→                      href="https://www.instagram.com/capimindofficial"
+   993→                      target="_blank"
+   994→                      rel="noopener noreferrer"
+   995→                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-gradient-to-br hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1882] hover:text-white text-muted-foreground transition-all duration-300"
+   996→                      aria-label="Instagram"
+   997→                    >
+   998→                      <Instagram className="h-4 w-4" />
+   999→                    </a>
+  1000→                    <a
+  1001→                      href="https://www.tiktok.com/@capimindofficial"
+  1002→                      target="_blank"
+  1003→                      rel="noopener noreferrer"
+  1004→                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-black hover:text-white text-muted-foreground transition-all duration-300"
+  1005→                      aria-label="TikTok"
+  1006→                    >
+  1007→                      <TikTokIcon className="h-4 w-4" />
+  1008→                    </a>
+  1009→                    <a
+  1010→                      href="https://www.linkedin.com/in/capimindofficial"
+  1011→                      target="_blank"
+  1012→                      rel="noopener noreferrer"
+  1013→                      className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#0A66C2] hover:text-white text-muted-foreground transition-all duration-300"
+  1014→                      aria-label="LinkedIn"
+  1015→                    >
+  1016→                      <Linkedin className="h-4 w-4" />
+  1017→                    </a>
+  1018→                  </div>
+  1019→                </div>
+  1020→              </div>
+  1021→            </div>
+  1022→
+  1023→            {/* Contact Form */}
+  1024→            <form
+  1025→              className="space-y-4"
+  1026→              onSubmit={(e) => {
+  1027→                e.preventDefault();
+  1028→                const form = e.target as HTMLFormElement;
+  1029→                const formData = new FormData(form);
+  1030→                fetch('/api/contact', {
+  1031→                  method: 'POST',
+  1032→                  headers: { 'Content-Type': 'application/json' },
+  1033→                  body: JSON.stringify({
+  1034→                    name: formData.get('name'),
+  1035→                    email: formData.get('email'),
+  1036→                    subject: formData.get('subject'),
+  1037→                    message: formData.get('message'),
+  1038→                  }),
+  1039→                }).then((res) => {
+  1040→                  if (res.ok) {
+  1041→                    form.reset();
+  1042→                    import('next/link').then(() => {});
+  1043→                    const toast = document.createElement('div');
+  1044→                    toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+  1045→                    toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
+  1046→                    document.body.appendChild(toast);
+  1047→                    setTimeout(() => toast.remove(), 4000);
+  1048→                  }
+  1049→                });
+  1050→              }}
+  1051→            >
+  1052→              <div className="space-y-2">
+  1053→                <label htmlFor="name" className="text-sm font-medium">Nom</label>
+  1054→                <Input id="name" name="name" placeholder="Votre nom" required />
+  1055→              </div>
+  1056→              <div className="space-y-2">
+  1057→                <label htmlFor="email" className="text-sm font-medium">Email</label>
+  1058→                <Input id="email" name="email" type="email" placeholder="votre@email.com" required />
+  1059→              </div>
+  1060→              <div className="space-y-2">
+  1061→                <label htmlFor="subject" className="text-sm font-medium">Sujet</label>
+  1062→                <Input id="subject" name="subject" placeholder="Sujet de votre message" required />
+  1063→              </div>
+  1064→              <div className="space-y-2">
+  1065→                <label htmlFor="message" className="text-sm font-medium">Message</label>
+  1066→                <textarea
+  1067→                  id="message"
+  1068→                  name="message"
+  1069→                  rows={4}
+  1070→                  placeholder="Votre message..."
+  1071→                  required
+  1072→                  className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  1073→                />
+  1074→              </div>
+  1075→              <p className="text-xs text-muted-foreground flex items-center gap-1">
+  1076→                <Mail className="h-3 w-3" />
+  1077→                Votre message sera automatiquement transmis à contact@capimind.com
+  1078→              </p>
+  1079→              <Button
+  1080→                type="submit"
+  1081→                className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0"
+  1082→              >
+  1083→                Envoyer le message
+  1084→                <Mail className="h-4 w-4 ml-2" />
+  1085→              </Button>
+  1086→            </form>
+  1087→          </div>
+  1088→        </div>
+  1089→      </section>
+  1090→
+  1091→      {/* Footer */}
+  1092→      <footer className="mt-auto bg-card border-t border-border/50">
+  1093→        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  1094→          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+  1095→            {/* Brand */}
+  1096→            <div className="space-y-4">
+  1097→              <div className="flex items-center gap-2.5">
+  1098→                <img
+  1099→                  src="/images/logo-cropped.png"
+  1100→                  alt="CapiMind Logo"
+  1101→                  className="h-28 w-auto object-contain"
+  1102→                />
+  1103→              </div>
+  1104→              <p className="text-sm text-muted-foreground leading-relaxed">
+  1105→                Designed for Exceptional Minds. La plateforme de formation premium pour les professionnels ambitieux au Maroc et en Afrique.
+  1106→              </p>
+  1107→            </div>
+  1108→
+  1109→            {/* Formations */}
+  1110→            <div>
+  1111→              <h4 className="font-semibold mb-4">Formations</h4>
+  1112→              <ul className="space-y-2 text-sm text-muted-foreground">
+  1113→                {courses.slice(0, 5).map((c) => (
+  1114→                  <li key={c.id} className="hover:text-foreground cursor-pointer transition-colors" onClick={() => handleSelectCourse(c)}>
+  1115→                    {c.title}
+  1116→                  </li>
+  1117→                ))}
+  1118→              </ul>
+  1119→            </div>
+  1120→
+  1121→            {/* Plus */}
+  1122→            <div>
+  1123→              <h4 className="font-semibold mb-4">Plus</h4>
+  1124→              <ul className="space-y-2 text-sm text-muted-foreground">
+  1125→                {courses.slice(5).map((c) => (
+  1126→                  <li key={c.id} className="hover:text-foreground cursor-pointer transition-colors" onClick={() => handleSelectCourse(c)}>
+  1127→                    {c.title}
+  1128→                  </li>
+  1129→                ))}
+  1130→              </ul>
+  1131→            </div>
+  1132→
+  1133→            {/* Contact & Réseaux Sociaux */}
+  1134→            <div>
+  1135→              <h4 className="font-semibold mb-4">Contact</h4>
+  1136→              <ul className="space-y-2 text-sm text-muted-foreground">
+  1137→                <li className="flex items-center gap-2">
+  1138→                  <Mail className="h-3.5 w-3.5" />
+  1139→                  <a href="mailto:contact@capimind.com" className="hover:text-emerald-600 transition-colors">contact@capimind.com</a>
+  1140→                </li>
+  1141→                <li className="flex items-center gap-2">
+  1142→                  <Phone className="h-3.5 w-3.5" />
+  1143→                  <a href="tel:+212786249306" className="hover:text-emerald-600 transition-colors">+212 786-249306</a>
+  1144→                </li>
+  1145→                <li className="flex items-center gap-2">
+  1146→                  <MapPin className="h-3.5 w-3.5" />
+  1147→                  Marrakech, 40000, Maroc
+  1148→                </li>
+  1149→                <li className="flex items-center gap-2">
+  1150→                  <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />
+  1151→                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors">WhatsApp</a>
+  1152→                </li>
+  1153→              </ul>
+  1154→
+  1155→              <h4 className="font-semibold mb-3 mt-6">Réseaux Sociaux</h4>
+  1156→              <div className="flex items-center gap-3">
+  1157→                <a
+  1158→                  href="https://web.facebook.com/capimindofficial"
+  1159→                  target="_blank"
+  1160→                  rel="noopener noreferrer"
+  1161→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground transition-all duration-300"
+  1162→                  aria-label="Facebook"
+  1163→                >
+  1164→                  <Facebook className="h-4 w-4" />
+  1165→                </a>
+  1166→                <a
+  1167→                  href="https://www.instagram.com/capimindofficial"
+  1168→                  target="_blank"
+  1169→                  rel="noopener noreferrer"
+  1170→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-gradient-to-br hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white text-muted-foreground transition-all duration-300"
+  1171→                  aria-label="Instagram"
+  1172→                >
+  1173→                  <Instagram className="h-4 w-4" />
+  1174→                </a>
+  1175→                <a
+  1176→                  href="https://www.tiktok.com/@capimindofficial"
+  1177→                  target="_blank"
+  1178→                  rel="noopener noreferrer"
+  1179→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-black hover:text-white text-muted-foreground transition-all duration-300"
+  1180→                  aria-label="TikTok"
+  1181→                >
+  1182→                  <TikTokIcon className="h-4 w-4" />
+  1183→                </a>
+  1184→                <a
+  1185→                  href="https://www.linkedin.com/in/capimindofficial"
+  1186→                  target="_blank"
+  1187→                  rel="noopener noreferrer"
+  1188→                  className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-[#0A66C2] hover:text-white text-muted-foreground transition-all duration-300"
+  1189→                  aria-label="LinkedIn"
+  1190→                >
+  1191→                  <Linkedin className="h-4 w-4" />
+  1192→                </a>
+  1193→              </div>
+  1194→            </div>
+  1195→          </div>
+  1196→
+  1197→          <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+  1198→            <p className="text-sm text-muted-foreground">
+  1199→              © {new Date().getFullYear()} CapiMind. Tous droits réservés.
+  1200→            </p>
+  1201→            <div className="flex items-center gap-4">
+  1202→              <div className="flex items-center gap-3">
+  1203→                <a
+  1204→                  href="https://web.facebook.com/capimindofficial"
+  1205→                  target="_blank"
+  1206→                  rel="noopener noreferrer"
+  1207→                  className="text-muted-foreground hover:text-[#1877F2] transition-colors"
+  1208→                  aria-label="Facebook"
+  1209→                >
+  1210→                  <Facebook className="h-4 w-4" />
+  1211→                </a>
+  1212→                <a
+  1213→                  href="https://www.instagram.com/capimindofficial"
+  1214→                  target="_blank"
+  1215→                  rel="noopener noreferrer"
+  1216→                  className="text-muted-foreground hover:text-[#dc2743] transition-colors"
+  1217→                  aria-label="Instagram"
+  1218→                >
+  1219→                  <Instagram className="h-4 w-4" />
+  1220→                </a>
+  1221→                <a
+  1222→                  href="https://www.tiktok.com/@capimindofficial"
+  1223→                  target="_blank"
+  1224→                  rel="noopener noreferrer"
+  1225→                  className="text-muted-foreground hover:text-foreground transition-colors"
+  1226→                  aria-label="TikTok"
+  1227→                >
+  1228→                  <TikTokIcon className="h-4 w-4" />
+  1229→                </a>
+  1230→                <a
+  1231→                  href="https://www.linkedin.com/in/capimindofficial"
+  1232→                  target="_blank"
+  1233→                  rel="noopener noreferrer"
+  1234→                  className="text-muted-foreground hover:text-[#0A66C2] transition-colors"
+  1235→                  aria-label="LinkedIn"
+  1236→                >
+  1237→                  <Linkedin className="h-4 w-4" />
+  1238→                </a>
+  1239→              </div>
+  1240→              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+  1241→                Fait avec <Heart className="h-3.5 w-3.5 text-red-500 fill-red-500 mx-0.5" /> au Maroc
+  1242→              </div>
+  1243→            </div>
+  1244→          </div>
+  1245→        </div>
+  1246→      </footer>
+  1247→
+  1248→      {/* Dialogs */}
+  1249→      <CourseDetailDialog
+  1250→        course={selectedCourse}
+  1251→        open={detailOpen}
+  1252→        onClose={() => setDetailOpen(false)}
+  1253→        onEnroll={handleEnroll}
+  1254→      />
+  1255→      <EnrollmentDialog
+  1256→        course={selectedCourse}
+  1257→        open={enrollOpen}
+  1258→        onClose={() => setEnrollOpen(false)}
+  1259→      />
+  1260→
+  1261→      {/* WhatsApp Chat Button */}
+  1262→      <a
+  1263→        href={WHATSAPP_URL}
+  1264→        target="_blank"
+  1265→        rel="noopener noreferrer"
+  1266→        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
+  1267→        aria-label="Discuter sur WhatsApp"
+  1268→      >
+  1269→        <svg
+  1270→          xmlns="http://www.w3.org/2000/svg"
+  1271→          viewBox="0 0 24 24"
+  1272→          fill="currentColor"
+  1273→          className="h-6 w-6"
+  1274→        >
+  1275→          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+  1276→        </svg>
+  1277→        <span className="text-sm font-semibold hidden sm:inline group-hover:inline">
+  1278→          WhatsApp
+  1279→        </span>
+  1280→        {/* Pulse animation */}
+  1281→        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+  1282→          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+  1283→          <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+  1284→        </span>
+  1285→      </a>
+  1286→    </div>
+  1287→  );
+  1288→}
+  1289→
