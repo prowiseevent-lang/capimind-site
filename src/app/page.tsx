@@ -1195,9 +1195,14 @@ export default function Home() {
           </div>
 
           <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} CapiMind. Tous droits réservés.
-            </p>
+            <div className="text-center sm:text-left">
+              <p className="text-sm text-muted-foreground">
+                © 2026 CapiMind. Tous droits réservés.
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-1">
+                Plateforme détenue Légalement par la Sté ProWise Solutions.
+              </p>
+            </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <a
