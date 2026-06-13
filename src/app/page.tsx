@@ -36,6 +36,8 @@ import {
   TrendingUp,
   GraduationCap,
   Eye,
+  ChevronDown,
+  HelpCircle,
 } from 'lucide-react';
 
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=212786249306&source=FB_Post&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3ODE0NjY1NTAsInBob25lIjoiMjEyNzg2MjQ5MzA2IiwidGV4dCI6IkxpZW5cdTAwYTA6XG5odHRwczpcL1wvZmIubWVcLzZkY3NGcDhvSFxuXG5Cb25qb3VyXHUwMGEwISBQdWlzLWplIGVuIHNhdm9pciBwbHVzIFx1MDBlMCBjZSBzdWpldFx1MDBhMD8iLCJzb3VyY2VfdXJsIjoiaHR0cHM6XC9cL2ZiLm1lXC82ZGNzRnA4b0giLCJpY2VicmVha2VyIjoiQm9uam91clx1MDBhMCEgUHVpcy1qZSBlbiBzYXZvaXIgcGx1cyBcdTAwZTAgY2Ugc3VqZXRcdTAwYTA_IiwiYXBwIjoiZmFjZWJvb2siLCJlbnRyeV9wb2ludCI6InBvc3RfY3RhIiwiamlkIjoiMjEyNzg2MjQ5MzA2XHUwMDQwcy53aGF0c2FwcC5uZXQiLCJsaWQiOiI5NDkxNTIwMzcxOTI4Mlx1MDA0MGxpZCIsInNvdXJjZV9pZCI6IjEyMjA5NDAwMDk4MDQzNzUyNyIsImNoYXRfZHJhZnQiOjEsInNob3dfYWRfYXR0cmlidXRpb24iOjEsInNvdXJjZSI6IkZCX1Bvc3QiLCJjb250ZXh0IjoiQWZpWkFwLXB2QTNyU09seEVhOEtaRkgtamQtY0lTejkyUmNtT3BldUJnclQzLXZvVEttNmNwOHhpV0RjWTJhYVBjdUhaSEhydzk4MUNuekpweVo5Y2g4ZlkwR3RBSnlMcnREeFpLTTlqTDZWMFpFV25RM0JZSHRObnR5VDZEVk01YlZrcTg5V01HaXJtSlp6eEppSUwzNmxXWFNzMEtpbkEwR0J1QzdMTVZWd1ZxVHdjMEpNWTdzdXpmNlZ0WTJacDU0bnlfVmpZaktXRzVmbHJlQXBOaUY4R0JUWXd6QmJ4NGpMWTJzUGVtUEtHQ2tZM1c4dWJtWlllMG92TUtfd3hZSXBMSkc4TlZ6M3BqOXo4YjE1TjQyaHJacWlFaWJGUjZRbHhGNUZRTDhfdnZwZ3U4a3ZzZm5JaDNTaXExZW5Wb0VaUXBhb1ZHb0g3YW1xckxINVpJVnd5QW1SRXQxcExJZ3F0X2dmVkZYdVlWelVWWlhHRVdkamFQNmdhdzB6TFIxZUtkYURTMjFjMUhGWmxORWZ3SnQ4WW5rZWhhYjFqVEJpd0dTYTdNWWtrMGZDIn0.r6fUv68rc8kXaJNZ_o1E2ysv7rqOO6XGsZon9WX9jg2Zc4K48o2kVW_uT9pXtln01Bm1zmn9SQ1Ab0w6EVb4XQ&fbclid=IwY2xjawSak5BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeBdg4dHzXCvg7aVAUmi3BQjwtSRU2iVvw641O3PaPQLbZXAoOCwI9oim-zsU_aem_hJ-rZ1KZj5PDmcyQINW9tg';
@@ -63,6 +65,64 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const faqs = [
+    {
+      question: 'Qu\'est-ce que CapiMind ?',
+      answer: 'CapiMind est la plateforme de formation e-learning premium au Maroc, dédiée aux professionnels ambitieux qui souhaitent se former aux compétences du futur : Intelligence Artificielle, Data Analytics, Cybersécurité, Business, Leadership et plus encore. Notre mission est de démocratiser l\'accès à l\'excellence éducative en Afrique.',
+    },
+    {
+      question: 'Quelles formations propose CapiMind ?',
+      answer: 'CapiMind propose 10 formations certifiantes : IA pour Décideurs, Data Analytics & BI, Cybersécurité & Protection des Données, Création d\'Entreprise, Automatisation Business, Finance & Investissement, Leadership & Management, Productivité & Organisation Digitale, Programmation & Développement, et Compétences du Futur. Chaque formation est conçue par des experts praticiens avec une expérience terrain de +10 ans.',
+    },
+    {
+      question: 'Les formations CapiMind sont-elles certifiantes ?',
+      answer: 'Oui, toutes nos formations délivrent une certification reconnue par les entreprises au Maroc et à l\'international. Notre certification atteste des compétences acquises et est valorisée sur le marché de l\'emploi. Plus de 85% de nos diplômés constatent une progression de carrière dans les 6 mois suivant leur formation.',
+    },
+    {
+      question: 'Comment se déroulent les formations en ligne ?',
+      answer: 'Nos formations se déroulent en 3 formats : 100% en ligne (vidéos HD, exercices interactifs, projets pratiques), hybride (en ligne + sessions en présentiel), ou en présentiel à Marrakech. Chaque apprenant bénéficie d\'un mentor dédié, d\'un suivi personnalisé et d\'un accès à vie aux ressources pédagogiques.',
+    },
+    {
+      question: 'Quel est le prix des formations CapiMind ?',
+      answer: 'Nos formations commencent à partir de 2 900 MAD. Le prix varie selon la formation et le format choisi (en ligne, hybride, présentiel). Nous proposons des facilités de paiement en 3 ou 6 fois. Contactez-nous sur WhatsApp pour obtenir un devis personnalisé et connaître les offres promotionnelles en cours.',
+    },
+    {
+      question: 'Puis-je suivre une formation tout en travaillant ?',
+      answer: 'Absolument ! CapiMind est conçu pour les professionnels actifs. Nos formations sont flexibles avec des sessions le soir et le week-end. Le format en ligne vous permet d\'apprendre à votre rythme, avec une moyenne de 5 à 8 heures par semaine. Plus de 90% de nos apprenants sont des professionnels en activité.',
+    },
+    {
+      question: 'Quelle est la garantie de satisfaction ?',
+      answer: 'CapiMind offre une garantie satisfait ou remboursé. Si vous n\'êtes pas satisfait de la qualité de la formation dans les 7 premiers jours, nous vous remboursons intégralement, sans conditions. Nous croyons en l\'excellence de nos programmes et le prouvons par cette garantie.',
+    },
+    {
+      question: 'Comment contacter CapiMind pour s\'inscrire ?',
+      answer: 'Vous pouvez nous contacter par email à contact@capimind.com, par téléphone au +212 786-249306, ou directement sur WhatsApp pour une réponse rapide. Notre équipe est disponible du lundi au vendredi de 9h à 18h pour vous accompagner dans votre parcours de formation.',
+    },
+    {
+      question: 'Les formations CapiMind sont-elles éligibles au CPF ou à des financements ?',
+      answer: 'Oui, certaines de nos formations sont éligibles aux dispositifs de financement professionnels (OFPPT, OPC, plan de formation entreprise). Notre équipe vous accompagne dans les démarches administratives pour obtenir la prise en charge. Contactez-nous pour vérifier l\'éligibilité de votre projet.',
+    },
+    {
+      question: 'Quels débouchés après une formation CapiMind ?',
+      answer: 'Nos formations ouvrent les portes vers des métiers en forte demande : Data Analyst, Consultant Cybersécurité, Chef de Projet IA, Entrepreneur, Automatisation Specialist, et bien d\'autres. Nous proposons un accompagnement vers l\'emploi avec notre réseau de +200 entreprises partenaires au Maroc et en Afrique. 85% de nos diplômés trouvent un emploi ou obtiennent une promotion dans les 6 mois.',
+    },
+  ];
+
+  // JSON-LD Structured Data for FAQ (SEO/GEO/AEO)
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    'mainEntity': faqs.map((faq) => ({
+      '@type': 'Question',
+      'name': faq.question,
+      'acceptedAnswer': {
+        '@type': 'Answer',
+        'text': faq.answer,
+      },
+    })),
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -96,6 +156,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {/* JSON-LD Structured Data for FAQ (GEO/AEO SEO) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Navigation */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -124,8 +189,8 @@ export default function Home() {
               <button onClick={() => scrollTo('features')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Pourquoi nous
               </button>
-              <button onClick={() => scrollTo('testimonials')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Témoignages
+              <button onClick={() => scrollTo('faq')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                FAQ
               </button>
               <button onClick={() => scrollTo('contact')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Contact
@@ -198,8 +263,8 @@ export default function Home() {
               <button onClick={() => scrollTo('features')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
                 Pourquoi nous
               </button>
-              <button onClick={() => scrollTo('testimonials')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
-                Témoignages
+              <button onClick={() => scrollTo('faq')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+                FAQ
               </button>
               <button onClick={() => scrollTo('contact')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
                 Contact
@@ -729,6 +794,70 @@ export default function Home() {
                 </Badge>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ / Q&R Section */}
+      <section id="faq" className="py-20 bg-muted/30">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <Badge variant="secondary" className="mb-4">
+              <HelpCircle className="h-3.5 w-3.5 mr-1" />
+              Questions & Réponses
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Vos questions{' '}
+              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+                fréquentes
+              </span>
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Tout ce que vous devez savoir sur CapiMind. Si votre question n&apos;est pas ici, contactez-nous directement.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div
+                key={i}
+                className="rounded-xl bg-card border border-border/50 overflow-hidden transition-all duration-300 hover:border-primary/20"
+              >
+                <button
+                  className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-300 ${openFaq === i ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white' : 'bg-muted text-muted-foreground'}`}>
+                      <span className="text-sm font-bold">Q</span>
+                    </div>
+                    <h3 className="font-semibold text-sm sm:text-base pr-2">{faq.question}</h3>
+                  </div>
+                  <ChevronDown className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} />
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${openFaq === i ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                >
+                  <div className="px-5 pb-5 pl-16">
+                    <p className="text-muted-foreground text-sm leading-relaxed">{faq.answer}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-10 p-6 rounded-2xl bg-card border border-border/50">
+            <p className="text-muted-foreground mb-4">Vous avez d&apos;autres questions ?</p>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 h-11 px-6 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium hover:shadow-lg transition-all duration-300"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Posez votre question sur WhatsApp
+            </a>
           </div>
         </div>
       </section>
