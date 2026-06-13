@@ -418,14 +418,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trusted By / Logos */}
+      {/* Trusted By / Partners */}
       <section className="py-12 border-b border-border/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-sm text-muted-foreground mb-6">Ils nous font confiance</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 opacity-60">
-            {['OCP Group', 'Maroc Telecom', 'Attijariwafa Bank', 'BMCE Bank', 'RAM', 'CIH Bank'].map((name) => (
-              <span key={name} className="text-lg font-bold text-muted-foreground/60 tracking-wider">{name}</span>
-            ))}
+          <div className="flex justify-center">
+            <img
+              src="/images/trusted-by.png"
+              alt="Nos partenaires de confiance : ProWise Solutions, JA14 Informatique Plus, Arabian Desert Home, Association Nationale des Métiers d'Arts et des Médias, Psyped, Sundial, Hosteen"
+              className="w-full max-w-4xl h-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+            />
           </div>
         </div>
       </section>
@@ -726,44 +728,51 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                name: 'Youssef El Amrani',
-                role: 'CEO, TechMaroc',
-                text: 'La formation IA pour Décideurs a transformé notre vision stratégique. Nous avons automatisé 40% de nos processus en 3 mois.',
+                name: 'Rachid El Fassi',
+                role: 'Directeur Général, ProWise Solutions',
+                text: 'La formation IA pour Décideurs a transformé notre vision stratégique. Grâce à CapiMind, nous avons automatisé 40% de nos processus consultings en 3 mois. Un investissement rentabilisé dès le premier mois.',
                 rating: 5,
                 course: 'IA pour Décideurs',
               },
               {
-                name: 'Fatima Zahra Bennani',
-                role: 'Data Analyst, OCP',
-                text: 'La formation Data Analytics m\'a permis de passer de simple analyste à lead BI. Power BI n\'a plus de secrets pour moi.',
+                name: 'Amina Tazi',
+                role: 'Responsable IT, JA14 Informatique Plus',
+                text: 'La formation Data Analytics a révolutionné notre approche technique. Nos rapports BI sont passés de jours à quelques heures. L\'expertise pratique des formateurs CapiMind est inégalée.',
                 rating: 5,
                 course: 'Data Analytics & BI',
               },
               {
-                name: 'Ahmed Tazi',
-                role: 'CTO, StartupCasablanca',
-                text: 'La formation Cybersécurité est la meilleure investissement que nous ayons fait. Nos systèmes sont maintenant conformes aux standards internationaux.',
-                rating: 5,
-                course: 'Cybersécurité',
-              },
-              {
-                name: 'Salma Idrissi',
-                role: 'Entrepreneure',
-                text: 'Grâce à la formation Création d\'Entreprise, j\'ai lancé mon business en 2 mois avec un modèle viable. Les formateurs sont exceptionnels.',
+                name: 'Hassan Bennani',
+                role: 'Fondateur, Arabian Desert Home',
+                text: 'La formation Création d\'Entreprise m\'a permis de structurer mon projet hôtelier à Agafay. De l\'idée au business plan viable en 8 semaines. CapiMind comprend les défis des entrepreneurs marocains.',
                 rating: 5,
                 course: 'Création d\'Entreprise',
               },
               {
-                name: 'Karim Oujdi',
-                role: 'Manager, Banque Populaire',
-                text: 'La formation Leadership à distance m\'a donné les outils pour manager mon équipe hybride efficacement. Résultats visibles immédiatement.',
+                name: 'Khadija Amrani',
+                role: 'Présidente, Association Nationale des Métiers d\'Arts',
+                text: 'La formation Automatisation Business a digitalisé nos processus associatifs. Nous gérons maintenant nos 500+ membres avec une efficacité décuplée. Merci CapiMind pour cette transformation.',
+                rating: 5,
+                course: 'Automatisation Business',
+              },
+              {
+                name: 'Mehdi Alaoui',
+                role: 'CEO, Psyped',
+                text: 'La formation Cybersécurité a sécurisé toute notre infrastructure. En tant que startup tech, la confiance de nos clients dépend de notre sécurité. CapiMind nous a donné cet avantage concurrentiel.',
+                rating: 5,
+                course: 'Cybersécurité',
+              },
+              {
+                name: 'Yasmine Oujdi',
+                role: 'Directrice Opérations, Sundial',
+                text: 'La formation Leadership & Management m\'a donné les outils pour manager mon équipe hybride de 30 personnes. Productivité +45% en 2 mois. Les formateurs partagent une expérience terrain authentique.',
                 rating: 5,
                 course: 'Leadership & Management',
               },
               {
-                name: 'Nadia Fassi',
-                role: 'Développeuse, Freelance',
-                text: 'La formation Programmation m\'a ouvert les portes du cloud computing. J\'ai triplé mes revenus en 6 mois grâce aux compétences acquises.',
+                name: 'Omar Idrissi',
+                role: 'CTO, Hosteen',
+                text: 'La formation Programmation nous a permis de migrer notre infrastructure vers le cloud en interne. Économie de 60% sur nos coûts d\'hébergement. Les compétences acquises sont immédiatement applicables.',
                 rating: 5,
                 course: 'Programmation & Développement',
               },
