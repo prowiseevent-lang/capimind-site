@@ -30,7 +30,15 @@ import {
   Instagram,
   Linkedin,
   MessageCircle,
+  CheckCircle2,
+  Lightbulb,
+  Globe,
+  TrendingUp,
+  GraduationCap,
+  Eye,
 } from 'lucide-react';
+
+const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=212786249306&source=FB_Post&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3ODE0NjY1NTAsInBob25lIjoiMjEyNzg2MjQ5MzA2IiwidGV4dCI6IkxpZW5cdTAwYTA6XG5odHRwczpcL1wvZmIubWVcLzZkY3NGcDhvSFxuXG5Cb25qb3VyXHUwMGEwISBQdWlzLWplIGVuIHNhdm9pciBwbHVzIFx1MDBlMCBjZSBzdWpldFx1MDBhMD8iLCJzb3VyY2VfdXJsIjoiaHR0cHM6XC9cL2ZiLm1lXC82ZGNzRnA4b0giLCJpY2VicmVha2VyIjoiQm9uam91clx1MDBhMCEgUHVpcy1qZSBlbiBzYXZvaXIgcGx1cyBcdTAwZTAgY2Ugc3VqZXRcdTAwYTA_IiwiYXBwIjoiZmFjZWJvb2siLCJlbnRyeV9wb2ludCI6InBvc3RfY3RhIiwiamlkIjoiMjEyNzg2MjQ5MzA2XHUwMDQwcy53aGF0c2FwcC5uZXQiLCJsaWQiOiI5NDkxNTIwMzcxOTI4Mlx1MDA0MGxpZCIsInNvdXJjZV9pZCI6IjEyMjA5NDAwMDk4MDQzNzUyNyIsImNoYXRfZHJhZnQiOjEsInNob3dfYWRfYXR0cmlidXRpb24iOjEsInNvdXJjZSI6IkZCX1Bvc3QiLCJjb250ZXh0IjoiQWZpWkFwLXB2QTNyU09seEVhOEtaRkgtamQtY0lTejkyUmNtT3BldUJnclQzLXZvVEttNmNwOHhpV0RjWTJhYVBjdUhaSEhydzk4MUNuekpweVo5Y2g4ZlkwR3RBSnlMcnREeFpLTTlqTDZWMFpFV25RM0JZSHRObnR5VDZEVk01YlZrcTg5V01HaXJtSlp6eEppSUwzNmxXWFNzMEtpbkEwR0J1QzdMTVZWd1ZxVHdjMEpNWTdzdXpmNlZ0WTJacDU0bnlfVmpZaktXRzVmbHJlQXBOaUY4R0JUWXd6QmJ4NGpMWTJzUGVtUEtHQ2tZM1c4dWJtWlllMG92TUtfd3hZSXBMSkc4TlZ6M3BqOXo4YjE1TjQyaHJacWlFaWJGUjZRbHhGNUZRTDhfdnZwZ3U4a3ZzZm5JaDNTaXExZW5Wb0VaUXBhb1ZHb0g3YW1xckxINVpJVnd5QW1SRXQxcExJZ3F0X2dmVkZYdVlWelVWWlhHRVdkamFQNmdhdzB6TFIxZUtkYURTMjFjMUhGWmxORWZ3SnQ4WW5rZWhhYjFqVEJpd0dTYTdNWWtrMGZDIn0.r6fUv68rc8kXaJNZ_o1E2ysv7rqOO6XGsZon9WX9jg2Zc4K48o2kVW_uT9pXtln01Bm1zmn9SQ1Ab0w6EVb4XQ&fbclid=IwY2xjawSak5BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeBdg4dHzXCvg7aVAUmi3BQjwtSRU2iVvw641O3PaPQLbZXAoOCwI9oim-zsU_aem_hJ-rZ1KZj5PDmcyQINW9tg';
 
 // Custom TikTok icon since Lucide doesn't have one
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -107,6 +115,9 @@ export default function Home() {
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-6">
+              <button onClick={() => scrollTo('about')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                À propos
+              </button>
               <button onClick={() => scrollTo('courses')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Formations
               </button>
@@ -178,6 +189,9 @@ export default function Home() {
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div className="md:hidden pb-4 space-y-2 border-t border-border/50 pt-4">
+              <button onClick={() => scrollTo('about')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+                À propos
+              </button>
               <button onClick={() => scrollTo('courses')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
                 Formations
               </button>
@@ -249,16 +263,14 @@ export default function Home() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
-                Investissez dans{' '}
+                Designed for{' '}
                 <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
-                  votre avenir
-                </span>{' '}
-                avec nos formations
+                  Exceptional Minds
+                </span>
               </h1>
 
               <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
-                Découvrez nos 10 formations premium en IA, data, cybersécurité, business et plus encore. 
-                Des programmes conçus pour les professionnels qui veulent se démarquer.
+                CapiMind est la plateforme de formation premium au Maroc qui accompagne les professionnels ambitieux dans leur transformation digitale. IA, Data, Cybersécurité, Business — boostez votre carrière avec des experts.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -270,10 +282,15 @@ export default function Home() {
                   Explorer les formations
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
-                <Button size="lg" variant="outline" className="text-base gap-2">
-                  <Play className="h-5 w-5" />
-                  Voir la démo
-                </Button>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-md border border-input bg-background hover:bg-[#25D366] hover:text-white hover:border-[#25D366] text-base font-medium transition-all duration-300"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Passer à l'action
+                </a>
               </div>
 
               {/* Stats in hero */}
@@ -344,6 +361,177 @@ export default function Home() {
             {['OCP Group', 'Maroc Telecom', 'Attijariwafa Bank', 'BMCE Bank', 'RAM', 'CIH Bank'].map((name) => (
               <span key={name} className="text-lg font-bold text-muted-foreground/60 tracking-wider">{name}</span>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* À propos / Mission Section */}
+      <section id="about" className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Mission Header */}
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <Badge variant="secondary" className="mb-4">Notre Mission</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+              Qui est{' '}
+              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+                CapiMind
+              </span>
+              {' '}?
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              CapiMind est née d'une conviction forte : les talents d'Afrique et du Maroc méritent un accompagnement à la hauteur de leur ambition. Nous créons les passerelles entre le potentiel humain et les opportunités du monde digital.
+            </p>
+          </div>
+
+          {/* Vision & Mission Cards */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-200/50 dark:border-emerald-800/30">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-6">
+                <Eye className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Notre Vision</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Devenir la référence en formation professionnelle en Afrique, en offrant des programmes qui transforment durablement les carrières et créent un impact économique mesurable. Nous croyons que l'éducation est le levier le plus puissant du changement.
+              </p>
+            </div>
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200/50 dark:border-amber-800/30">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-6">
+                <Target className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Notre Mission</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Démocratiser l'accès aux compétences du futur en proposant des formations pratiques, accessibles et certifiantes. Nous accompagnons chaque apprenant avec une pédagogie active et un suivi personnalisé vers la réussite professionnelle.
+              </p>
+            </div>
+          </div>
+
+          {/* Méthodologie Pédagogique */}
+          <div className="mb-16">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <h3 className="text-2xl sm:text-3xl font-bold mb-4">
+                Notre{' '}
+                <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+                  Méthodologie Pédagogique
+                </span>
+              </h3>
+              <p className="text-muted-foreground">
+                Une approche en 4 piliers conçue pour garantir l'acquisition réelle des compétences et leur application immédiate en entreprise.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  step: '01',
+                  icon: Lightbulb,
+                  title: 'Comprendre',
+                  description: 'Évaluation des besoins et définition d\'un parcours personnalisé selon votre niveau et vos objectifs.',
+                  color: 'from-amber-500 to-orange-600',
+                },
+                {
+                  step: '02',
+                  icon: GraduationCap,
+                  title: 'Apprendre',
+                  description: 'Formation pratique avec des cas réels du marché marocain et africain, animée par des experts praticiens.',
+                  color: 'from-emerald-500 to-teal-600',
+                },
+                {
+                  step: '03',
+                  icon: TrendingUp,
+                  title: 'Pratiquer',
+                  description: 'Projets concrets, workshops et mise en situation professionnelle pour ancrer les compétences.',
+                  color: 'from-violet-500 to-purple-600',
+                },
+                {
+                  step: '04',
+                  icon: Award,
+                  title: 'Certifier',
+                  description: 'Obtention d\'une certification reconnue et accompagnement vers l\'emploi ou l\'entrepreneuriat.',
+                  color: 'from-rose-500 to-pink-600',
+                },
+              ].map((item, i) => (
+                <div key={i} className="group p-6 rounded-2xl bg-card border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+                  <div className="absolute top-3 right-4 text-5xl font-black text-muted-foreground/10">{item.step}</div>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}>
+                    <item.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="font-bold text-lg mb-2">{item.title}</h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Avantages & Opportunités */}
+          <div className="p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 relative overflow-hidden">
+            <div className="absolute inset-0">
+              <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
+            </div>
+            <div className="relative">
+              <div className="text-center mb-10">
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                  Avantages & Opportunités
+                </h3>
+                <p className="text-emerald-100 max-w-2xl mx-auto">
+                  Pourquoi des milliers de professionnels choisissent CapiMind pour accélérer leur carrière.
+                </p>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  {
+                    icon: Globe,
+                    title: 'Accès international',
+                    description: 'Des certifications reconnues à l\'international qui ouvrent les portes du marché global.',
+                  },
+                  {
+                    icon: TrendingUp,
+                    title: '+85% de progression',
+                    description: 'Nos apprenants constatent une progression salariale moyenne de 85% dans les 12 mois suivant la formation.',
+                  },
+                  {
+                    icon: Users,
+                    title: 'Réseau d\'alumni',
+                    description: 'Rejoignez une communauté de +8 000 professionnels connectés à travers le Maroc et l\'Afrique.',
+                  },
+                  {
+                    icon: Shield,
+                    title: 'Garantie satisfaction',
+                    description: 'Satisfait ou remboursé. Nous croyons en nos formations à 100% et le démontrons.',
+                  },
+                  {
+                    icon: Clock,
+                    title: 'Flexibilité totale',
+                    description: 'En ligne, hybride ou en présentiel — apprenez à votre rythme, selon votre emploi du temps.',
+                  },
+                  {
+                    icon: Sparkles,
+                    title: 'Accompagnement personnalisé',
+                    description: 'Un mentor dédié, un suivi individuel et un plan de carrière sur-mesure pour chaque apprenant.',
+                  },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm">
+                    <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                      <item.icon className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">{item.title}</h4>
+                      <p className="text-sm text-emerald-100 leading-relaxed">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="text-center mt-10">
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 h-12 px-8 rounded-lg bg-white text-emerald-700 hover:bg-white/90 font-semibold text-base shadow-lg transition-all duration-300"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Discutons de votre projet
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -649,7 +837,7 @@ export default function Home() {
                 <div>
                   <h3 className="font-semibold mb-1">WhatsApp</h3>
                   <a
-                    href="https://api.whatsapp.com/send?phone=212786249306&source=FB_Post&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3ODE0NjY1NTAsInBob25lIjoiMjEyNzg2MjQ5MzA2IiwidGV4dCI6IkxpZW5cdTAwYTA6XG5odHRwczpcL1wvZmIubWVcLzZkY3NGcDhvSFxuXG5Cb25qb3VyXHUwMGEwISBQdWlzLWplIGVuIHNhdm9pciBwbHVzIFx1MDBlMCBjZSBzdWpldFx1MDBhMD8iLCJzb3VyY2VfdXJsIjoiaHR0cHM6XC9cL2ZiLm1lXC82ZGNzRnA4b0giLCJpY2VicmVha2VyIjoiQm9uam91clx1MDBhMCEgUHVpcy1qZSBlbiBzYXZvaXIgcGx1cyBcdTAwZTAgY2Ugc3VqZXRcdTAwYTA_IiwiYXBwIjoiZmFjZWJvb2siLCJlbnRyeV9wb2ludCI6InBvc3RfY3RhIiwiamlkIjoiMjEyNzg2MjQ5MzA2XHUwMDQwcy53aGF0c2FwcC5uZXQiLCJsaWQiOiI5NDkxNTIwMzcxOTI4Mlx1MDA0MGxpZCIsInNvdXJjZV9pZCI6IjEyMjA5NDAwMDk4MDQzNzUyNyIsImNoYXRfZHJhZnQiOjEsInNob3dfYWRfYXR0cmlidXRpb24iOjEsInNvdXJjZSI6IkZCX1Bvc3QiLCJjb250ZXh0IjoiQWZpWkFwLXB2QTNyU09seEVhOEtaRkgtamQtY0lTejkyUmNtT3BldUJnclQzLXZvVEttNmNwOHhpV0RjWTJhYVBjdUhaSEhydzk4MUNuekpweVo5Y2g4ZlkwR3RBSnlMcnREeFpLTTlqTDZWMFpFV25RM0JZSHRObnR5VDZEVk01YlZrcTg5V01HaXJtSlp6eEppSUwzNmxXWFNzMEtpbkEwR0J1QzdMTVZWd1ZxVHdjMEpNWTdzdXpmNlZ0WTJacDU0bnlfVmpZaktXRzVmbHJlQXBOaUY4R0JUWXd6QmJ4NGpMWTJzUGVtUEtHQ2tZM1c4dWJtWlllMG92TUtfd3hZSXBMSkc4TlZ6M3BqOXo4YjE1TjQyaHJacWlFaWJGUjZRbHhGNUZRTDhfdnZwZ3U4a3ZzZm5JaDNTaXExZW5Wb0VaUXBhb1ZHb0g3YW1xckxINVpJVnd5QW1SRXQxcExJZ3F0X2dmVkZYdVlWelVWWlhHRVdkamFQNmdhdzB6TFIxZUtkYURTMjFjMUhGWmxORWZ3SnQ4WW5rZWhhYjFqVEJpd0dTYTdNWWtrMGZDIn0.r6fUv68rc8kXaJNZ_o1E2ysv7rqOO6XGsZon9WX9jg2Zc4K48o2kVW_uT9pXtln01Bm1zmn9SQ1Ab0w6EVb4XQ&fbclid=IwY2xjawSak5BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeBdg4dHzXCvg7aVAUmi3BQjwtSRU2iVvw641O3PaPQLbZXAoOCwI9oim-zsU_aem_hJ-rZ1KZj5PDmcyQINW9tg"
+                    href={WHATSAPP_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted-foreground text-sm hover:text-[#25D366] transition-colors"
@@ -835,7 +1023,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />
-                  <a href="https://api.whatsapp.com/send?phone=212786249306&source=FB_Post&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3ODE0NjY1NTAsInBob25lIjoiMjEyNzg2MjQ5MzA2IiwidGV4dCI6IkxpZW5cdTAwYTA6XG5odHRwczpcL1wvZmIubWVcLzZkY3NGcDhvSFxuXG5Cb25qb3VyXHUwMGEwISBQdWlzLWplIGVuIHNhdm9pciBwbHVzIFx1MDBlMCBjZSBzdWpldFx1MDBhMD8iLCJzb3VyY2VfdXJsIjoiaHR0cHM6XC9cL2ZiLm1lXC82ZGNzRnA4b0giLCJpY2VicmVha2VyIjoiQm9uam91clx1MDBhMCEgUHVpcy1qZSBlbiBzYXZvaXIgcGx1cyBcdTAwZTAgY2Ugc3VqZXRcdTAwYTA_IiwiYXBwIjoiZmFjZWJvb2siLCJlbnRyeV9wb2ludCI6InBvc3RfY3RhIiwiamlkIjoiMjEyNzg2MjQ5MzA2XHUwMDQwcy53aGF0c2FwcC5uZXQiLCJsaWQiOiI5NDkxNTIwMzcxOTI4Mlx1MDA0MGxpZCIsInNvdXJjZV9pZCI6IjEyMjA5NDAwMDk4MDQzNzUyNyIsImNoYXRfZHJhZnQiOjEsInNob3dfYWRfYXR0cmlidXRpb24iOjEsInNvdXJjZSI6IkZCX1Bvc3QiLCJjb250ZXh0IjoiQWZpWkFwLXB2QTNyU09seEVhOEtaRkgtamQtY0lTejkyUmNtT3BldUJnclQzLXZvVEttNmNwOHhpV0RjWTJhYVBjdUhaSEhydzk4MUNuekpweVo5Y2g4ZlkwR3RBSnlMcnREeFpLTTlqTDZWMFpFV25RM0JZSHRObnR5VDZEVk01YlZrcTg5V01HaXJtSlp6eEppSUwzNmxXWFNzMEtpbkEwR0J1QzdMTVZWd1ZxVHdjMEpNWTdzdXpmNlZ0WTJacDU0bnlfVmpZaktXRzVmbHJlQXBOaUY4R0JUWXd6QmJ4NGpMWTJzUGVtUEtHQ2tZM1c4dWJtWlllMG92TUtfd3hZSXBMSkc4TlZ6M3BqOXo4YjE1TjQyaHJacWlFaWJGUjZRbHhGNUZRTDhfdnZwZ3U4a3ZzZm5JaDNTaXExZW5Wb0VaUXBhb1ZHb0g3YW1xckxINVpJVnd5QW1SRXQxcExJZ3F0X2dmVkZYdVlWelVWWlhHRVdkamFQNmdhdzB6TFIxZUtkYURTMjFjMUhGWmxORWZ3SnQ4WW5rZWhhYjFqVEJpd0dTYTdNWWtrMGZDIn0.r6fUv68rc8kXaJNZ_o1E2ysv7rqOO6XGsZon9WX9jg2Zc4K48o2kVW_uT9pXtln01Bm1zmn9SQ1Ab0w6EVb4XQ&fbclid=IwY2xjawSak5BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeBdg4dHzXCvg7aVAUmi3BQjwtSRU2iVvw641O3PaPQLbZXAoOCwI9oim-zsU_aem_hJ-rZ1KZj5PDmcyQINW9tg" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors">WhatsApp</a>
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors">WhatsApp</a>
                 </li>
               </ul>
 
@@ -947,7 +1135,7 @@ export default function Home() {
 
       {/* WhatsApp Chat Button */}
       <a
-        href="https://api.whatsapp.com/send?phone=212786249306&source=FB_Post&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3ODE0NjY1NTAsInBob25lIjoiMjEyNzg2MjQ5MzA2IiwidGV4dCI6IkxpZW5cdTAwYTA6XG5odHRwczpcL1wvZmIubWVcLzZkY3NGcDhvSFxuXG5Cb25qb3VyXHUwMGEwISBQdWlzLWplIGVuIHNhdm9pciBwbHVzIFx1MDBlMCBjZSBzdWpldFx1MDBhMD8iLCJzb3VyY2VfdXJsIjoiaHR0cHM6XC9cL2ZiLm1lXC82ZGNzRnA4b0giLCJpY2VicmVha2VyIjoiQm9uam91clx1MDBhMCEgUHVpcy1qZSBlbiBzYXZvaXIgcGx1cyBcdTAwZTAgY2Ugc3VqZXRcdTAwYTA_IiwiYXBwIjoiZmFjZWJvb2siLCJlbnRyeV9wb2ludCI6InBvc3RfY3RhIiwiamlkIjoiMjEyNzg2MjQ5MzA2XHUwMDQwcy53aGF0c2FwcC5uZXQiLCJsaWQiOiI5NDkxNTIwMzcxOTI4Mlx1MDA0MGxpZCIsInNvdXJjZV9pZCI6IjEyMjA5NDAwMDk4MDQzNzUyNyIsImNoYXRfZHJhZnQiOjEsInNob3dfYWRfYXR0cmlidXRpb24iOjEsInNvdXJjZSI6IkZCX1Bvc3QiLCJjb250ZXh0IjoiQWZpWkFwLXB2QTNyU09seEVhOEtaRkgtamQtY0lTejkyUmNtT3BldUJnclQzLXZvVEttNmNwOHhpV0RjWTJhYVBjdUhaSEhydzk4MUNuekpweVo5Y2g4ZlkwR3RBSnlMcnREeFpLTTlqTDZWMFpFV25RM0JZSHRObnR5VDZEVk01YlZrcTg5V01HaXJtSlp6eEppSUwzNmxXWFNzMEtpbkEwR0J1QzdMTVZWd1ZxVHdjMEpNWTdzdXpmNlZ0WTJacDU0bnlfVmpZaktXRzVmbHJlQXBOaUY4R0JUWXd6QmJ4NGpMWTJzUGVtUEtHQ2tZM1c4dWJtWlllMG92TUtfd3hZSXBMSkc4TlZ6M3BqOXo4YjE1TjQyaHJacWlFaWJGUjZRbHhGNUZRTDhfdnZwZ3U4a3ZzZm5JaDNTaXExZW5Wb0VaUXBhb1ZHb0g3YW1xckxINVpJVnd5QW1SRXQxcExJZ3F0X2dmVkZYdVlWelVWWlhHRVdkamFQNmdhdzB6TFIxZUtkYURTMjFjMUhGWmxORWZ3SnQ4WW5rZWhhYjFqVEJpd0dTYTdNWWtrMGZDIn0.r6fUv68rc8kXaJNZ_o1E2ysv7rqOO6XGsZon9WX9jg2Zc4K48o2kVW_uT9pXtln01Bm1zmn9SQ1Ab0w6EVb4XQ&fbclid=IwY2xjawSak5BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeBdg4dHzXCvg7aVAUmi3BQjwtSRU2iVvw641O3PaPQLbZXAoOCwI9oim-zsU_aem_hJ-rZ1KZj5PDmcyQINW9tg"
+        href={WHATSAPP_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
