@@ -66,6 +66,10 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [emailChatOpen, setEmailChatOpen] = useState(false);
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailForm, setEmailForm] = useState({ name: '', email: '', subject: '', message: '' });
 
   const faqs = [
     {
@@ -1289,9 +1293,147 @@ export default function Home() {
         </span>
       </a>
 
+      {/* Email Chatbot */}
+      {emailChatOpen && (
+        <div className="fixed bottom-24 right-4 sm:right-6 z-50 w-[340px] sm:w-[380px] animate-in slide-in-from-bottom-4 duration-300">
+          <div className="bg-card border border-border rounded-2xl shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-[#EA4335] text-white px-5 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center">
+                  <Mail className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm">CapiMind Email</p>
+                  <p className="text-xs text-white/80">contact@capimind.com</p>
+                </div>
+              </div>
+              <button
+                onClick={() => { setEmailChatOpen(false); setEmailSent(false); }}
+                className="text-white/80 hover:text-white transition-colors"
+                aria-label="Fermer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-5 max-h-[420px] overflow-y-auto">
+              {emailSent ? (
+                <div className="text-center py-6">
+                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="h-7 w-7 text-emerald-600" />
+                  </div>
+                  <p className="font-semibold text-lg mb-1">Message envoyé !</p>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Votre email a été transmis à contact@capimind.com
+                  </p>
+                  <button
+                    onClick={() => { setEmailSent(false); setEmailForm({ name: '', email: '', subject: '', message: '' }); }}
+                    className="text-sm text-[#EA4335] hover:underline font-medium"
+                  >
+                    Envoyer un autre message
+                  </button>
+                </div>
+              ) : (
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setEmailSending(true);
+                    try {
+                      const res = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(emailForm),
+                      });
+                      if (res.ok) {
+                        setEmailSent(true);
+                      }
+                    } catch {
+                      // silently fail
+                    }
+                    setEmailSending(false);
+                  }}
+                  className="space-y-3"
+                >
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Nom complet</label>
+                    <input
+                      type="text"
+                      required
+                      value={emailForm.name}
+                      onChange={(e) => setEmailForm({ ...emailForm, name: e.target.value })}
+                      placeholder="Votre nom"
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EA4335]/40 focus:border-[#EA4335] transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Votre email</label>
+                    <input
+                      type="email"
+                      required
+                      value={emailForm.email}
+                      onChange={(e) => setEmailForm({ ...emailForm, email: e.target.value })}
+                      placeholder="votre@email.com"
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EA4335]/40 focus:border-[#EA4335] transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Sujet</label>
+                    <input
+                      type="text"
+                      required
+                      value={emailForm.subject}
+                      onChange={(e) => setEmailForm({ ...emailForm, subject: e.target.value })}
+                      placeholder="Objet de votre message"
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EA4335]/40 focus:border-[#EA4335] transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Message</label>
+                    <textarea
+                      required
+                      rows={3}
+                      value={emailForm.message}
+                      onChange={(e) => setEmailForm({ ...emailForm, message: e.target.value })}
+                      placeholder="Écrivez votre message..."
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-[#EA4335]/40 focus:border-[#EA4335] transition-all resize-none"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Mail className="h-3 w-3" />
+                    Envoyé à contact@capimind.com
+                  </p>
+                  <button
+                    type="submit"
+                    disabled={emailSending}
+                    className="w-full bg-[#EA4335] hover:bg-[#D33426] text-white py-2.5 rounded-lg font-semibold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {emailSending ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Envoi en cours...
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="h-4 w-4" />
+                        Envoyer l&apos;email
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Email Floating Button */}
-      <a
-        href="mailto:contact@capimind.com"
+      <button
+        onClick={() => { setEmailChatOpen(!emailChatOpen); setEmailSent(false); }}
         className="fixed bottom-6 right-40 sm:right-48 z-50 flex items-center gap-2 bg-[#EA4335] hover:bg-[#D33426] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
         aria-label="Envoyer un email"
       >
@@ -1304,7 +1446,7 @@ export default function Home() {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
           <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
         </span>
-      </a>
+      </button>
     </div>
   );
 }
