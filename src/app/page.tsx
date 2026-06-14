@@ -172,14 +172,20 @@ export default function Home() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-32">
+          <div className="flex items-center justify-between h-36">
             {/* Logo */}
             <div className="flex items-center">
-              <img
-                src="/images/logo-cropped.png"
-                alt="CapiMind Logo"
-                className="h-28 w-auto object-contain"
-              />
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg transition-transform hover:scale-105 active:scale-100"
+                aria-label="Retour en haut de la page"
+              >
+                <img
+                  src="/images/logo-cropped.png"
+                  alt="CapiMind Logo"
+                  className="h-34 w-auto object-contain drop-shadow-sm brightness-105"
+                />
+              </button>
             </div>
 
             {/* Desktop Nav */}
@@ -1099,11 +1105,17 @@ export default function Home() {
             {/* Brand */}
             <div className="space-y-4">
               <div className="flex items-center gap-2.5">
-                <img
-                  src="/images/logo-cropped.png"
-                  alt="CapiMind Logo"
-                  className="h-28 w-auto object-contain"
-                />
+                <button
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg transition-transform hover:scale-105 active:scale-100"
+                  aria-label="Retour en haut de la page"
+                >
+                  <img
+                    src="/images/logo-cropped.png"
+                    alt="CapiMind Logo"
+                    className="h-28 w-auto object-contain drop-shadow-sm brightness-105"
+                  />
+                </button>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Designed for Exceptional Minds. La plateforme de formation premium pour les professionnels ambitieux au Maroc et en Afrique.
