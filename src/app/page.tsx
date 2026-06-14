@@ -172,7 +172,7 @@ export default function Home() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-24">
             {/* Logo */}
             <div className="flex items-center shrink-0">
               <button
@@ -185,8 +185,8 @@ export default function Home() {
                   <img
                     src="/images/logo.png"
                     alt="CapiMind Logo"
-                    className="h-16 w-auto object-contain"
-                    style={{ imageRendering: 'crisp-edges', WebkitFontSmoothing: 'antialiased' }}
+                    className="h-20 w-auto object-contain"
+                    style={{ imageRendering: 'crisp-edges' }}
                     fetchPriority="high"
                   />
                 </picture>
@@ -1124,7 +1124,7 @@ export default function Home() {
                     <img
                       src="/images/logo.png"
                       alt="CapiMind Logo"
-                      className="h-20 w-auto object-contain"
+                      className="h-24 w-auto object-contain"
                       style={{ imageRendering: 'crisp-edges', WebkitFontSmoothing: 'antialiased' }}
                       fetchPriority="high"
                     />
