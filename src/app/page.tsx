@@ -186,7 +186,7 @@ export default function Home() {
                     src="/images/logo.png"
                     alt="CapiMind Logo"
                     className="h-20 w-auto object-contain"
-                    style={{ imageRendering: 'crisp-edges' }}
+                    style={{ imageRendering: 'high-quality' }}
                     fetchPriority="high"
                   />
                 </picture>
@@ -1125,7 +1125,7 @@ export default function Home() {
                       src="/images/logo.png"
                       alt="CapiMind Logo"
                       className="h-24 w-auto object-contain"
-                      style={{ imageRendering: 'crisp-edges', WebkitFontSmoothing: 'antialiased' }}
+                      style={{ imageRendering: 'high-quality' }}
                       fetchPriority="high"
                     />
                   </picture>
