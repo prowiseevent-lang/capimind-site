@@ -14,23 +14,38 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CapiMind - Designed for Exceptional Minds",
-  description: "Plateforme de formation e-learning premium au Maroc. IA, Data Analytics, Cybersécurité, Business et plus encore. Designed for Exceptional Minds.",
-  keywords: ["Formation", "E-learning", "IA", "Data Analytics", "Cybersécurité", "Business", "Maroc", "CapiMind"],
+  title: 'CapiMind - Plateforme de Formation E-Learning Premium au Maroc',
+  description: 'CapiMind est la plateforme de formation e-learning premium au Maroc. Formations certifiantes en IA, Data Analytics, Cybersécurité, Business, Leadership et plus encore. Designed for Exceptional Minds.',
+  keywords: ['CapiMind', 'formation', 'e-learning', 'Maroc', 'IA', 'intelligence artificielle', 'data analytics', 'cybersécurité', 'business', 'leadership', 'certification', 'formation en ligne', 'formation professionnelle'],
   authors: [{ name: "CapiMind" }],
   icons: {
     icon: "/images/logo.webp",
   },
   openGraph: {
-    title: "CapiMind - Designed for Exceptional Minds",
-    description: "Investissez dans votre avenir avec nos formations premium en IA, data, cybersécurité et business.",
-    siteName: "CapiMind",
-    type: "website",
+    title: 'CapiMind - Plateforme de Formation E-Learning Premium au Maroc',
+    description: 'Investissez dans votre avenir avec nos formations premium en IA, Data Analytics, Cybersécurité et Business. 10+ formations certifiantes, 8K+ étudiants.',
+    siteName: 'CapiMind',
+    type: 'website',
+    url: 'https://capimind.com',
   },
   twitter: {
     card: "summary_large_image",
-    title: "CapiMind - Designed for Exceptional Minds",
-    description: "Investissez dans votre avenir avec nos formations premium",
+    title: 'CapiMind - Plateforme de Formation E-Learning Premium au Maroc',
+    description: 'Investissez dans votre avenir avec nos formations premium en IA, Data Analytics, Cybersécurité et Business.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://capimind.com',
   },
 };
 
