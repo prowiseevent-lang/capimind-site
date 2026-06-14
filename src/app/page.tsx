@@ -172,9 +172,9 @@ export default function Home() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-36">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center shrink-0">
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg transition-transform hover:scale-105 active:scale-100"
@@ -183,7 +183,7 @@ export default function Home() {
                 <img
                   src="/images/logo-cropped.png"
                   alt="CapiMind Logo"
-                  className="h-34 w-auto object-contain drop-shadow-sm brightness-105"
+                  className="h-16 w-auto object-contain drop-shadow-sm brightness-105"
                 />
               </button>
             </div>
@@ -1113,7 +1113,7 @@ export default function Home() {
                   <img
                     src="/images/logo-cropped.png"
                     alt="CapiMind Logo"
-                    className="h-28 w-auto object-contain drop-shadow-sm brightness-105"
+                    className="h-20 w-auto object-contain drop-shadow-sm brightness-105"
                   />
                 </button>
               </div>
