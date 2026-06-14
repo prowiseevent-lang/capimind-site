@@ -180,11 +180,16 @@ export default function Home() {
                 className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg transition-transform hover:scale-105 active:scale-100"
                 aria-label="Retour en haut de la page"
               >
-                <img
-                  src="/images/logo-cropped.png"
-                  alt="CapiMind Logo"
-                  className="h-16 w-auto object-contain drop-shadow-sm brightness-105"
-                />
+                <picture>
+                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <img
+                    src="/images/logo.png"
+                    alt="CapiMind Logo"
+                    className="h-16 w-auto object-contain"
+                    style={{ imageRendering: 'crisp-edges', WebkitFontSmoothing: 'antialiased' }}
+                    fetchPriority="high"
+                  />
+                </picture>
               </button>
             </div>
 
@@ -1114,11 +1119,16 @@ export default function Home() {
                   className="cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 rounded-lg transition-transform hover:scale-105 active:scale-100"
                   aria-label="Retour en haut de la page"
                 >
-                  <img
-                    src="/images/logo-cropped.png"
-                    alt="CapiMind Logo"
-                    className="h-20 w-auto object-contain drop-shadow-sm brightness-105"
-                  />
+                  <picture>
+                    <source srcSet="/images/logo.webp" type="image/webp" />
+                    <img
+                      src="/images/logo.png"
+                      alt="CapiMind Logo"
+                      className="h-20 w-auto object-contain"
+                      style={{ imageRendering: 'crisp-edges', WebkitFontSmoothing: 'antialiased' }}
+                      fetchPriority="high"
+                    />
+                  </picture>
                 </button>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   keywords: ["Formation", "E-learning", "IA", "Data Analytics", "Cybersécurité", "Business", "Maroc", "CapiMind"],
   authors: [{ name: "CapiMind" }],
   icons: {
-    icon: "/images/logo-cropped.png",
+    icon: "/images/logo.webp",
   },
   openGraph: {
     title: "CapiMind - Designed for Exceptional Minds",
