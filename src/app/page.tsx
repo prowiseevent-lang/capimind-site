@@ -387,13 +387,17 @@ export default function Home() {
 
             {/* Right Image */}
             <div className="relative hidden lg:block">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="/images/hero-banner.png"
-                  alt="E-learning platform"
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 to-transparent" />
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-black/5">
+                <picture>
+                  <source srcSet="/images/hero-banner.webp" type="image/webp" />
+                  <img
+                    src="/images/hero-banner.png"
+                    alt="E-learning platform"
+                    className="w-full h-auto object-cover"
+                    style={{ imageRendering: '-webkit-optimize-contrast' }}
+                    fetchPriority="high"
+                  />
+                </picture>
               </div>
 
               {/* Floating cards */}
