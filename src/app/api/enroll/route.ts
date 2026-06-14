@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
 
 const GOOGLE_SHEETS_SCRIPT_URL = process.env.GOOGLE_SHEETS_SCRIPT_URL || '';
 
@@ -15,30 +14,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the enrollment to the database
-    const enrollment = await db.enrollment.create({
-      data: {
-        fullName,
-        email,
-        phone,
-        company: company || null,
-        message: message || null,
-        courseId,
-        courseTitle,
-      },
-    });
+    const enrollmentId = 'enr_' + Date.now();
 
-    console.log('New enrollment saved:', {
-      id: enrollment.id,
-      fullName,
-      email,
-      phone,
-      courseId,
-      courseTitle,
-      enrolledAt: new Date().toISOString(),
-    });
+    // Save to database locally (if available)
+    try {
+      const { db } = await import('@/lib/db');
+      await db.enrollment.create({
+        data: {
+          fullName,
+          email,
+          phone,
+          company: company || null,
+          message: message || null,
+          courseId,
+          courseTitle,
+        },
+      });
+      console.log('Enrollment saved to local DB');
+    } catch {
+      console.warn('Local DB not available — Google Sheets only');
+    }
 
-    // Forward to Google Sheets (non-blocking)
+    // Forward to Google Sheets
     if (GOOGLE_SHEETS_SCRIPT_URL) {
       try {
         const sheetsRes = await fetch(GOOGLE_SHEETS_SCRIPT_URL, {
@@ -65,14 +62,14 @@ export async function POST(request: NextRequest) {
         console.error('Google Sheets forwarding error:', sheetsError);
       }
     } else {
-      console.warn('GOOGLE_SHEETS_SCRIPT_URL not configured — skipping Sheets forwarding');
+      console.warn('GOOGLE_SHEETS_SCRIPT_URL not configured');
     }
 
     return NextResponse.json(
       {
         success: true,
         message: 'Inscription réussie! Vous recevrez une confirmation à votre email.',
-        id: enrollment.id,
+        id: enrollmentId,
       },
       { status: 200 }
     );

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
 
 const GOOGLE_SHEETS_SCRIPT_URL = process.env.GOOGLE_SHEETS_SCRIPT_URL || '';
 
@@ -15,27 +14,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the contact message to the database
-    const contactMessage = await db.contactMessage.create({
-      data: {
-        name,
-        email,
-        subject,
-        message,
-        sentTo: 'contact@capimind.com',
-      },
-    });
+    const contactId = 'msg_' + Date.now();
 
-    console.log('New contact message saved:', {
-      id: contactMessage.id,
-      name,
-      email,
-      subject,
-      sentTo: 'contact@capimind.com',
-      sentAt: new Date().toISOString(),
-    });
+    // Save to database locally (if available)
+    try {
+      const { db } = await import('@/lib/db');
+      await db.contactMessage.create({
+        data: {
+          name,
+          email,
+          subject,
+          message,
+          sentTo: 'contact@capimind.com',
+        },
+      });
+      console.log('Contact message saved to local DB');
+    } catch {
+      console.warn('Local DB not available — Google Sheets only');
+    }
 
-    // Forward to Google Sheets (non-blocking)
+    // Forward to Google Sheets
     if (GOOGLE_SHEETS_SCRIPT_URL) {
       try {
         const sheetsRes = await fetch(GOOGLE_SHEETS_SCRIPT_URL, {
@@ -59,14 +57,14 @@ export async function POST(request: NextRequest) {
         console.error('Google Sheets forwarding error:', sheetsError);
       }
     } else {
-      console.warn('GOOGLE_SHEETS_SCRIPT_URL not configured — skipping Sheets forwarding');
+      console.warn('GOOGLE_SHEETS_SCRIPT_URL not configured');
     }
 
     return NextResponse.json(
       {
         success: true,
         message: 'Message envoyé avec succès à contact@capimind.com',
-        id: contactMessage.id,
+        id: contactId,
       },
       { status: 200 }
     );
