@@ -713,6 +713,26 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            {/* Action buttons */}
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-md hover:shadow-lg transition-all"
+                onClick={() => scrollTo('contact')}
+              >
+                S'inscrire à un bootcamp
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-md border border-input bg-background hover:bg-[#25D366] hover:text-white hover:border-[#25D366] text-base font-medium transition-all duration-300"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Demander le programme
+              </a>
+            </div>
           </div>
 
           {/* Service 2: Formations sur-mesure entreprises */}
@@ -742,6 +762,26 @@ export default function Home() {
                   <p className="text-xs text-muted-foreground leading-relaxed pl-6">{item.desc}</p>
                 </div>
               ))}
+            </div>
+            {/* Action buttons */}
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 shadow-md hover:shadow-lg transition-all"
+                onClick={() => scrollTo('contact')}
+              >
+                Demander un devis entreprise
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-md border border-input bg-background hover:bg-[#25D366] hover:text-white hover:border-[#25D366] text-base font-medium transition-all duration-300"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Parler à un conseiller
+              </a>
             </div>
           </div>
 
