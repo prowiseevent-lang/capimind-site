@@ -201,6 +201,9 @@ export default function Home() {
               <button onClick={() => scrollTo('courses')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Formations
               </button>
+              <button onClick={() => scrollTo('services')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Services
+              </button>
               <button onClick={() => scrollTo('features')} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Pourquoi nous
               </button>
@@ -274,6 +277,9 @@ export default function Home() {
               </button>
               <button onClick={() => scrollTo('courses')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
                 Formations
+              </button>
+              <button onClick={() => scrollTo('services')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
+                Services
               </button>
               <button onClick={() => scrollTo('features')} className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-foreground">
                 Pourquoi nous
@@ -661,8 +667,148 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Services Section */}
+      <section id="services" className="py-20 bg-muted/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <Badge variant="secondary" className="mb-4">Nos Services</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Des solutions sur-mesure pour{' '}
+              <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+                chaque ambition
+              </span>
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              Au-delà de nos formations certifiantes, CapiMind vous accompagne avec des programmes adaptés à vos besoins spécifiques.
+            </p>
+          </div>
+
+          {/* Service 1: Bootcamps */}
+          <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 mb-8">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shrink-0">
+                <GraduationCap className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold mb-2">Nos Bootcamps pour professionnels & étudiants</h3>
+                <p className="text-muted-foreground text-sm">Des programmes intensifs pour monter rapidement en compétences sur les outils les plus demandés du marché.</p>
+              </div>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { title: 'Gestion de Projet', desc: 'PMP, Agile, Scrum — certifications et méthodologies reconnues internationalement.' },
+                { title: 'SAP - Odoo (ERP)', desc: 'Maîtrisez les ERP leaders du marché pour piloter la performance de votre entreprise.' },
+                { title: 'HubSpot - Salesforce (CRM)', desc: 'Gérez efficacement votre relation client avec les CRM les plus utilisés au monde.' },
+                { title: 'Bureautique Avancée', desc: 'Excel, Word, PowerPoint — devenez expert sur la suite Microsoft Office.' },
+                { title: 'Business English', desc: 'Anglais professionnel et communication internationale pour réussir vos négociations.' },
+                { title: "Communication Professionnelle", desc: "Développez votre aisance à l'oral, à l'écrit et en réunion." },
+              ].map((item) => (
+                <div key={item.title} className="bg-background rounded-xl p-4 border border-border/30 hover:border-emerald-300 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                    <h4 className="font-semibold text-sm">{item.title}</h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed pl-6">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Service 2: Formations sur-mesure entreprises */}
+          <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 mb-8">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold mb-2">Formations sur-mesure pour les entreprises</h3>
+                <p className="text-muted-foreground text-sm">Des programmes conçus spécifiquement pour répondre aux besoins de votre organisation.</p>
+              </div>
+            </div>
+            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Domaines d'expertise</h4>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {[
+                { title: "Management et Leadership", desc: "Gestion d'équipe, conduite du changement et développement des talents." },
+                { title: "Technologie et Digital", desc: "Transformation digitale, bureautique, systèmes d'information et marketing." },
+                { title: 'Commercial et Relation client', desc: 'Techniques de vente, négociation et marketing.' },
+                { title: 'Conformité et Réglementation', desc: 'Hygiène, sécurité au travail et droit du travail.' },
+              ].map((item) => (
+                <div key={item.title} className="bg-background rounded-xl p-4 border border-border/30 hover:border-amber-300 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Target className="h-4 w-4 text-amber-500 shrink-0" />
+                    <h4 className="font-semibold text-sm">{item.title}</h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed pl-6">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Services 3 & 4: Coaching & VAE */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-4">
+                <Heart className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Coaching Individuel sur-mesure</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                Un accompagnement personnalisé pour votre développement personnel et vos soft-skills. Avancez avec un coach dédié qui vous aide à révéler votre plein potentiel.
+              </p>
+              <button
+                onClick={() => scrollTo('contact')}
+                className="inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors"
+              >
+                Demander un coaching
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-4">
+                <Award className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Validation des Acquis de l'Expérience (VAE)</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                Transformez votre expérience professionnelle en certification officielle. Notre accompagnement VAE vous guide pas à pas dans la valorisation de votre parcours.
+              </p>
+              <button
+                onClick={() => scrollTo('contact')}
+                className="inline-flex items-center gap-1 text-sm font-medium text-cyan-600 hover:text-cyan-700 transition-colors"
+              >
+                En savoir plus sur la VAE
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="mt-10 text-center">
+            <div className="inline-flex flex-col sm:flex-row gap-4">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg hover:shadow-xl transition-all"
+                onClick={() => scrollTo('contact')}
+              >
+                Discuter de votre projet
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-md border border-input bg-background hover:bg-[#25D366] hover:text-white hover:border-[#25D366] text-base font-medium transition-all duration-300"
+              >
+                <MessageCircle className="h-5 w-5" />
+                WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section id="features" className="py-20 bg-muted/30">
+      <section id="features" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <Badge variant="secondary" className="mb-4">Pourquoi CapiMind</Badge>
