@@ -127,3 +127,41 @@ Stage Summary:
 - Removed the 10 course-link items that previously cluttered the footer
 - 3-column footer layout: Brand | Navigation | Contact
 - Live on https://capimind.com
+
+---
+Task ID: 5
+Agent: Main Agent
+Task: Force Google sitelinks to show À propos/Formations/Services/Pourquoi nous/FAQ/Contact instead of legacy WordPress pages
+
+Work Log:
+- User clarified: the items to be "replaced" are the Google SERP sitelinks for capimind.com — Google still shows "Des outils pédagogiques", "Réservation", "Contact", "Hello world!", "Sample Page" because they are cached from the old WordPress site
+- Goal: tell Google to show the 6 current site sections (À propos, Formations, Services, Pourquoi nous, FAQ, Contact) as sitelinks instead
+- Confirmed existing SEO infrastructure already in place: 308 redirects for all legacy URLs, robots.txt disallowing them, custom 404 with noindex
+- Updated src/app/sitemap.ts: added 6 anchor URLs to sitemap.xml (https://capimind.com/#about, /#courses, /#services, /#features, /#faq, /#contact) with priority 0.7-0.9 so Google treats them as distinct indexable sections
+- Updated src/app/layout.tsx: added 2 new JSON-LD structured data scripts:
+  * SiteNavigationElement: explicitly declares the 6 navigation sections with names + URLs — this is the schema Google uses to generate sitelinks
+  * BreadcrumbList: reinforces site structure (Accueil > Formations > Services > Contact)
+- Updated src/app/page.tsx: added <span class="sr-only"> labels to each section h2 heading (À propos, Formations, Services, Pourquoi nous, FAQ, Contact) so Google can extract the canonical section names even though they are visually styled differently
+- Ran `bun run lint` → passes cleanly
+- Verified locally:
+  * GET / → 200
+  * sitemap.xml contains 7 URLs (homepage + 6 anchor sections)
+  * Homepage HTML contains all 4 JSON-LD types: EducationalOrganization, WebSite, SiteNavigationElement, BreadcrumbList
+  * All 6 sr-only labels present in HTML
+- Committed (SHA: 47a5282) and pushed to GitHub main
+- Triggered Vercel deployment (ID: dpl_6DvaPe99CG9gNHAvbB5xRwyJQzFQ) → READY
+- Verified on production https://capimind.com:
+  * sitemap.xml now lists 7 URLs (homepage + #about, #courses, #services, #features, #faq, #contact)
+  * JSON-LD includes SiteNavigationElement + BreadcrumbList + EducationalOrganization + WebSite
+  * All 6 sr-only section labels present in HTML
+  * Legacy URLs (/hello-world, /sample-page) still 308 redirect to homepage
+
+Stage Summary:
+- All technical signals sent to Google to display the correct sitelinks:
+  1. Sitemap declares 6 anchor sections as indexable URLs
+  2. SiteNavigationElement JSON-LD explicitly names the 6 nav sections
+  3. BreadcrumbList JSON-LD reinforces structure
+  4. sr-only h2 labels give Google clean section names
+- IMPORTANT: Google sitelinks are algorithmically generated and take 1-4 weeks to update after re-crawl
+- User action needed: submit https://capimind.com/sitemap.xml in Google Search Console → Sitemaps to accelerate re-crawling
+- Also request re-indexing of https://capimind.com via Search Console → URL Inspection
