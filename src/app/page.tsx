@@ -1296,7 +1296,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-auto bg-card border-t border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
             {/* Brand */}
             <div className="space-y-4">
               <div className="flex items-center gap-2.5">
@@ -1322,27 +1322,40 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Formations */}
+            {/* Navigation */}
             <div>
-              <h4 className="font-semibold mb-4">Formations</h4>
+              <h4 className="font-semibold mb-4">Navigation</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                {courses.slice(0, 5).map((c) => (
-                  <li key={c.id} className="hover:text-foreground cursor-pointer transition-colors" onClick={() => handleSelectCourse(c)}>
-                    {c.title}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Plus */}
-            <div>
-              <h4 className="font-semibold mb-4">Plus</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {courses.slice(5).map((c) => (
-                  <li key={c.id} className="hover:text-foreground cursor-pointer transition-colors" onClick={() => handleSelectCourse(c)}>
-                    {c.title}
-                  </li>
-                ))}
+                <li>
+                  <button onClick={() => scrollTo('about')} className="hover:text-foreground transition-colors text-left">
+                    À propos
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('courses')} className="hover:text-foreground transition-colors text-left">
+                    Formations
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                    Services
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('features')} className="hover:text-foreground transition-colors text-left">
+                    Pourquoi nous
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('faq')} className="hover:text-foreground transition-colors text-left">
+                    FAQ
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('contact')} className="hover:text-foreground transition-colors text-left">
+                    Contact
+                  </button>
+                </li>
               </ul>
             </div>
 
