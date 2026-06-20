@@ -95,3 +95,35 @@ Stage Summary:
 - Enriched metadata with JSON-LD Organization + WebSite structured data, OpenGraph image, Twitter card, verification tag
 - User should submit https://capimind.com/sitemap.xml in Google Search Console to accelerate re-crawling
 - User should replace the google-site-verification placeholder in layout.tsx with their actual Search Console verification token
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Replace footer course lists with navigation menu (À propos, Formations, Services, Pourquoi nous, FAQ, Contact)
+
+Work Log:
+- User requested footer items be replaced with: À propos, Formations, Services, Pourquoi nous, FAQ, Contact
+- Diagnosed: header desktop + mobile menus already contained exactly these 6 items; the user was referring to the FOOTER which had "Formations" (5 course links) and "Plus" (5 course links) columns
+- Verified on production: footer <h4> columns were "Formations", "Plus", "Contact"
+- Edited src/app/page.tsx footer:
+  * Removed the "Formations" course-list column (courses.slice(0,5))
+  * Removed the "Plus" course-list column (courses.slice(5))
+  * Added a new "Navigation" column with 6 scrollTo buttons: À propos (#about), Formations (#courses), Services (#services), Pourquoi nous (#features), FAQ (#faq), Contact (#contact)
+  * Changed footer grid from lg:grid-cols-4 to lg:grid-cols-3 (Brand / Navigation / Contact)
+- Verified all 6 section IDs exist in the DOM (about, courses, services, features, faq, contact)
+- Ran `bun run lint` → passes cleanly
+- Verified with agent-browser:
+  * Footer text shows: "Navigation, À propos, Formations, Services, Pourquoi nous, FAQ, Contact"
+  * Clicking "À propos" (ref=e5) → scrolls to #about (top = 0.0625)
+  * Clicking "Contact" (ref=e147) → scrolls to #contact (top = -0.4375)
+- Committed (SHA: 2644e1e) and pushed to GitHub main
+- Triggered Vercel deployment (ID: dpl_4UoN9mQb1XC1KoRfe7Nv1nXVySKe) → READY
+- Verified on production https://capimind.com:
+  * Footer <h4> columns are now "Navigation" + "Contact" (Formations and Plus removed)
+  * "Navigation", "À propos", "Pourquoi nous" present in HTML
+
+Stage Summary:
+- Footer now mirrors the header navigation menu with the 6 requested items
+- Removed the 10 course-link items that previously cluttered the footer
+- 3-column footer layout: Brand | Navigation | Contact
+- Live on https://capimind.com
