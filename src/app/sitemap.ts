@@ -5,14 +5,23 @@ const SITE_URL = 'https://capimind.com';
 /**
  * sitemap.xml — declares the canonical, indexable route set for CapiMind.
  *
- * CapiMind is a single-page application. The homepage (`/`) is the only route
- * that should appear in Google's index. All legacy WordPress paths (e.g.
- * /hello-world, /sample-page, /reservation, /contact, /blog) have been removed
- * and are now disallowed in robots.txt + redirected via next.config.ts.
+ * CapiMind is a single-page application, but we expose the 6 main in-page
+ * sections as anchor URLs so Google can generate proper sitelinks
+ * (À propos, Formations, Services, Pourquoi nous, FAQ, Contact) instead of
+ * the legacy WordPress pages that are currently cached.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  return [
+  const sections = [
+    { anchor: '#about', label: 'À propos', priority: 0.9 },
+    { anchor: '#courses', label: 'Formations', priority: 0.9 },
+    { anchor: '#services', label: 'Services', priority: 0.9 },
+    { anchor: '#features', label: 'Pourquoi nous', priority: 0.8 },
+    { anchor: '#faq', label: 'FAQ', priority: 0.7 },
+    { anchor: '#contact', label: 'Contact', priority: 0.9 },
+  ];
+
+  const urls: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
       lastModified: now,
@@ -20,4 +29,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
   ];
+
+  sections.forEach((section) => {
+    urls.push({
+      url: `${SITE_URL}/${section.anchor}`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: section.priority,
+    });
+  });
+
+  return urls;
 }

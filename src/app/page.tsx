@@ -464,6 +464,7 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <Badge variant="secondary" className="mb-4">Notre Mission</Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+              <span className="sr-only">À propos</span>
               Qui est{' '}
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
                 CapiMind
@@ -635,6 +636,7 @@ export default function Home() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <Badge variant="secondary" className="mb-4">Nos Formations</Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <span className="sr-only">Formations</span>
               10 formations pour{' '}
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
                 transformer votre carrière
@@ -674,6 +676,7 @@ export default function Home() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <Badge variant="secondary" className="mb-4">Nos Services</Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <span className="sr-only">Services</span>
               Des solutions sur-mesure pour{' '}
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
                 chaque ambition
@@ -853,6 +856,7 @@ export default function Home() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <Badge variant="secondary" className="mb-4">Pourquoi CapiMind</Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <span className="sr-only">Pourquoi nous</span>
               Ce qui nous{' '}
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
                 distingue
@@ -1021,6 +1025,7 @@ export default function Home() {
               Questions & Réponses
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <span className="sr-only">FAQ</span>
               Vos questions{' '}
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
                 fréquentes
@@ -1117,6 +1122,7 @@ export default function Home() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <Badge variant="secondary" className="mb-4">Contact</Badge>
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <span className="sr-only">Contact</span>
               Une question ?{' '}
               <span className="bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
                 Parlons-en

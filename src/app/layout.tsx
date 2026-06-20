@@ -165,6 +165,57 @@ const websiteJsonLd = {
   },
 };
 
+// JSON-LD for the site navigation — explicitly declares the 6 main sections
+// so Google can generate the correct sitelinks (À propos, Formations, Services,
+// Pourquoi nous, FAQ, Contact) instead of the legacy WordPress pages.
+const navigationSections = [
+  { name: "À propos", url: `${SITE_URL}/#about` },
+  { name: "Formations", url: `${SITE_URL}/#courses` },
+  { name: "Services", url: `${SITE_URL}/#services` },
+  { name: "Pourquoi nous", url: `${SITE_URL}/#features` },
+  { name: "FAQ", url: `${SITE_URL}/#faq` },
+  { name: "Contact", url: `${SITE_URL}/#contact` },
+];
+
+const siteNavigationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SiteNavigationElement",
+  name: navigationSections.map((s) => s.name),
+  url: navigationSections.map((s) => s.url),
+};
+
+// JSON-LD for BreadcrumbList — reinforces the site structure for Google.
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Accueil",
+      item: SITE_URL,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Formations",
+      item: `${SITE_URL}/#courses`,
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: "Services",
+      item: `${SITE_URL}/#services`,
+    },
+    {
+      "@type": "ListItem",
+      position: 4,
+      name: "Contact",
+      item: `${SITE_URL}/#contact`,
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -180,6 +231,14 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavigationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       </head>
       <body
