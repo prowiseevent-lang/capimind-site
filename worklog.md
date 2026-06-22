@@ -165,3 +165,54 @@ Stage Summary:
 - IMPORTANT: Google sitelinks are algorithmically generated and take 1-4 weeks to update after re-crawl
 - User action needed: submit https://capimind.com/sitemap.xml in Google Search Console → Sitemaps to accelerate re-crawling
 - Also request re-indexing of https://capimind.com via Search Console → URL Inspection
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Add 2 new services after VAE: Support Académique (LMD, Formation Professionnelle) & Aide à la recherche de stage, each with action buttons
+
+Work Log:
+- Added Briefcase + Compass to lucide-react icon imports in src/app/page.tsx
+- After the VAE card in the Services section, added a new grid md:grid-cols-2 with 2 cards:
+
+  1. Support Académique (rose/pink gradient, BookOpen icon)
+     - Description: "Un accompagnement complet pour réussir votre parcours académique"
+     - 2 feature lines:
+       * LMD — Licence, Master, Doctorat : soutien universitaire toutes filières
+       * Formation Professionnelle — préparation aux diplômes et certifications pro
+     - Action buttons:
+       * "Demander un soutien" (rose/pink gradient Button, scrolls to #contact)
+       * "Info rapide" (WhatsApp link, opens api.whatsapp.com)
+
+  2. Aide à la recherche de stage (indigo/violet gradient, Briefcase icon)
+     - Description: "Maximisez vos chances de décrocher le stage idéal"
+     - 2 feature lines:
+       * Orientation — définition de votre projet et ciblage des entreprises
+       * Coaching — CV, lettre de motivation, simulation d'entretien
+     - Action buttons:
+       * "Démarrer ma recherche" (indigo/violet gradient Button, scrolls to #contact)
+       * "Conseil gratuit" (WhatsApp link, opens api.whatsapp.com)
+
+- Ran `bun run lint` → passes cleanly
+- Verified with agent-browser:
+  * Services section now contains: Bootcamps, Formations sur-mesure, Coaching, VAE, Support Académique, Aide à la recherche de stage
+  * All 4 new action buttons render with correct refs (e54, e55, e57, e58)
+  * Clicking "Demander un soutien" scrolls to #contact (top = 0.0625)
+  * Clicking "Démarrer ma recherche" scrolls to #contact (top = 0.0625)
+- Committed (SHA: ed7d3f9) and pushed to GitHub main
+- Triggered Vercel deployment (ID: dpl_7NdzAU3JvScUtdQdVGxdrVxQURpR) → READY
+- Verified on production https://capimind.com: all 10 new strings present in HTML
+  (Support Académique, Aide à la recherche de stage, LMD, Formation Professionnelle,
+   Orientation, Coaching, Demander un soutien, Info rapide, Démarrer ma recherche,
+   Conseil gratuit)
+
+Stage Summary:
+- Services section now contains 6 service cards total:
+  1. Nos Bootcamps pour professionnels & étudiants
+  2. Formations sur-mesure pour les entreprises
+  3. Coaching Individuel sur-mesure
+  4. Validation des Acquis de l'Expérience (VAE)
+  5. Support Académique (NEW — LMD, Formation Professionnelle)
+  6. Aide à la recherche de stage (NEW)
+- Each new card has 2 action buttons (primary CTA + WhatsApp secondary)
+- Live on https://capimind.com
