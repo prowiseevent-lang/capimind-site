@@ -72,6 +72,7 @@ export default function Home() {
   const [emailSending, setEmailSending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [emailForm, setEmailForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [highlightedService, setHighlightedService] = useState<string | null>(null);
 
   const faqs = [
     {
@@ -158,6 +159,15 @@ export default function Home() {
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setMobileMenuOpen(false);
+  };
+
+  // Scroll directly to a specific service card and briefly highlight it
+  // so the user clearly sees which service they landed on.
+  const scrollToService = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setMobileMenuOpen(false);
+    setHighlightedService(id);
+    window.setTimeout(() => setHighlightedService(null), 2400);
   };
 
   return (
@@ -690,7 +700,10 @@ export default function Home() {
           </div>
 
           {/* Service 1: Bootcamps */}
-          <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 mb-8">
+          <div
+            id="service-bootcamps"
+            className={`bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 mb-8 scroll-mt-32 transition-all duration-500 ${highlightedService === 'service-bootcamps' ? 'ring-2 ring-emerald-400 ring-offset-2 ring-offset-background' : ''}`}
+          >
             <div className="flex items-start gap-4 mb-6">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shrink-0">
                 <GraduationCap className="h-6 w-6 text-white" />
@@ -741,7 +754,10 @@ export default function Home() {
           </div>
 
           {/* Service 2: Formations sur-mesure entreprises */}
-          <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 mb-8">
+          <div
+            id="service-formations-entreprises"
+            className={`bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 mb-8 scroll-mt-32 transition-all duration-500 ${highlightedService === 'service-formations-entreprises' ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-background' : ''}`}
+          >
             <div className="flex items-start gap-4 mb-6">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0">
                 <Users className="h-6 w-6 text-white" />
@@ -792,7 +808,10 @@ export default function Home() {
 
           {/* Services 3 & 4: Coaching & VAE */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+            <div
+              id="service-coaching"
+              className={`bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300 scroll-mt-32 ${highlightedService === 'service-coaching' ? 'ring-2 ring-violet-400 ring-offset-2 ring-offset-background' : ''}`}
+            >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-4">
                 <Heart className="h-6 w-6 text-white" />
               </div>
@@ -809,7 +828,10 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+            <div
+              id="service-vae"
+              className={`bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300 scroll-mt-32 ${highlightedService === 'service-vae' ? 'ring-2 ring-cyan-400 ring-offset-2 ring-offset-background' : ''}`}
+            >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-4">
                 <Award className="h-6 w-6 text-white" />
               </div>
@@ -829,7 +851,10 @@ export default function Home() {
 
           {/* Services 5 & 6: Support Académique & Aide à la recherche de stage */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+            <div
+              id="service-support-academique"
+              className={`bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300 scroll-mt-32 ${highlightedService === 'service-support-academique' ? 'ring-2 ring-rose-400 ring-offset-2 ring-offset-background' : ''}`}
+            >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center mb-4">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
@@ -876,7 +901,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+            <div
+              id="service-recherche-stage"
+              className={`bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300 scroll-mt-32 ${highlightedService === 'service-recherche-stage' ? 'ring-2 ring-indigo-400 ring-offset-2 ring-offset-background' : ''}`}
+            >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mb-4">
                 <Briefcase className="h-6 w-6 text-white" />
               </div>
@@ -1478,32 +1506,32 @@ export default function Home() {
               <h4 className="font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                  <button onClick={() => scrollToService('service-bootcamps')} className="hover:text-foreground transition-colors text-left">
                     Bootcamps Pro & Étudiants
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                  <button onClick={() => scrollToService('service-formations-entreprises')} className="hover:text-foreground transition-colors text-left">
                     Formations sur-mesure Entreprises
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                  <button onClick={() => scrollToService('service-coaching')} className="hover:text-foreground transition-colors text-left">
                     Coaching Individuel
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                  <button onClick={() => scrollToService('service-vae')} className="hover:text-foreground transition-colors text-left">
                     Validation des Acquis (VAE)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                  <button onClick={() => scrollToService('service-support-academique')} className="hover:text-foreground transition-colors text-left">
                     Support Académique
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                  <button onClick={() => scrollToService('service-recherche-stage')} className="hover:text-foreground transition-colors text-left">
                     Aide à la recherche de stage
                   </button>
                 </li>

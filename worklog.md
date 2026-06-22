@@ -300,3 +300,38 @@ Stage Summary:
 - Footer now has 5 columns: Brand | Navigation | Formations (all 10 courses) | Services (all 6 services) | Contact
 - Formations list has custom scrollbar for the long list
 - Live on https://capimind.com
+
+---
+Task ID: 10
+Agent: Main Agent
+Task: Make each footer Services link navigate directly to the corresponding service card (instead of just scrolling to #services)
+
+Work Log:
+- Added `highlightedService` state (string | null) to Home component
+- Added new `scrollToService(id)` function: scrollIntoView(block:'start') + sets highlightedService for 2400ms to briefly ring the targeted card
+- Added unique IDs + scroll-mt-32 + conditional ring highlight to each of the 6 service cards:
+  * service-bootcamps (ring-emerald-400) — Service 1: Nos Bootcamps
+  * service-formations-entreprises (ring-amber-400) — Service 2: Formations sur-mesure entreprises
+  * service-coaching (ring-violet-400) — Service 3: Coaching Individuel
+  * service-vae (ring-cyan-400) — Service 4: VAE
+  * service-support-academique (ring-rose-400) — Service 5: Support Académique
+  * service-recherche-stage (ring-indigo-400) — Service 6: Aide à la recherche de stage
+  * Each ring color matches the card's accent gradient for visual coherence
+- Updated the 6 footer Services buttons (previously all called scrollTo('services')) to call scrollToService with the matching service ID
+- Ran `bun run lint` → passes cleanly
+- Verified with agent-browser: clicked each of the 6 footer buttons and measured the bounding rect of the corresponding card:
+  * Bootcamps → top=128.3px (visible=true)
+  * Formations entreprises → top=128.3px (visible=true)
+  * Coaching → top=128.3px (visible=true)
+  * VAE → top=128.3px (visible=true)
+  * Support Académique → top=127.6px (visible=true)
+  * Aide à la recherche de stage → top=127.6px (visible=true)
+  * All cards land exactly below the fixed navbar (h-32 = 128px) thanks to scroll-mt-32
+  * Highlight ring confirmed applied (ring-2 ring-rose-400 on Support Académique right after click)
+- No console errors, no runtime errors
+
+Stage Summary:
+- Each footer Services link now navigates directly to its specific service card (not just the #services section)
+- Cards are positioned just below the fixed navbar (scroll-mt-32 = 128px offset)
+- A brief 2.4s colored ring highlight (matching each card's accent color) gives users clear visual feedback on which service they landed
+- Ready to commit & deploy
