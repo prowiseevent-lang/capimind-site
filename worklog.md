@@ -492,3 +492,57 @@ Stage Summary:
   5. Support Académique → "Demander un soutien" + "Info rapide"
   6. Recherche stage → "Démarrer ma recherche" + "Conseil gratuit"
 - Feature verified working locally; pending Vercel unblock for production
+
+---
+Task ID: 15
+Agent: Main Agent
+Task: Find and apply a solution to deploy the CapiMind site (with footer Services → action buttons feature) to a public URL, bypassing the Vercel account-level block
+
+Work Log:
+- Diagnosed: Vercel account-level block prevents ALL deployments to capimind.com since 09:34 UTC (Task 13)
+- No VERCEL_TOKEN available; cannot unblock Vercel programmatically
+- Solution chosen: Deploy static build to GitHub Pages via a NEW public repo (capimind-web)
+  * Source code stays PRIVATE in the CapiMind repo
+  * Only the compiled static HTML/CSS/JS goes to the PUBLIC capimind-web repo
+  * This is safe — static files are what browsers see anyway
+- Implementation:
+  1. Modified next.config.ts: conditional `output: 'export'` when DEPLOY_TARGET=github-pages
+     - basePath: '/capimind-web' (matches public repo name for GitHub Pages project site)
+     - images: { unoptimized: true } (static export can't use Next.js image server)
+     - trailingSlash: true (better GitHub Pages routing)
+     - redirects() returns [] in static mode (not supported by static export)
+  2. Added `export const dynamic = 'force-static'` to robots.ts and sitemap.ts (required for static export)
+  3. Modified both contact forms (page.tsx) to fall back to mailto: when /api/contact is unavailable
+     - Works universally: Vercel (API works) + GitHub Pages (API 404s → mailto fallback)
+  4. Added `build:static` script to package.json
+  5. Created public repo `capimind-web` via GitHub API
+  6. Built static site (temporarily moving src/app/api/ outside src/app/ during build — API routes are incompatible with output: export)
+  7. Pushed static build to capimind-web repo's main branch
+  8. Enabled GitHub Pages on capimind-web with legacy build type (deploy from main branch)
+  9. Triggered Pages build → status: "built" (success)
+  10. Fixed basePath from /CapiMind to /capimind-web (initial build had wrong basePath → JS bundles 404'd → no React hydration)
+  11. Stored DEPLOY_TOKEN secret in private CapiMind repo (for future CI auto-deploy)
+  12. Created scripts/deploy-pages.sh for manual re-deployment
+- Could NOT create .github/workflows/deploy-pages.yml on remote (token lacks `workflow` scope)
+  - Workflow file exists locally but can't be pushed
+  - Deployments can be triggered manually via scripts/deploy-pages.sh
+- Verified with agent-browser on LIVE site (https://mohamedbenkacem95-boop.github.io/capimind-web/):
+  * React hydrates correctly (JS bundles load with correct /capimind-web/ basePath)
+  * All 6 service card action-button container IDs present
+  * All 6 footer Service buttons tested:
+    - Bootcamps Pro & Étudiants → ring=YES, actions top=331, inView=true, centered=true ✅
+    - Formations sur-mesure Entreprises → ring=YES, actions top=331, inView=true, centered=true ✅
+    - Coaching Individuel → ring=YES, actions top=343, inView=true, centered=true ✅
+    - Validation des Acquis (VAE) → ring=YES, actions top=343, inView=true, centered=true ✅
+    - Support Académique → ring=YES, actions top=334, inView=true, centered=true ✅
+    - Aide à la recherche de stage → ring=YES, actions top=334, inView=true, centered=true ✅
+  * No console errors, no page errors
+
+Stage Summary:
+- LIVE URL: https://mohamedbenkacem95-boop.github.io/capimind-web/
+- The footer Services → action buttons feature is LIVE and verified working 6/6
+- Each footer Service link scrolls directly to that service's CTA buttons (centered in viewport) + colored ring highlight on the card
+- Contact forms fall back to mailto: on static host (pre-filled email to contact@capimind.com)
+- To redeploy after future code changes: run `bash scripts/deploy-pages.sh` (~30s build + ~2min Pages propagation)
+- To use capimind.com domain: point DNS CNAME capimind.com → mohamedbenkacem95-boop.github.io, then add custom domain in capimind-web repo settings
+- Source code remains private; only static build is public
