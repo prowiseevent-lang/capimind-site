@@ -448,3 +448,47 @@ Stage Summary:
   C. Move deployment to another platform (Netlify, Cloudflare Pages, Railway, self-hosted)
   D. If user has a different Vercel account/token that is not blocked, provide it so agent can deploy there
 - The feature WILL go live automatically the moment the Vercel block is lifted, because the GitHub integration is already triggering deployments on every push — they just get blocked.
+
+---
+Task ID: 14
+Agent: Main Agent
+Task: Associate footer Services links with each service's ACTION BUTTONS — clicking a footer Service should bring the user directly to that service's action buttons (not just the card top)
+
+Work Log:
+- Added unique IDs to each service's action button container in src/app/page.tsx:
+  * service-bootcamps-actions (div wrapping "S'inscrire à un bootcamp" + "Demander le programme")
+  * service-formations-entreprises-actions (div wrapping "Demander un devis entreprise" + "Parler à un conseiller")
+  * service-coaching-actions (the "Demander un coaching" text button itself)
+  * service-vae-actions (the "En savoir plus sur la VAE" text button itself)
+  * service-support-academique-actions (div wrapping "Demander un soutien" + "Info rapide")
+  * service-recherche-stage-actions (div wrapping "Démarrer ma recherche" + "Conseil gratuit")
+  * Each container also got scroll-mt-32 for navbar offset safety
+- Updated scrollToService(id) function:
+  * Now prefers scrolling the ${id}-actions element into view with block:'center' (centers action buttons in viewport so user lands directly on the CTA they can click)
+  * Falls back to card top (block:'start') if no -actions element exists
+  * Still sets highlightedService ring on the whole card (2.4s) so user sees which service the buttons belong to
+- Ran `bun run lint` → passes cleanly
+- Verified with agent-browser (all 6 footer Service buttons tested):
+  * Bootcamps Pro & Étudiants → ring=YES, actions top=330, inView=true, centered=true ✅
+  * Formations sur-mesure Entreprises → ring=YES, actions top=330, inView=true, centered=true ✅
+  * Coaching Individuel → ring=YES, actions top=343, inView=true, centered=true ✅
+  * Validation des Acquis (VAE) → ring=YES, actions top=343, inView=true, centered=true ✅
+  * Support Académique → ring=YES, actions top=334, inView=true, centered=true ✅
+  * Aide à la recherche de stage → ring=YES, actions top=334, inView=true, centered=true ✅
+  * All action buttons land centered in the 577px viewport (~330-343px from top)
+  * Colored ring appears immediately on click (emerald/amber/violet/cyan/rose/indigo per card)
+  * No console errors, no runtime errors
+- Committed (SHA: 1062e2c) and pushed to GitHub origin/main
+- NOTE: Production deploy still blocked by Vercel account-level block (see Task ID 13). Feature is live on local dev server and will auto-deploy to capimind.com once the Vercel block is lifted.
+
+Stage Summary:
+- Footer Services links are now ASSOCIATED with each service's action buttons:
+  clicking a footer Service brings the user directly to that service's CTA buttons (centered in viewport) + highlights the whole card with a colored ring
+- Each service's action buttons:
+  1. Bootcamps → "S'inscrire à un bootcamp" + "Demander le programme"
+  2. Formations entreprises → "Demander un devis entreprise" + "Parler à un conseiller"
+  3. Coaching → "Demander un coaching"
+  4. VAE → "En savoir plus sur la VAE"
+  5. Support Académique → "Demander un soutien" + "Info rapide"
+  6. Recherche stage → "Démarrer ma recherche" + "Conseil gratuit"
+- Feature verified working locally; pending Vercel unblock for production
