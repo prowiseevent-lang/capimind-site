@@ -835,16 +835,24 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-2">Support Académique</h3>
               <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                Un accompagnement complet pour réussir votre parcours académique : préparation aux examens, méthodologie, et suivi personnalisé.
+                Accompagnement personnalisé pour la réalisation de vos travaux académiques et scientifiques, du brouillon à la soutenance.
               </p>
               <div className="space-y-2 mb-5">
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
-                  <span className="text-muted-foreground"><span className="font-medium text-foreground">LMD</span> — Licence, Master, Doctorat : soutien universitaire toutes filières</span>
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Thèses & Mémoires</span> — structuration, rédaction et méthodologie de recherche</span>
                 </div>
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
-                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Formation Professionnelle</span> — préparation aux diplômes et certifications pro</span>
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Articles scientifiques & Communications</span> — publication et présentation en conférence</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Rapports de stage & PFE/PFA</span> — rédaction et mise en forme professionnelle</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Traitement de données</span> — analyse statistique, visualisation et interprétation</span>
                 </div>
               </div>
               {/* Action buttons */}
