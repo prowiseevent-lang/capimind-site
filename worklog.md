@@ -268,3 +268,35 @@ Work Log:
 Stage Summary:
 - Wording updated: 'rédaction' → 'assistance à la rédaction' (2 occurrences)
 - Live on https://capimind.com
+
+---
+Task ID: 9
+Agent: Main Agent
+Task: Add Formations + Services columns next to Navigation in footer
+
+Work Log:
+- Updated footer grid from lg:grid-cols-3 to lg:grid-cols-5 (sm:grid-cols-2 unchanged)
+- Brand column: added sm:col-span-2 lg:col-span-1 so it spans full width on mobile but 1 column on desktop
+- Kept Navigation column (À propos, Formations, Services, Pourquoi nous, FAQ, Contact)
+- Added new "Formations" column listing all 10 courses:
+  * IA pour Décideurs, Data Analytics & Business Intelligence, Cybersécurité, Création d'Entreprise, Automatisation Business, Finance & Investissement, Leadership & Management à Distance, Productivité & Organisation Digitale, Programmation & Développement, Compétences du Futur
+  * Each course is clickable → opens CourseDetailDialog via handleSelectCourse
+  * max-h-72 overflow-y-auto with custom scrollbar (.capimind-scroll) per UI rules for long lists
+- Added new "Services" column listing all 6 services:
+  * Bootcamps Pro & Étudiants, Formations sur-mesure Entreprises, Coaching Individuel, Validation des Acquis (VAE), Support Académique, Aide à la recherche de stage
+  * Each service is clickable → scrolls to #services section
+- Kept Contact column (email, phone, address, WhatsApp, social)
+- Added custom scrollbar CSS (.capimind-scroll) in globals.css with thin scrollbar + border color thumb + hover state
+- Ran `bun run lint` → passes cleanly
+- Verified with agent-browser: footer innerText shows all 5 columns with correct content (Brand, Navigation, Formations with 10 courses, Services with 6 services, Contact)
+- Committed (SHA: 93dec58) and pushed to GitHub main
+- Triggered Vercel deployment (ID: dpl_27gqHEcfMR7HRoeUG12REjGHRJRz) → READY
+- Verified on production https://capimind.com:
+  * 4 footer <h4> column titles: Navigation, Formations, Services, Contact
+  * All 10 course titles present in HTML
+  * All 6 service names present in HTML
+
+Stage Summary:
+- Footer now has 5 columns: Brand | Navigation | Formations (all 10 courses) | Services (all 6 services) | Contact
+- Formations list has custom scrollbar for the long list
+- Live on https://capimind.com
