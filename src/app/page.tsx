@@ -161,10 +161,18 @@ export default function Home() {
     setMobileMenuOpen(false);
   };
 
-  // Scroll directly to a specific service card and briefly highlight it
-  // so the user clearly sees which service they landed on.
+  // Scroll directly to the ACTION BUTTONS of a specific service (so the user
+  // lands on the CTA they can click immediately), and briefly highlight the
+  // whole card so they see which service the buttons belong to.
   const scrollToService = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const actionsEl = document.getElementById(`${id}-actions`);
+    const cardEl = document.getElementById(id);
+    // Prefer scrolling the action buttons into the center of the viewport.
+    if (actionsEl) {
+      actionsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (cardEl) {
+      cardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     setMobileMenuOpen(false);
     setHighlightedService(id);
     window.setTimeout(() => setHighlightedService(null), 2400);
@@ -732,7 +740,7 @@ export default function Home() {
               ))}
             </div>
             {/* Action buttons */}
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <div id="service-bootcamps-actions" className="mt-6 flex flex-col sm:flex-row gap-3 scroll-mt-32">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-md hover:shadow-lg transition-all"
@@ -785,7 +793,7 @@ export default function Home() {
               ))}
             </div>
             {/* Action buttons */}
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <div id="service-formations-entreprises-actions" className="mt-6 flex flex-col sm:flex-row gap-3 scroll-mt-32">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 shadow-md hover:shadow-lg transition-all"
@@ -820,8 +828,9 @@ export default function Home() {
                 Un accompagnement personnalisé pour votre développement personnel et vos soft-skills. Avancez avec un coach dédié qui vous aide à révéler votre plein potentiel.
               </p>
               <button
+                id="service-coaching-actions"
                 onClick={() => scrollTo('contact')}
-                className="inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors"
+                className="inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors scroll-mt-32"
               >
                 Demander un coaching
                 <ArrowRight className="h-4 w-4" />
@@ -840,8 +849,9 @@ export default function Home() {
                 Transformez votre expérience professionnelle en certification officielle. Notre accompagnement VAE vous guide pas à pas dans la valorisation de votre parcours.
               </p>
               <button
+                id="service-vae-actions"
                 onClick={() => scrollTo('contact')}
-                className="inline-flex items-center gap-1 text-sm font-medium text-cyan-600 hover:text-cyan-700 transition-colors"
+                className="inline-flex items-center gap-1 text-sm font-medium text-cyan-600 hover:text-cyan-700 transition-colors scroll-mt-32"
               >
                 En savoir plus sur la VAE
                 <ArrowRight className="h-4 w-4" />
@@ -881,7 +891,7 @@ export default function Home() {
                 </div>
               </div>
               {/* Action buttons */}
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div id="service-support-academique-actions" className="flex flex-col sm:flex-row gap-3 scroll-mt-32">
                 <Button
                   className="bg-gradient-to-r from-rose-500 to-pink-600 text-white border-0 shadow-sm hover:shadow-md transition-all"
                   onClick={() => scrollTo('contact')}
@@ -923,7 +933,7 @@ export default function Home() {
                 </div>
               </div>
               {/* Action buttons */}
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div id="service-recherche-stage-actions" className="flex flex-col sm:flex-row gap-3 scroll-mt-32">
                 <Button
                   className="bg-gradient-to-r from-indigo-500 to-violet-600 text-white border-0 shadow-sm hover:shadow-md transition-all"
                   onClick={() => scrollTo('contact')}
