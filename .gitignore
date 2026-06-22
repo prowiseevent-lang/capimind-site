@@ -4,3 +4,5 @@ db/
 *.db
 dev.log
 .vercel
+out/
+tool-results/

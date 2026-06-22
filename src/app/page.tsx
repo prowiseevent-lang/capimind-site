@@ -1363,30 +1363,38 @@ export default function Home() {
             {/* Contact Form */}
             <form
               className="space-y-4"
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 const form = e.target as HTMLFormElement;
                 const formData = new FormData(form);
-                fetch('/api/contact', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    subject: formData.get('subject'),
-                    message: formData.get('message'),
-                  }),
-                }).then((res) => {
+                const payload = {
+                  name: formData.get('name'),
+                  email: formData.get('email'),
+                  subject: formData.get('subject'),
+                  message: formData.get('message'),
+                };
+                try {
+                  const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                  });
                   if (res.ok) {
                     form.reset();
-                    import('next/link').then(() => {});
                     const toast = document.createElement('div');
                     toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
                     toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 4000);
+                    return;
                   }
-                });
+                  throw new Error('API unavailable');
+                } catch {
+                  // Fallback for static hosts (GitHub Pages, etc.): open a pre-filled email.
+                  const mailto = `mailto:contact@capimind.com?subject=${encodeURIComponent(String(payload.subject))}&body=${encodeURIComponent(`Nom: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`)}`;
+                  window.location.href = mailto;
+                  form.reset();
+                }
               }}
             >
               <div className="space-y-2">
@@ -1762,9 +1770,15 @@ export default function Home() {
                       });
                       if (res.ok) {
                         setEmailSent(true);
+                        setEmailSending(false);
+                        return;
                       }
+                      throw new Error('API unavailable');
                     } catch {
-                      // silently fail
+                      // Fallback for static hosts: open a pre-filled email.
+                      const mailto = `mailto:contact@capimind.com?subject=${encodeURIComponent(emailForm.subject || 'Contact CapiMind')}&body=${encodeURIComponent(`Nom: ${emailForm.name}\nEmail: ${emailForm.email}\n\n${emailForm.message}`)}`;
+                      window.location.href = mailto;
+                      setEmailSent(true);
                     }
                     setEmailSending(false);
                   }}
