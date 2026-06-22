@@ -840,7 +840,7 @@ export default function Home() {
               <div className="space-y-2 mb-5">
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
-                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Thèses & Mémoires</span> — structuration, rédaction et méthodologie de recherche</span>
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Thèses & Mémoires</span> — structuration, assistance à la rédaction et méthodologie de recherche</span>
                 </div>
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
@@ -848,7 +848,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
-                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Rapports de stage & PFE/PFA</span> — rédaction et mise en forme professionnelle</span>
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Rapports de stage & PFE/PFA</span> — assistance à la rédaction et mise en forme professionnelle</span>
                 </div>
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
