@@ -38,6 +38,8 @@ import {
   Eye,
   ChevronDown,
   HelpCircle,
+  Briefcase,
+  Compass,
 } from 'lucide-react';
 
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=212786249306&source=FB_Post&token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNSJ9.eyJleHAiOjE3ODE0NjY1NTAsInBob25lIjoiMjEyNzg2MjQ5MzA2IiwidGV4dCI6IkxpZW5cdTAwYTA6XG5odHRwczpcL1wvZmIubWVcLzZkY3NGcDhvSFxuXG5Cb25qb3VyXHUwMGEwISBQdWlzLWplIGVuIHNhdm9pciBwbHVzIFx1MDBlMCBjZSBzdWpldFx1MDBhMD8iLCJzb3VyY2VfdXJsIjoiaHR0cHM6XC9cL2ZiLm1lXC82ZGNzRnA4b0giLCJpY2VicmVha2VyIjoiQm9uam91clx1MDBhMCEgUHVpcy1qZSBlbiBzYXZvaXIgcGx1cyBcdTAwZTAgY2Ugc3VqZXRcdTAwYTA_IiwiYXBwIjoiZmFjZWJvb2siLCJlbnRyeV9wb2ludCI6InBvc3RfY3RhIiwiamlkIjoiMjEyNzg2MjQ5MzA2XHUwMDQwcy53aGF0c2FwcC5uZXQiLCJsaWQiOiI5NDkxNTIwMzcxOTI4Mlx1MDA0MGxpZCIsInNvdXJjZV9pZCI6IjEyMjA5NDAwMDk4MDQzNzUyNyIsImNoYXRfZHJhZnQiOjEsInNob3dfYWRfYXR0cmlidXRpb24iOjEsInNvdXJjZSI6IkZCX1Bvc3QiLCJjb250ZXh0IjoiQWZpWkFwLXB2QTNyU09seEVhOEtaRkgtamQtY0lTejkyUmNtT3BldUJnclQzLXZvVEttNmNwOHhpV0RjWTJhYVBjdUhaSEhydzk4MUNuekpweVo5Y2g4ZlkwR3RBSnlMcnREeFpLTTlqTDZWMFpFV25RM0JZSHRObnR5VDZEVk01YlZrcTg5V01HaXJtSlp6eEppSUwzNmxXWFNzMEtpbkEwR0J1QzdMTVZWd1ZxVHdjMEpNWTdzdXpmNlZ0WTJacDU0bnlfVmpZaktXRzVmbHJlQXBOaUY4R0JUWXd6QmJ4NGpMWTJzUGVtUEtHQ2tZM1c4dWJtWlllMG92TUtfd3hZSXBMSkc4TlZ6M3BqOXo4YjE1TjQyaHJacWlFaWJGUjZRbHhGNUZRTDhfdnZwZ3U4a3ZzZm5JaDNTaXExZW5Wb0VaUXBhb1ZHb0g3YW1xckxINVpJVnd5QW1SRXQxcExJZ3F0X2dmVkZYdVlWelVWWlhHRVdkamFQNmdhdzB6TFIxZUtkYURTMjFjMUhGWmxORWZ3SnQ4WW5rZWhhYjFqVEJpd0dTYTdNWWtrMGZDIn0.r6fUv68rc8kXaJNZ_o1E2ysv7rqOO6XGsZon9WX9jg2Zc4K48o2kVW_uT9pXtln01Bm1zmn9SQ1Ab0w6EVb4XQ&fbclid=IwY2xjawSak5BleHRuA2FlbQIxMQBzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeBdg4dHzXCvg7aVAUmi3BQjwtSRU2iVvw641O3PaPQLbZXAoOCwI9oim-zsU_aem_hJ-rZ1KZj5PDmcyQINW9tg';
@@ -822,6 +824,87 @@ export default function Home() {
                 En savoir plus sur la VAE
                 <ArrowRight className="h-4 w-4" />
               </button>
+            </div>
+          </div>
+
+          {/* Services 5 & 6: Support Académique & Aide à la recherche de stage */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center mb-4">
+                <BookOpen className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Support Académique</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                Un accompagnement complet pour réussir votre parcours académique : préparation aux examens, méthodologie, et suivi personnalisé.
+              </p>
+              <div className="space-y-2 mb-5">
+                <div className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">LMD</span> — Licence, Master, Doctorat : soutien universitaire toutes filières</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Formation Professionnelle</span> — préparation aux diplômes et certifications pro</span>
+                </div>
+              </div>
+              {/* Action buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  className="bg-gradient-to-r from-rose-500 to-pink-600 text-white border-0 shadow-sm hover:shadow-md transition-all"
+                  onClick={() => scrollTo('contact')}
+                >
+                  Demander un soutien
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 h-9 px-4 rounded-md border border-input bg-background hover:bg-[#25D366] hover:text-white hover:border-[#25D366] text-sm font-medium transition-all duration-300"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Info rapide
+                </a>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50 hover:shadow-md transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mb-4">
+                <Briefcase className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Aide à la recherche de stage</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                Maximisez vos chances de décrocher le stage idéal : CV, lettre de motivation, préparation aux entretiens et mise en relation.
+              </p>
+              <div className="space-y-2 mb-5">
+                <div className="flex items-start gap-2 text-sm">
+                  <Compass className="h-4 w-4 text-indigo-500 shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Orientation</span> — définition de votre projet et ciblage des entreprises</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-indigo-500 shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Coaching</span> — CV, lettre de motivation, simulation d'entretien</span>
+                </div>
+              </div>
+              {/* Action buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  className="bg-gradient-to-r from-indigo-500 to-violet-600 text-white border-0 shadow-sm hover:shadow-md transition-all"
+                  onClick={() => scrollTo('contact')}
+                >
+                  Démarrer ma recherche
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 h-9 px-4 rounded-md border border-input bg-background hover:bg-[#25D366] hover:text-white hover:border-[#25D366] text-sm font-medium transition-all duration-300"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Conseil gratuit
+                </a>
+              </div>
             </div>
           </div>
 
