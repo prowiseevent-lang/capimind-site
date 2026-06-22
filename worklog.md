@@ -216,3 +216,36 @@ Stage Summary:
   6. Aide à la recherche de stage (NEW)
 - Each new card has 2 action buttons (primary CTA + WhatsApp secondary)
 - Live on https://capimind.com
+
+---
+Task ID: 7
+Agent: Main Agent
+Task: Update Support Académique to include only academic writing accompaniment (Thèses & Mémoires, Articles scientifiques & Communications, Rapports de stage & PFE/PFA, Traitement de données)
+
+Work Log:
+- User clarified: Support Académique should only include personalized accompaniment for producing academic work, NOT general LMD or Formation Professionnelle support
+- Updated src/app/page.tsx Support Académique card:
+  * New description: "Accompagnement personnalisé pour la réalisation de vos travaux académiques et scientifiques, du brouillon à la soutenance."
+  * Removed: "LMD — Licence, Master, Doctorat" feature line
+  * Removed: "Formation Professionnelle" feature line
+  * Added 4 new feature lines:
+    1. Thèses & Mémoires — structuration, rédaction et méthodologie de recherche
+    2. Articles scientifiques & Communications — publication et présentation en conférence
+    3. Rapports de stage & PFE/PFA — rédaction et mise en forme professionnelle
+    4. Traitement de données — analyse statistique, visualisation et interprétation
+- Action buttons preserved: "Demander un soutien" (scrolls to #contact) + "Info rapide" (WhatsApp)
+- Ran `bun run lint` → passes cleanly
+- Verified with agent-browser:
+  * Support Académique card displays the 4 new sub-services
+  * "Demander un soutien" button (ref=e54) still scrolls to #contact (top = 0.0625)
+  * LMD and Formation Professionnelle no longer present
+- Committed (SHA: a44270d) and pushed to GitHub main
+- Triggered Vercel deployment (ID: dpl_2Dp5VEA2rwhXj5iSQcQKg2VnL1NT) → READY
+- Verified on production https://capimind.com:
+  * New description + 4 sub-services present in HTML
+  * LMD + Formation Professionnelle removed
+
+Stage Summary:
+- Support Académique now correctly scoped to academic writing/research accompaniment
+- 4 sub-services: Thèses & Mémoires, Articles scientifiques & Communications, Rapports de stage & PFE/PFA, Traitement de données
+- Live on https://capimind.com
