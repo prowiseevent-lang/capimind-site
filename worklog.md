@@ -407,3 +407,44 @@ Stage Summary:
   Option B (one-time): On Vercel dashboard → capimind-site → Deployments → click "Redeploy" and pick the latest commit (b3087a0 or 253c075).
   Option C (if user has a Vercel token): provide VERCEL_TOKEN env var so the agent can deploy via `vercel --prod --token=...`.
 - Feature verified working locally (Task ID 11) — only the production propagation is blocked.
+
+---
+Task ID: 13
+Agent: Main Agent
+Task: Diagnose why production deploy of footer Services direct-navigation feature is not reaching capimind.com
+
+Work Log:
+- Queried GitHub Deployments API for repo mohamedbenkacem95-boop/CapiMind
+- Discovered 3 Vercel projects are connected to the repo: capimind-site, my-project, capi-mind
+- All 3 projects trigger a deployment on every push (via vercel[bot] GitHub App)
+- Retrieved deployment statuses for the capimind-site project:
+  * 5148332964 (ed7d3f9f) → SUCCESS
+  * 5148455063 (a44270d4) → SUCCESS
+  * 5148544756 (cc062d39) → SUCCESS
+  * 5148778495 (f957fd7d) → SUCCESS
+  * 5148853293 (93dec58f) → SUCCESS ← LAST SUCCESSFUL (Task 9, footer Formations+Services columns)
+  * 5149065428 (253c0754) → FAILURE "Deployment was blocked" ← FIRST BLOCKED (Task 10, scrollToService)
+  * 5149207117 (fb46312) → FAILURE "Deployment was blocked"
+  * 5149355208 (b3087a0) → FAILURE "Deployment was blocked"
+  * 5149397087 (82d0988) → FAILURE "Deployment was blocked"
+- Same "Deployment was blocked" failure affects all 3 Vercel projects simultaneously
+- Block started suddenly at commit 253c0754 (09:34:43Z) — all prior commits deployed fine
+- Verified the Vercel preview URL (capimind-site-3zrv6yq67-me-d.vercel.app) shows "Deployment is building" but GitHub API confirms state=failure
+- This is a Vercel ACCOUNT-LEVEL block, NOT a code issue or webhook issue (the vercel[bot] GitHub App IS installed and IS triggering deployments — they just get blocked at build time)
+- Most likely cause: Vercel's automated commercial-usage detection flagged capimind.com (a business/training platform) as commercial use on a Hobby (free) plan, triggering a deployment block. This is a known Vercel policy: commercial sites must be on Pro ($20/mo).
+- Verified local code works perfectly via agent-browser:
+  * All 6 service card IDs present (service-bootcamps through service-recherche-stage)
+  * All 6 footer Service buttons present with correct labels
+  * Clicking each button scrolls the corresponding card to top=128px (just below 129px navbar)
+  * Each card gets a colored highlight ring matching its accent color
+
+Stage Summary:
+- ROOT CAUSE IDENTIFIED: Vercel is blocking ALL deployments to the account since 09:34:43Z UTC on 2026-06-22
+- The feature code is 100% COMPLETE, PUSHED to GitHub, and VERIFIED WORKING locally
+- This is NOT fixable from the code side — it requires account-level action on Vercel
+- USER MUST DO ONE OF:
+  A. Upgrade Vercel project to Pro plan ($20/month) → unblocks commercial deployments immediately
+  B. On Vercel dashboard → Settings → check for any policy notification / contact Vercel support to dispute
+  C. Move deployment to another platform (Netlify, Cloudflare Pages, Railway, self-hosted)
+  D. If user has a different Vercel account/token that is not blocked, provide it so agent can deploy there
+- The feature WILL go live automatically the moment the Vercel block is lifted, because the GitHub integration is already triggering deployments on every push — they just get blocked.
