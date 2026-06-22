@@ -249,3 +249,22 @@ Stage Summary:
 - Support Académique now correctly scoped to academic writing/research accompaniment
 - 4 sub-services: Thèses & Mémoires, Articles scientifiques & Communications, Rapports de stage & PFE/PFA, Traitement de données
 - Live on https://capimind.com
+
+---
+Task ID: 8
+Agent: Main Agent
+Task: Replace 'rédaction' with 'assistance à la rédaction' in Support Académique service
+
+Work Log:
+- Found 2 occurrences of 'rédaction' in Support Académique card (src/app/page.tsx lines 843, 851)
+- Replaced both with 'assistance à la rédaction':
+  * Thèses & Mémoires: "structuration, assistance à la rédaction et méthodologie de recherche"
+  * Rapports de stage & PFE/PFA: "assistance à la rédaction et mise en forme professionnelle"
+- Ran `bun run lint` → passes cleanly
+- Committed (SHA: cc062d3) and pushed to GitHub main
+- Triggered Vercel deployment (ID: dpl_DVm6HUTSvFzM2kEckwLLm6uGfUAS) → READY
+- Verified on production https://capimind.com: both new phrases present in HTML
+
+Stage Summary:
+- Wording updated: 'rédaction' → 'assistance à la rédaction' (2 occurrences)
+- Live on https://capimind.com
