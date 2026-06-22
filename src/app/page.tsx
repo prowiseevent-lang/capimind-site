@@ -1393,9 +1393,9 @@ export default function Home() {
       {/* Footer */}
       <footer className="mt-auto bg-card border-t border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
             {/* Brand */}
-            <div className="space-y-4">
+            <div className="space-y-4 sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2.5">
                 <button
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -1451,6 +1451,60 @@ export default function Home() {
                 <li>
                   <button onClick={() => scrollTo('contact')} className="hover:text-foreground transition-colors text-left">
                     Contact
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Formations */}
+            <div>
+              <h4 className="font-semibold mb-4">Formations</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground max-h-72 overflow-y-auto pr-2 capimind-scroll">
+                {courses.map((c) => (
+                  <li key={c.id}>
+                    <button
+                      onClick={() => handleSelectCourse(c)}
+                      className="hover:text-foreground transition-colors text-left"
+                    >
+                      {c.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Services */}
+            <div>
+              <h4 className="font-semibold mb-4">Services</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                    Bootcamps Pro & Étudiants
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                    Formations sur-mesure Entreprises
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                    Coaching Individuel
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                    Validation des Acquis (VAE)
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                    Support Académique
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollTo('services')} className="hover:text-foreground transition-colors text-left">
+                    Aide à la recherche de stage
                   </button>
                 </li>
               </ul>
