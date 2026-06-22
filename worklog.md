@@ -335,3 +335,42 @@ Stage Summary:
 - Cards are positioned just below the fixed navbar (scroll-mt-32 = 128px offset)
 - A brief 2.4s colored ring highlight (matching each card's accent color) gives users clear visual feedback on which service they landed
 - Ready to commit & deploy
+
+---
+Task ID: 11
+Agent: Main Agent
+Task: Verify & deploy footer Services links that navigate directly to the corresponding service card (Bootcamps, Formations Entreprises, Coaching, VAE, Support Académique, Aide à la recherche de stage)
+
+Work Log:
+- Reviewed existing implementation from Task ID 10 (commit 253c075, already committed locally but NOT pushed)
+- Confirmed code structure in src/app/page.tsx:
+  * `highlightedService` state (line 75) tracks which card to ring-highlight
+  * `scrollToService(id)` function (line 166): scrollIntoView(smooth, block:start) + closes mobile menu + sets highlight for 2400ms
+  * 6 service cards each have unique ID + scroll-mt-32 (128px navbar offset) + conditional colored ring matching card accent:
+    - service-bootcamps (ring-emerald-400)
+    - service-formations-entreprises (ring-amber-400)
+    - service-coaching (ring-violet-400)
+    - service-vae (ring-cyan-400)
+    - service-support-academique (ring-rose-400)
+    - service-recherche-stage (ring-indigo-400)
+  * 6 footer Services buttons (lines 1509-1536) each call scrollToService with matching service ID
+- Verified end-to-end with agent-browser on local dev server (http://localhost:3000):
+  * Clicked each of the 6 footer Services buttons (e166-e171)
+  * After smooth-scroll settle (~2.5s), measured each target card bounding rect:
+    - Bootcamps → top=128px, visible=true
+    - Formations sur-mesure Entreprises → top=128px, visible=true
+    - Coaching Individuel → top=128px, visible=true
+    - Validation des Acquis (VAE) → top=128px, visible=true
+    - Support Académique → top=128px, visible=true
+    - Aide à la recherche de stage → top=128px, visible=true
+  * All cards land exactly at 128px (just below the 129px fixed navbar) thanks to scroll-mt-32
+  * Highlight ring confirmed appearing right after click (e.g. Support Académique → hasRing=true, ringColor=rose)
+  * No console errors, no runtime errors (only standard React DevTools info + HMR connected)
+- Pushed commit 253c075 to GitHub origin/main (was previously only local)
+- Production (https://capimind.com) still serving cached Task ID 9 build (x-vercel-cache: HIT, age ~27min) — Vercel GitHub integration will auto-deploy the new commit; no VERCEL_TOKEN available to trigger/monitor deployment explicitly
+
+Stage Summary:
+- Feature COMPLETE and verified: each footer Services link now navigates directly to its specific service card (not just the #services section)
+- Cards are positioned just below the fixed navbar (scroll-mt-32 = 128px offset, navbar = 129px)
+- A 2.4s colored ring highlight (matching each card's accent color) gives clear visual feedback on which service the user landed
+- Commit 253c075 pushed to origin/main; production deployment pending Vercel GitHub integration build
