@@ -844,7 +844,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
-                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Articles scientifiques & Communications</span> — publication et présentation en conférence</span>
+                  <span className="text-muted-foreground"><span className="font-medium text-foreground">Articles scientifiques & Communications</span> — assistance à la rédaction, publication et présentation en conférence</span>
                 </div>
                 <div className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
