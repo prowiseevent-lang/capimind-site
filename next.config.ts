@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
 
-// GitHub Pages static export mode (set via DEPLOY_TARGET env var in CI).
-// When enabled, we export a fully static site (no server, no API routes)
-// that can be hosted on GitHub Pages, Netlify, or any static host.
-// basePath must match the public repo name where the static site is deployed.
-const isStaticExport = process.env.DEPLOY_TARGET === "github-pages";
-const basePath = isStaticExport ? "/capimind-web" : "";
+// Static export mode (set via DEPLOY_TARGET env var in CI).
+// "github-pages" → static export with basePath /capimind-web
+// "custom-domain" → static export with NO basePath (for custom domain on Cloudflare/Netlify/etc.)
+const isStaticExport =
+  process.env.DEPLOY_TARGET === "github-pages" ||
+  process.env.DEPLOY_TARGET === "custom-domain";
+const basePath = process.env.DEPLOY_TARGET === "github-pages" ? "/capimind-web" : "";
 
 const LEGACY_WORDPRESS_PATHS = [
   "/hello-world",
