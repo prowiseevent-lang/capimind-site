@@ -3,39 +3,45 @@
  * GOOGLE APPS SCRIPT - CapiMind Google Sheets Integration
  * ============================================================
  * 
- * Ce script reçoit les données du site CapiMind et les écrit
- * dans le Google Sheet connecté.
+ * VERSION 2 - Corrigé et robuste
  * 
- * Les données sont envoyées via GET avec un paramètre "data"
- * contenant un JSON encodé (pour éviter les problèmes de 
- * redirection POST des Google Apps Script Web Apps).
+ * Ce script reçoit les données du site CapiMind et les écrit
+ * dans le Google Sheet CapiMind - CRM.
+ * 
+ * IMPORTANT: Ce script utilise l'ID EXPLICITE du spreadsheet
+ * au lieu de getActiveSpreadsheet() pour garantir que les
+ * données arrivent dans le bon fichier.
  * 
  * INSTRUCTIONS:
- * 1. Ouvrez votre Google Sheet
+ * 1. Ouvrez votre Google Sheet: https://docs.google.com/spreadsheets/d/1Tc6VFwIfbI3Q_Y-aBLhUtgCQl1DJnovRWdmJ0F9zdoA/edit
  * 2. Cliquez sur "Extensions" > "Apps Script"
- * 3. Collez tout ce code dans l'éditeur (remplacez tout)
+ * 3. Collez TOUT ce code dans l'éditeur (remplacez tout ce qui existe)
  * 4. Cliquez sur "Déployer" > "Nouvelle deployment" :
  *    - Type : "Application Web"
- *    - Exécuter en tant que : "Moi"
+ *    - Exécuter en tant que : "Moi" (VOTRE compte Google)
  *    - Qui a accès : "Tout le monde"
- * 5. Copiez l'URL et ajoutez-la dans .env :
- *    GOOGLE_SHEETS_SCRIPT_URL=https://script.google.com/macros/s/XXXXX/exec
+ * 5. Copiez la nouvelle URL et envoyez-la moi
  * ============================================================
  */
 
-// Handle GET requests - receives data and writes to sheet
+// ID EXPLICITE du spreadsheet CapiMind - CRM
+var SPREADSHEET_ID = '1Tc6VFwIfbI3Q_Y-aBLhUtgCQl1DJnovRWdmJ0F9zdoA';
+
+// Handle GET requests
 function doGet(e) {
   try {
-    // Data comes as JSON encoded in the "data" query parameter
     var dataStr = e.parameter.data;
     
     if (!dataStr) {
-      // No data = just a ping/test request
+      // Ping/test - returns sheet info
+      var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
       return ContentService
         .createTextOutput(JSON.stringify({ 
           status: 'ok', 
-          message: 'CapiMind Google Sheets Integration is active',
-          sheetId: SpreadsheetApp.getActiveSpreadsheet().getId()
+          message: 'CapiMind CRM Integration v2 active',
+          sheetId: SPREADSHEET_ID,
+          sheetName: ss.getName(),
+          sheets: ss.getSheets().map(function(s) { return s.getName(); })
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
@@ -51,16 +57,25 @@ function doGet(e) {
     return ContentService
       .createTextOutput(JSON.stringify({ 
         success: false, 
-        error: error.toString() 
+        error: error.toString(),
+        stack: error.stack
       }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Handle POST requests (fallback - may not work due to redirect)
+// Handle POST requests
 function doPost(e) {
   try {
-    var data = JSON.parse(e.postData.contents);
+    var data;
+    if (e.postData && e.postData.contents) {
+      data = JSON.parse(e.postData.contents);
+    } else if (e.parameter.data) {
+      data = JSON.parse(e.parameter.data);
+    } else {
+      throw new Error('No data received');
+    }
+    
     var result = writeDataToSheet(data);
     
     return ContentService
@@ -71,7 +86,8 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({ 
         success: false, 
-        error: error.toString() 
+        error: error.toString(),
+        stack: error.stack
       }))
       .setMimeType(ContentService.MimeType.JSON);
   }
@@ -79,7 +95,8 @@ function doPost(e) {
 
 // Core function: writes data to the appropriate sheet
 function writeDataToSheet(data) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  // Open the spreadsheet by EXPLICIT ID (not getActive which can be wrong)
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   
   // Determine which sheet to write to based on the type
   var sheetName = data.type === 'inscription' ? 'Inscriptions' : 'Contacts';
@@ -88,17 +105,22 @@ function writeDataToSheet(data) {
   // Create sheet if it doesn't exist
   if (!sheet) {
     sheet = ss.insertSheet(sheetName);
-    
+  }
+  
+  // Check if headers exist (row 1 should have content)
+  var hasHeaders = sheet.getRange(1, 1).getValue() !== '';
+  
+  if (!hasHeaders) {
     // Add headers based on type
     if (data.type === 'inscription') {
-      sheet.appendRow([
+      sheet.getRange(1, 1, 1, 9).setValues([[
         'Date', 'Type', 'Nom complet', 'Email', 'Téléphone', 
         'Entreprise', 'Formation', 'Message', 'Destination'
-      ]);
+      ]]);
     } else {
-      sheet.appendRow([
+      sheet.getRange(1, 1, 1, 7).setValues([[
         'Date', 'Type', 'Nom', 'Email', 'Sujet', 'Message', 'Destination'
-      ]);
+      ]]);
     }
     
     // Format headers
@@ -112,9 +134,10 @@ function writeDataToSheet(data) {
   var date = data.date ? new Date(data.date) : new Date();
   var formattedDate = Utilities.formatDate(date, 'Africa/Casablanca', 'yyyy-MM-dd HH:mm:ss');
   
-  // Append data row based on type
+  // Build row data
+  var rowData;
   if (data.type === 'inscription') {
-    sheet.appendRow([
+    rowData = [
       formattedDate,
       data.type || 'inscription',
       data.name || '',
@@ -124,9 +147,9 @@ function writeDataToSheet(data) {
       data.course || '',
       data.message || '',
       data.destination || 'contact@capimind.com'
-    ]);
+    ];
   } else {
-    sheet.appendRow([
+    rowData = [
       formattedDate,
       data.type || 'contact',
       data.name || '',
@@ -134,17 +157,25 @@ function writeDataToSheet(data) {
       data.subject || '',
       data.message || '',
       data.destination || 'contact@capimind.com'
-    ]);
+    ];
   }
   
-  // Auto-resize columns
-  for (var i = 1; i <= sheet.getLastColumn(); i++) {
-    sheet.autoResizeColumn(i);
-  }
+  // Append the row
+  sheet.appendRow(rowData);
+  
+  // CRITICAL: Force flush to ensure data is written immediately
+  SpreadsheetApp.flush();
+  
+  // Verify the write by reading back the last row
+  var lastRow = sheet.getLastRow();
+  var writtenData = sheet.getRange(lastRow, 1, 1, rowData.length).getValues()[0];
   
   return {
     success: true,
-    message: 'Données enregistrées dans ' + sheetName,
-    sheet: sheetName
+    message: 'Enregistré dans ' + sheetName,
+    sheet: sheetName,
+    row: lastRow,
+    verified: writtenData[0] === formattedDate,
+    spreadsheetId: SPREADSHEET_ID
   };
 }
