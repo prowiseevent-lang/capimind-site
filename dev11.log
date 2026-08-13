@@ -1,0 +1,11 @@
+▲ Next.js 16.1.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://0.0.0.0:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 719ms
+ GET / 200 in 2.5s (compile: 2.2s, render: 315ms)
+prisma:query INSERT INTO `main`.`Enrollment` (`id`, `fullName`, `email`, `phone`, `company`, `message`, `courseId`, `courseTitle`, `createdAt`) VALUES (?,?,?,?,?,?,?,?,?) RETURNING `id` AS `id`, `fullName` AS `fullName`, `email` AS `email`, `phone` AS `phone`, `company` AS `company`, `message` AS `message`, `courseId` AS `courseId`, `courseTitle` AS `courseTitle`, `createdAt` AS `createdAt`
+Enrollment saved to local DB
+ POST /api/enroll 200 in 572ms (compile: 508ms, render: 63ms)

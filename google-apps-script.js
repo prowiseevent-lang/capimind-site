@@ -13,7 +13,7 @@
  * données arrivent dans le bon fichier.
  * 
  * INSTRUCTIONS:
- * 1. Ouvrez votre Google Sheet: https://docs.google.com/spreadsheets/d/1Tc6VFwIfbI3Q_Y-aBLhUtgCQl1DJnovRWdmJ0F9zdoA/edit
+ * 1. Ouvrez votre Google Sheet: https://docs.google.com/spreadsheets/d/1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI/edit
  * 2. Cliquez sur "Extensions" > "Apps Script"
  * 3. Collez TOUT ce code dans l'éditeur (remplacez tout ce qui existe)
  * 4. Cliquez sur "Déployer" > "Nouvelle deployment" :
@@ -24,8 +24,8 @@
  * ============================================================
  */
 
-// ID EXPLICITE du spreadsheet CapiMind - CRM
-var SPREADSHEET_ID = '1Tc6VFwIfbI3Q_Y-aBLhUtgCQl1DJnovRWdmJ0F9zdoA';
+// ID EXPLICITE du spreadsheet CapiMind - CRM (nouveau fichier)
+var SPREADSHEET_ID = '1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI';
 
 // Handle GET requests
 function doGet(e) {
