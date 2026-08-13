@@ -29,7 +29,8 @@ jobs:
 
       - name: Build static site
         env:
-          DEPLOY_TARGET: github-pages
+          DEPLOY_TARGET: custom-domain
+          NEXT_PUBLIC_GOOGLE_SHEETS_URL: https://script.google.com/macros/s/AKfycbzGJoUoXzhX6u5zDj01oHG_Fgjr8AIXyLJ0J_M7EmjShKdOIxta_LQMsjULDKby5rDk/exec
         run: bun run build:static
 
       - name: Restore API routes

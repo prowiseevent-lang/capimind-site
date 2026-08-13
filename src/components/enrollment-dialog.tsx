@@ -26,6 +26,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useState } from 'react';
+import { sendToGoogleSheetsDirect } from '@/lib/google-sheets';
 
 const iconMap: Record<string, React.ElementType> = {
   Brain,
@@ -65,17 +66,40 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
     setLoading(true);
 
     try {
-      const res = await fetch('/api/enroll', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          courseId: course.id,
-          courseTitle: course.title,
-        }),
-      });
+      // Try API route first (works on dev server)
+      let apiOk = false;
+      try {
+        const res = await fetch('/api/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...formData,
+            courseId: course.id,
+            courseTitle: course.title,
+          }),
+        });
+        apiOk = res.ok;
+      } catch {
+        // API route not available (static site) — use Google Sheets directly
+      }
 
-      if (res.ok) {
+      // If API route failed, send directly to Google Sheets
+      if (!apiOk) {
+        const result = await sendToGoogleSheetsDirect({
+          type: 'inscription',
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company || '',
+          course: course.title,
+          message: formData.message || '',
+          date: new Date().toISOString(),
+          destination: 'contact@capimind.com',
+        });
+        apiOk = result.success;
+      }
+
+      if (apiOk) {
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);

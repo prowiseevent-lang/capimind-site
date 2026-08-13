@@ -5,6 +5,7 @@ import { courses, Course } from '@/lib/courses';
 import { CourseCard } from '@/components/course-card';
 import { CourseDetailDialog } from '@/components/course-detail-dialog';
 import { EnrollmentDialog } from '@/components/enrollment-dialog';
+import { sendToGoogleSheetsDirect } from '@/lib/google-sheets';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -1368,10 +1369,10 @@ export default function Home() {
                 const form = e.target as HTMLFormElement;
                 const formData = new FormData(form);
                 const payload = {
-                  name: formData.get('name'),
-                  email: formData.get('email'),
-                  subject: formData.get('subject'),
-                  message: formData.get('message'),
+                  name: formData.get('name') as string,
+                  email: formData.get('email') as string,
+                  subject: formData.get('subject') as string,
+                  message: formData.get('message') as string,
                 };
                 try {
                   const res = await fetch('/api/contact', {
@@ -1390,8 +1391,29 @@ export default function Home() {
                   }
                   throw new Error('API unavailable');
                 } catch {
-                  // Fallback for static hosts (GitHub Pages, etc.): open a pre-filled email.
-                  const mailto = `mailto:contact@capimind.com?subject=${encodeURIComponent(String(payload.subject))}&body=${encodeURIComponent(`Nom: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`)}`;
+                  // API route not available (static site) — try Google Sheets directly
+                  try {
+                    const result = await sendToGoogleSheetsDirect({
+                      type: 'contact',
+                      name: payload.name,
+                      email: payload.email,
+                      subject: payload.subject,
+                      message: payload.message,
+                      date: new Date().toISOString(),
+                      destination: 'contact@capimind.com',
+                    });
+                    if (result.success) {
+                      form.reset();
+                      const toast = document.createElement('div');
+                      toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+                      toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
+                      document.body.appendChild(toast);
+                      setTimeout(() => toast.remove(), 4000);
+                      return;
+                    }
+                  } catch { /* fallback below */ }
+                  // Final fallback: open a pre-filled email.
+                  const mailto = `mailto:contact@capimind.com?subject=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(`Nom: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`)}`;
                   window.location.href = mailto;
                   form.reset();
                 }
@@ -1775,7 +1797,24 @@ export default function Home() {
                       }
                       throw new Error('API unavailable');
                     } catch {
-                      // Fallback for static hosts: open a pre-filled email.
+                      // API route not available (static site) — try Google Sheets directly
+                      try {
+                        const result = await sendToGoogleSheetsDirect({
+                          type: 'contact',
+                          name: emailForm.name,
+                          email: emailForm.email,
+                          subject: emailForm.subject,
+                          message: emailForm.message,
+                          date: new Date().toISOString(),
+                          destination: 'contact@capimind.com',
+                        });
+                        if (result.success) {
+                          setEmailSent(true);
+                          setEmailSending(false);
+                          return;
+                        }
+                      } catch { /* fallback below */ }
+                      // Final fallback: open a pre-filled email.
                       const mailto = `mailto:contact@capimind.com?subject=${encodeURIComponent(emailForm.subject || 'Contact CapiMind')}&body=${encodeURIComponent(`Nom: ${emailForm.name}\nEmail: ${emailForm.email}\n\n${emailForm.message}`)}`;
                       window.location.href = mailto;
                       setEmailSent(true);
