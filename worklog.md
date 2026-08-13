@@ -578,3 +578,25 @@ Stage Summary:
 - All 6 footer Services → action buttons feature working (service-bootcamps-actions through service-recherche-stage-actions)
 - www.capimind.com redirects to capimind.com
 - To redeploy after code changes: rebuild with DEPLOY_TARGET=custom-domain, push out/ to GitHub repo
+---
+Task ID: 6
+Agent: Main Agent
+Task: Verify and configure Google Sheets integration for enrollment forms and floating email button
+
+Work Log:
+- Analyzed all 3 form endpoints: enrollment dialog, contact section form, floating email button
+- Confirmed all 3 forms already call /api/enroll or /api/contact which forward to GOOGLE_SHEETS_SCRIPT_URL
+- Identified that GOOGLE_SHEETS_SCRIPT_URL was NOT configured in .env (empty string)
+- Created google-apps-script.js with complete Apps Script code for the user's Google Sheet
+- Updated /api/contact/route.ts to include type: 'contact' field in Google Sheets payload
+- Updated both API routes with clearer warning messages when GOOGLE_SHEETS_SCRIPT_URL is not set
+- Updated .env with GOOGLE_SHEETS_SCRIPT_URL placeholder and instructions
+- Verified with agent-browser that all 3 forms are functional (enrollment, contact, floating email)
+- All lint checks pass, dev server running cleanly
+
+Stage Summary:
+- All 3 forms (enrollment dialog, contact section, floating email popup) already route through /api/enroll and /api/contact
+- Both API routes forward data to GOOGLE_SHEETS_SCRIPT_URL when configured
+- Google Apps Script code created at google-apps-script.js for user to deploy in their spreadsheet
+- User needs to: (1) deploy the script in their Google Sheet, (2) get the web app URL, (3) set GOOGLE_SHEETS_SCRIPT_URL in .env
+- Data will be organized in 2 sheets: "Inscriptions" (for enrollment) and "Contacts" (for contact/email)

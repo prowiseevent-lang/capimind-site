@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const GOOGLE_SHEETS_SCRIPT_URL = process.env.GOOGLE_SHEETS_SCRIPT_URL || '';
 
+if (!GOOGLE_SHEETS_SCRIPT_URL) {
+  console.warn('⚠️ GOOGLE_SHEETS_SCRIPT_URL is not configured. Form data will NOT be sent to Google Sheets.');
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -62,7 +66,7 @@ export async function POST(request: NextRequest) {
         console.error('Google Sheets forwarding error:', sheetsError);
       }
     } else {
-      console.warn('GOOGLE_SHEETS_SCRIPT_URL not configured');
+      console.warn('⚠️ GOOGLE_SHEETS_SCRIPT_URL not configured — enrollment data NOT sent to Google Sheets');
     }
 
     return NextResponse.json(
