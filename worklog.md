@@ -649,3 +649,49 @@ Stage Summary:
 - User needs to push to GitHub: git push origin main
 - CI workflow will auto-deploy to capimind.com via GitHub Pages
 - All 3 forms will send data to Google Sheets on the live site
+---
+Task ID: 9
+Agent: Sub Agent
+Task: Start server and verify site - API + browser testing of all 3 forms
+
+Work Log:
+- Started Next.js dev server on port 3000 (npx next dev -p 3000 -H 0.0.0.0)
+- Server ready and responding via Caddy proxy on port 81
+- Tested enrollment API endpoint with curl:
+  * POST /api/enroll with {"fullName":"Browser Test","email":"browsertest@capimind.com","phone":"+212600000000","company":"CapiMind","courseId":"course-1","courseTitle":"IA Fondamentale","message":"Test from browser verification"}
+  * Response: {"success":true,"message":"Inscription réussie! Vous recevrez une confirmation à votre email.","id":"enr_1786622150471"}
+  * Google Sheets confirmation: ✅ Data forwarded to Google Sheets: {"success":true,"message":"Enregistré dans Inscriptions","sheet":"Inscriptions"}
+- Tested contact API endpoint with curl:
+  * POST /api/contact with {"name":"Browser Test","email":"browsertest@capimind.com","subject":"Test Contact","message":"Testing contact form integration"}
+  * Response: {"success":true,"message":"Message envoyé avec succès à contact@capimind.com","id":"msg_1786622157174"}
+  * Google Sheets confirmation: ✅ Data forwarded to Google Sheets: {"success":true,"message":"Enregistré dans Contacts","sheet":"Contacts"}
+- Browser tested enrollment dialog (via agent-browser on port 81):
+  * Clicked "Voir détails" on "IA pour Décideurs" course card
+  * Clicked "S'inscrire maintenant" in course detail dialog
+  * Filled enrollment form: Nom, Email, Téléphone, Entreprise, Message
+  * Clicked "Confirmer l'inscription" - form submitted successfully
+  * Server log: Enrollment saved to local DB + Google Sheets ✅
+- Browser tested floating email button:
+  * Clicked "Envoyer un email" floating button
+  * Email popup opened with form: Nom, Email, Objet, Message
+  * Filled form and clicked "Envoyer l'email"
+  * Success state shown: "Envoyer un autre message" button appeared
+  * Server log: Contact message saved to local DB + Google Sheets ✅
+- Browser tested contact section form:
+  * Scrolled to contact section (#contact)
+  * Filled form fields: Nom, Email, Sujet, Message
+  * Clicked "Envoyer le message" - form submitted and reset
+  * Server log: Contact message saved to local DB + Google Sheets ✅
+- All data forwarded to both local SQLite DB and Google Sheets
+- Screenshot saved: verification-full-test.png
+
+Stage Summary:
+- ✅ All 3 API endpoints tested and working (curl + browser)
+- ✅ All 3 forms forward data to Google Sheets successfully
+  * Enrollment → "Inscriptions" sheet
+  * Contact (floating email) → "Contacts" sheet
+  * Contact (section form) → "Contacts" sheet
+- ✅ Local DB also saving records (Enrollment + ContactMessage tables)
+- ✅ GOOGLE_SHEETS_SCRIPT_URL properly configured and working
+- ✅ Next.js dev server running on port 3000, proxied via Caddy on port 81
+- No issues found - all form submissions complete end-to-end
