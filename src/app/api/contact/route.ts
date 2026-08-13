@@ -6,51 +6,15 @@ if (!GOOGLE_SHEETS_SCRIPT_URL) {
   console.warn('⚠️ GOOGLE_SHEETS_SCRIPT_URL is not configured. Form data will NOT be sent to Google Sheets.');
 }
 
-// Cache the redirect URL to avoid an extra request each time
-let cachedRedirectUrl: string | null = null;
-let cachedRedirectUrlExpiry = 0;
-const REDIRECT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
 /**
- * Google Apps Script Web Apps redirect GET/POST requests (302).
- * The redirect URL points to script.googleusercontent.com which is the
- * actual execution endpoint. We need to:
- * 1. Get the redirect URL (once, cached)
- * 2. Append our data as a query parameter to that URL
- * 3. Make the actual request to the redirect URL with data
- */
-async function getExecutionUrl(): Promise<string | null> {
-  // Return cached URL if still valid
-  if (cachedRedirectUrl && Date.now() < cachedRedirectUrlExpiry) {
-    return cachedRedirectUrl;
-  }
-
-  try {
-    const res = await fetch(GOOGLE_SHEETS_SCRIPT_URL, {
-      method: 'GET',
-      redirect: 'manual',
-    });
-
-    const location = res.headers.get('location');
-    if (location) {
-      cachedRedirectUrl = location;
-      cachedRedirectUrlExpiry = Date.now() + REDIRECT_CACHE_TTL;
-      return cachedRedirectUrl;
-    }
-
-    // No redirect means the URL is already the execution URL
-    cachedRedirectUrl = GOOGLE_SHEETS_SCRIPT_URL;
-    cachedRedirectUrlExpiry = Date.now() + REDIRECT_CACHE_TTL;
-    return cachedRedirectUrl;
-  } catch (err) {
-    console.error('❌ Failed to get Google Sheets execution URL:', err);
-    return null;
-  }
-}
-
-/**
- * Send data to Google Apps Script by appending it to the execution URL.
- * This bypasses the redirect that would otherwise strip query parameters.
+ * Send data to Google Apps Script Web App.
+ * 
+ * Google Apps Script web apps use a 302 redirect flow:
+ * 1. Request SCRIPT_URL?data=... → 302 redirect to script.googleusercontent.com
+ * 2. Follow redirect → script executes with data available in e.parameter
+ * 
+ * We must include the data in the initial URL so it's part of the
+ * execution context that Google creates for the redirect.
  */
 async function sendToGoogleSheets(data: Record<string, string>) {
   if (!GOOGLE_SHEETS_SCRIPT_URL) {
@@ -59,33 +23,42 @@ async function sendToGoogleSheets(data: Record<string, string>) {
   }
 
   try {
-    const execUrl = await getExecutionUrl();
-    if (!execUrl) {
-      console.error('❌ Could not resolve Google Sheets execution URL');
+    // Step 1: Request with data in URL, get the redirect location
+    const urlWithData = `${GOOGLE_SHEETS_SCRIPT_URL}?data=${encodeURIComponent(JSON.stringify(data))}`;
+    
+    const redirectRes = await fetch(urlWithData, {
+      method: 'GET',
+      redirect: 'manual',
+    });
+
+    const location = redirectRes.headers.get('location');
+    
+    if (!location) {
+      // No redirect — try reading the response directly
+      if (redirectRes.ok) {
+        const text = await redirectRes.text();
+        console.log('✅ Google Sheets response (no redirect):', text);
+        return true;
+      }
+      console.error('❌ Google Sheets request failed:', redirectRes.status);
       return false;
     }
 
-    // Append data parameter to the execution URL
-    const separator = execUrl.includes('?') ? '&' : '?';
-    const url = `${execUrl}${separator}data=${encodeURIComponent(JSON.stringify(data))}`;
-
-    const res = await fetch(url, {
+    // Step 2: Follow the redirect to execute the script
+    const execRes = await fetch(location, {
       method: 'GET',
     });
 
-    if (res.ok) {
-      const text = await res.text();
+    if (execRes.ok) {
+      const text = await execRes.text();
       console.log('✅ Data forwarded to Google Sheets:', text);
       return true;
     } else {
-      console.error('❌ Google Sheets forwarding failed:', res.status);
-      // Invalidate cache on error
-      cachedRedirectUrl = null;
+      console.error('❌ Google Sheets execution failed:', execRes.status);
       return false;
     }
   } catch (err) {
     console.error('❌ Google Sheets forwarding error:', err);
-    cachedRedirectUrl = null;
     return false;
   }
 }

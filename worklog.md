@@ -600,3 +600,29 @@ Stage Summary:
 - Google Apps Script code created at google-apps-script.js for user to deploy in their spreadsheet
 - User needs to: (1) deploy the script in their Google Sheet, (2) get the web app URL, (3) set GOOGLE_SHEETS_SCRIPT_URL in .env
 - Data will be organized in 2 sheets: "Inscriptions" (for enrollment) and "Contacts" (for contact/email)
+---
+Task ID: 7
+Agent: Main Agent
+Task: Configure GOOGLE_SHEETS_SCRIPT_URL and verify Google Sheets integration works
+
+Work Log:
+- User provided 3 Google Apps Script deployment URLs across the conversation
+- First URL had code error (ReferenceError: google is not defined)
+- Second URL had old code without data parameter handling
+- Third URL (AKfycbzG...) had the correct updated script code
+- Discovered Google Apps Script web apps redirect (302) which strips POST body and query params
+- Implemented redirect-bypass approach: include data in initial URL → get 302 → follow redirect to execution endpoint
+- Updated /api/enroll/route.ts with sendToGoogleSheets() using redirect: 'manual' + follow pattern
+- Updated /api/contact/route.ts with same pattern
+- Tested directly via curl: inscription → {"success":true,"message":"Enregistré dans Inscriptions"}
+- Tested directly via curl: contact → {"success":true,"message":"Enregistré dans Contacts"}
+- Tested via Next.js API endpoints: both return success and forward to Google Sheets
+- Server logs confirm: "Data forwarded to Google Sheets: {"success":true,"message":"Enregistré dans Inscriptions"}"
+- Lint passes, agent-browser confirms site works with floating email button
+
+Stage Summary:
+- GOOGLE_SHEETS_SCRIPT_URL configured in .env with working deployment
+- All 3 forms (enrollment dialog, contact section, floating email button) now send data to Google Sheet
+- Data organized in 2 sheets: "Inscriptions" and "Contacts"
+- Google Apps Script redirect issue resolved with manual redirect handling
+- End-to-end verified: form → API → Google Sheets → success response
