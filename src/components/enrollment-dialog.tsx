@@ -26,7 +26,6 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useState } from 'react';
-import { sendToGoogleSheetsDirect } from '@/lib/google-sheets';
 
 const iconMap: Record<string, React.ElementType> = {
   Brain,
@@ -57,6 +56,7 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!course) return null;
   const Icon = iconMap[course.icon] || Brain;
@@ -64,51 +64,36 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
-      // Try API route first (works on dev server)
-      let apiOk = false;
-      try {
-        const res = await fetch('/api/enroll', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...formData,
-            courseId: course.id,
-            courseTitle: course.title,
-          }),
-        });
-        apiOk = res.ok;
-      } catch {
-        // API route not available (static site) — use Google Sheets directly
-      }
+      const res = await fetch('/api/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          courseId: course.id,
+          courseTitle: course.title,
+        }),
+      });
 
-      // If API route failed, send directly to Google Sheets
-      if (!apiOk) {
-        const result = await sendToGoogleSheetsDirect({
-          type: 'inscription',
-          name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          company: formData.company || '',
-          course: course.title,
-          message: formData.message || '',
-          date: new Date().toISOString(),
-          destination: 'contact@capimind.com',
-        });
-        apiOk = result.success;
-      }
-
-      if (apiOk) {
+      if (res.ok) {
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
           setFormData({ fullName: '', email: '', phone: '', company: '', message: '' });
           onClose();
         }, 2500);
+      } else {
+        let errorMsg = 'Une erreur est survenue. Veuillez réessayer.';
+        try {
+          const data = await res.json();
+          if (data.error) errorMsg = data.error;
+        } catch { /* use default message */ }
+        setError(errorMsg);
       }
     } catch {
-      // Error handling
+      setError('Erreur de connexion. Vérifiez votre connexion internet et réessayez.');
     } finally {
       setLoading(false);
     }
@@ -117,6 +102,7 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
   const handleClose = () => {
     if (!loading) {
       setSuccess(false);
+      setError(null);
       onClose();
     }
   };
@@ -147,6 +133,13 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
                 </div>
               </DialogTitle>
             </DialogHeader>
+
+            {error && (
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm mt-2">
+                <svg className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
               <div className="space-y-2">

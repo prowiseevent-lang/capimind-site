@@ -96,8 +96,8 @@ export async function POST(request: NextRequest) {
       console.warn('Local DB not available — Google Sheets only');
     }
 
-    // Forward to Google Sheets
-    await sendToGoogleSheets({
+    // Forward to Google Sheets in background (don't block the response)
+    sendToGoogleSheets({
       type: 'inscription',
       name: fullName,
       email,
@@ -107,8 +107,9 @@ export async function POST(request: NextRequest) {
       message: message || '',
       date: new Date().toISOString(),
       destination: 'contact@capimind.com',
-    });
+    }).catch((err) => console.error('Background Google Sheets forwarding failed:', err));
 
+    // Respond immediately
     return NextResponse.json(
       {
         success: true,

@@ -5,7 +5,7 @@ import { courses, Course } from '@/lib/courses';
 import { CourseCard } from '@/components/course-card';
 import { CourseDetailDialog } from '@/components/course-detail-dialog';
 import { EnrollmentDialog } from '@/components/enrollment-dialog';
-import { sendToGoogleSheetsDirect } from '@/lib/google-sheets';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -72,6 +72,7 @@ export default function Home() {
   const [emailChatOpen, setEmailChatOpen] = useState(false);
   const [emailSending, setEmailSending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [emailForm, setEmailForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [highlightedService, setHighlightedService] = useState<string | null>(null);
 
@@ -1387,35 +1388,19 @@ export default function Home() {
                     toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 4000);
-                    return;
+                  } else {
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+                    toast.innerHTML = '✗ Erreur lors de l\'envoi. Veuillez réessayer.';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 4000);
                   }
-                  throw new Error('API unavailable');
                 } catch {
-                  // API route not available (static site) — try Google Sheets directly
-                  try {
-                    const result = await sendToGoogleSheetsDirect({
-                      type: 'contact',
-                      name: payload.name,
-                      email: payload.email,
-                      subject: payload.subject,
-                      message: payload.message,
-                      date: new Date().toISOString(),
-                      destination: 'contact@capimind.com',
-                    });
-                    if (result.success) {
-                      form.reset();
-                      const toast = document.createElement('div');
-                      toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                      toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
-                      document.body.appendChild(toast);
-                      setTimeout(() => toast.remove(), 4000);
-                      return;
-                    }
-                  } catch { /* fallback below */ }
-                  // Final fallback: open a pre-filled email.
-                  const mailto = `mailto:contact@capimind.com?subject=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(`Nom: ${payload.name}\nEmail: ${payload.email}\n\n${payload.message}`)}`;
-                  window.location.href = mailto;
-                  form.reset();
+                  const toast = document.createElement('div');
+                  toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+                  toast.innerHTML = '✗ Erreur de connexion. Vérifiez votre connexion internet.';
+                  document.body.appendChild(toast);
+                  setTimeout(() => toast.remove(), 4000);
                 }
               }}
             >
@@ -1753,7 +1738,7 @@ export default function Home() {
                 </div>
               </div>
               <button
-                onClick={() => { setEmailChatOpen(false); setEmailSent(false); }}
+                onClick={() => { setEmailChatOpen(false); setEmailSent(false); setEmailError(null); }}
                 className="text-white/80 hover:text-white transition-colors"
                 aria-label="Fermer"
               >
@@ -1784,6 +1769,7 @@ export default function Home() {
                   onSubmit={async (e) => {
                     e.preventDefault();
                     setEmailSending(true);
+                    setEmailError(null);
                     try {
                       const res = await fetch('/api/contact', {
                         method: 'POST',
@@ -1792,34 +1778,19 @@ export default function Home() {
                       });
                       if (res.ok) {
                         setEmailSent(true);
-                        setEmailSending(false);
-                        return;
+                      } else {
+                        let errorMsg = 'Erreur lors de l\'envoi. Veuillez réessayer.';
+                        try {
+                          const data = await res.json();
+                          if (data.error) errorMsg = data.error;
+                        } catch { /* use default */ }
+                        setEmailError(errorMsg);
                       }
-                      throw new Error('API unavailable');
                     } catch {
-                      // API route not available (static site) — try Google Sheets directly
-                      try {
-                        const result = await sendToGoogleSheetsDirect({
-                          type: 'contact',
-                          name: emailForm.name,
-                          email: emailForm.email,
-                          subject: emailForm.subject,
-                          message: emailForm.message,
-                          date: new Date().toISOString(),
-                          destination: 'contact@capimind.com',
-                        });
-                        if (result.success) {
-                          setEmailSent(true);
-                          setEmailSending(false);
-                          return;
-                        }
-                      } catch { /* fallback below */ }
-                      // Final fallback: open a pre-filled email.
-                      const mailto = `mailto:contact@capimind.com?subject=${encodeURIComponent(emailForm.subject || 'Contact CapiMind')}&body=${encodeURIComponent(`Nom: ${emailForm.name}\nEmail: ${emailForm.email}\n\n${emailForm.message}`)}`;
-                      window.location.href = mailto;
-                      setEmailSent(true);
+                      setEmailError('Erreur de connexion. Vérifiez votre connexion internet.');
+                    } finally {
+                      setEmailSending(false);
                     }
-                    setEmailSending(false);
                   }}
                   className="space-y-3"
                 >
@@ -1871,6 +1842,12 @@ export default function Home() {
                     <Mail className="h-3 w-3" />
                     Envoyé à contact@capimind.com
                   </p>
+                  {emailError && (
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-xs">
+                      <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" /></svg>
+                      {emailError}
+                    </div>
+                  )}
                   <button
                     type="submit"
                     disabled={emailSending}
@@ -1900,7 +1877,7 @@ export default function Home() {
 
       {/* Email Floating Button */}
       <button
-        onClick={() => { setEmailChatOpen(!emailChatOpen); setEmailSent(false); }}
+        onClick={() => { setEmailChatOpen(!emailChatOpen); setEmailSent(false); setEmailError(null); }}
         className="fixed bottom-6 right-40 sm:right-48 z-50 flex items-center gap-2 bg-[#EA4335] hover:bg-[#D33426] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
         aria-label="Envoyer un email"
       >
