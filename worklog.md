@@ -626,3 +626,26 @@ Stage Summary:
 - Data organized in 2 sheets: "Inscriptions" and "Contacts"
 - Google Apps Script redirect issue resolved with manual redirect handling
 - End-to-end verified: form → API → Google Sheets → success response
+---
+Task ID: 8
+Agent: Main Agent
+Task: Deploy Google Sheets integration to live site (capimind.com)
+
+Work Log:
+- Created src/lib/google-sheets.ts client-side utility for direct Google Apps Script calls
+- Updated EnrollmentDialog: tries /api/enroll first, falls back to sendToGoogleSheetsDirect()
+- Updated contact form in page.tsx: tries /api/contact first, falls back to Google Sheets direct
+- Updated floating email form: tries /api/contact first, falls back to Google Sheets direct
+- Added NEXT_PUBLIC_GOOGLE_SHEETS_URL env var (baked into static build)
+- Updated package.json: build:static now uses DEPLOY_TARGET=custom-domain (no basePath)
+- Updated .github/workflows/deploy-pages.yml: added NEXT_PUBLIC_GOOGLE_SHEETS_URL, changed to custom-domain
+- Updated src/app/api/route.ts with force-static export for build compatibility
+- Committed all changes (13 files, 166 insertions)
+- Verified dev server works: lint passes, page loads 200, all forms functional
+- GitHub push requires authentication not available in this environment
+
+Stage Summary:
+- All code changes committed to local git (b410340)
+- User needs to push to GitHub: git push origin main
+- CI workflow will auto-deploy to capimind.com via GitHub Pages
+- All 3 forms will send data to Google Sheets on the live site
