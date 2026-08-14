@@ -770,3 +770,24 @@ Stage Summary:
 - ✅ Email dialog has error banner with clear messages
 - ✅ No double submissions — single API call per form
 - ✅ Browser tested all 3 forms — all return 200 and display success
+---
+Task ID: 10
+Agent: main
+Task: Apply Google Sheets integration with direct browser submission
+
+Work Log:
+- Verified Google Apps Script v2 is working with new spreadsheet ID: 1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI
+- Created /src/lib/sheets-direct.ts with CORS-free iframe form submission
+- Updated enrollment-dialog.tsx to send data directly to Google Sheets + API route
+- Updated contact form in page.tsx to send data directly to Google Sheets + API route
+- Updated floating email form in page.tsx to send data directly to Google Sheets + API route
+- Updated package.json dev script to include -H 0.0.0.0 for gateway accessibility
+- Verified: Inscriptions row 13, Contacts row 12 in new spreadsheet
+- Key fix: Data now goes to Google Sheets via BOTH API route AND direct iframe submission
+
+Stage Summary:
+- All 3 forms now send data directly to Google Sheets (CORS-free iframe method)
+- Data reaches Google Sheets even if Next.js server is down
+- API routes still forward as backup
+- Google Apps Script URL: AKfycbxDkpEnbsYuEnNLK69WVNcVhhXpt5QWYkp6JmVM9pUub2hoBTp357EMTMgzqGjQqhOO2A
+- Spreadsheet: CRM - CapiMind (1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI)

@@ -1,0 +1,6 @@
+{
+  "name": "sheets-forwarder",
+  "scripts": {
+    "dev": "bun --hot index.ts"
+  }
+}
