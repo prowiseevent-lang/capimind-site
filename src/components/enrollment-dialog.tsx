@@ -26,7 +26,6 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useState } from 'react';
-import { sendToGoogleSheets } from '@/lib/sheets-direct';
 
 const iconMap: Record<string, React.ElementType> = {
   Brain,
@@ -67,40 +66,34 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
     setLoading(true);
     setError(null);
 
-    // 1. ALWAYS send directly to Google Sheets first (works even without server)
-    sendToGoogleSheets({
-      type: 'inscription',
-      name: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      company: formData.company || '',
-      course: course.title,
-      message: formData.message || '',
-      date: new Date().toISOString(),
-      destination: 'contact@capimind.com',
-    });
+    try {
+      const res = await fetch('/api/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          courseId: course.id,
+          courseTitle: course.title,
+        }),
+      });
 
-    // 2. Also try the API route (for local DB backup) — don't block on it
-    fetch('/api/enroll', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...formData,
-        courseId: course.id,
-        courseTitle: course.title,
-      }),
-    }).catch(() => {
-      // Server might be down — that's OK, Google Sheets already received the data
-    });
-
-    // 3. Show success immediately
-    setSuccess(true);
-    setLoading(false);
-    setTimeout(() => {
-      setSuccess(false);
-      setFormData({ fullName: '', email: '', phone: '', company: '', message: '' });
-      onClose();
-    }, 2500);
+      if (res.ok) {
+        setSuccess(true);
+        setLoading(false);
+        setTimeout(() => {
+          setSuccess(false);
+          setFormData({ fullName: '', email: '', phone: '', company: '', message: '' });
+          onClose();
+        }, 2500);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || 'Erreur lors de l\'inscription. Veuillez réessayer.');
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('Erreur réseau. Vérifiez votre connexion et réessayez.');
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {

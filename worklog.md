@@ -840,3 +840,25 @@ Stage Summary:
 - This works even if Next.js server is down - data goes directly from browser to Google Sheets
 - Google Sheet confirmed receiving data: Contacts row 26, Inscriptions row 20
 - All 3 forms (inscription, contact, email flottant) now send data to Google Sheets
+---
+Task ID: 1
+Agent: main
+Task: Fix broken form submissions (enrollment, contact, floating email button) — all had broken import from non-existent sheets-direct module
+
+Work Log:
+- Read page.tsx, enrollment-dialog.tsx, API routes, and Google Apps Script
+- Found root cause: both page.tsx (line 8) and enrollment-dialog.tsx (line 29) imported `sendToGoogleSheets` from `@/lib/sheets-direct` — this file DOES NOT EXIST, causing a build/compilation error that breaks the entire app
+- Fixed enrollment-dialog.tsx: removed broken import, rewrote handleSubmit to use `/api/enroll` with proper try/catch error handling
+- Fixed page.tsx: removed broken import, rewrote contact section form to use `/api/contact` with success/error toasts, rewrote floating email button form to use `/api/contact` with proper error handling
+- All forms now properly await the API response and show success/error based on actual result (instead of showing false success immediately)
+- Verified lint passes clean
+- Tested API routes: `/api/enroll` returns success, `/api/contact` returns success, both save to local DB and forward to Google Sheets
+- Browser test confirmed enrollment dialog opens correctly with form fields
+- Dev server instability in sandbox prevents extended browser testing
+
+Stage Summary:
+- Root cause: `import { sendToGoogleSheets } from '@/lib/sheets-direct'` — file didn't exist → app couldn't compile → ALL forms broken
+- Fix: Removed all references to sheets-direct, all forms now use proper API routes
+- API routes confirmed working: enrollment, contact, and floating email all return success
+- Data is forwarded to Google Sheets via the API routes (redirect-bypass pattern)
+- User should check "Inscriptions" and "Contacts" tabs in their Google Sheet, NOT "Feuille 1" (gid=0)
