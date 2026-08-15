@@ -71,3 +71,24 @@ Stage Summary:
 - Token is validated before deployment starts
 - Token is masked in all console output
 - .deploy-token is gitignored for security
+---
+Task ID: 4
+Agent: Main
+Task: Apply deployment - find a solution for deploying to capimind.com
+
+Work Log:
+- Checked all available auth methods: no GitHub token, no SSH keys, no gh CLI, no netrc
+- git push dry-run fails: "could not read Username for 'https://github.com'"
+- Solution: GitHub Actions workflows for automatic deployment
+- Created .github/workflows/deploy.yml using peaceiris/actions-gh-pages (recommended)
+- Created .github/workflows/deploy-direct.yml as alternative (direct git push)
+- Built static site: DEPLOY_TARGET=custom-domain bun run build:static → out/ (18M)
+- Created capimind-deploy.zip (17M) for manual upload option
+- Committed workflow files
+
+Stage Summary:
+- GitHub Actions auto-deploy configured: push to main → auto builds & deploys to capimind-web
+- User needs to set DEPLOY_TOKEN secret once in GitHub repo settings
+- Static site built and ready in out/ directory
+- capimind-deploy.zip available for manual deployment
+- 3 deployment options provided to user
