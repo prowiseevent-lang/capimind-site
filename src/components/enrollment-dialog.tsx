@@ -26,7 +26,6 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useState } from 'react';
-import { sendToGoogleSheets } from '@/lib/sheets-direct';
 
 const iconMap: Record<string, React.ElementType> = {
   Brain,
@@ -67,19 +66,6 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
     setLoading(true);
     setError(null);
 
-    // ALWAYS send directly to Google Sheets (CORS-free, works even if server is down)
-    sendToGoogleSheets({
-      type: 'inscription',
-      name: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      company: formData.company || '',
-      course: course.title,
-      message: formData.message || '',
-      date: new Date().toISOString(),
-      destination: 'contact@capimind.com',
-    });
-
     try {
       const res = await fetch('/api/enroll', {
         method: 'POST',
@@ -91,7 +77,9 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
         }),
       });
 
-      if (res.ok) {
+      const result = await res.json();
+
+      if (res.ok && result.success) {
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
@@ -99,22 +87,11 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
           onClose();
         }, 2500);
       } else {
-        // API failed but Google Sheets already received the data via direct send
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-          setFormData({ fullName: '', email: '', phone: '', company: '', message: '' });
-          onClose();
-        }, 2500);
+        setError(result.error || 'Erreur lors de l\'inscription. Veuillez réessayer.');
       }
-    } catch {
-      // API route failed (server might be down) but Google Sheets already received data
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-        setFormData({ fullName: '', email: '', phone: '', company: '', message: '' });
-        onClose();
-      }, 2500);
+    } catch (err) {
+      setError('Erreur de connexion. Veuillez réessayer.');
+      console.error('Enrollment submission error:', err);
     } finally {
       setLoading(false);
     }

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { courses, Course } from '@/lib/courses';
 import { CourseCard } from '@/components/course-card';
-import { sendToGoogleSheets } from '@/lib/sheets-direct';
 import { CourseDetailDialog } from '@/components/course-detail-dialog';
 import { EnrollmentDialog } from '@/components/enrollment-dialog';
 
@@ -1376,37 +1375,31 @@ export default function Home() {
                   subject: formData.get('subject') as string,
                   message: formData.get('message') as string,
                 };
-                // ALWAYS send directly to Google Sheets (works even if server is down)
-                sendToGoogleSheets({
-                  type: 'contact',
-                  name: payload.name,
-                  email: payload.email,
-                  subject: payload.subject,
-                  message: payload.message,
-                  date: new Date().toISOString(),
-                  destination: 'contact@capimind.com',
-                });
                 try {
                   const res = await fetch('/api/contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
                   });
-                  if (res.ok || !res.ok) {
-                    // Google Sheets already received data via direct send
+                  const result = await res.json();
+                  if (res.ok && result.success) {
                     form.reset();
                     const toast = document.createElement('div');
                     toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
                     toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 4000);
+                  } else {
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+                    toast.innerHTML = '✗ Erreur: ' + (result.error || 'Veuillez réessayer');
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 4000);
                   }
                 } catch {
-                  // Server might be down but Google Sheets already received data
-                  form.reset();
                   const toast = document.createElement('div');
-                  toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                  toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
+                  toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+                  toast.innerHTML = '✗ Erreur de connexion. Veuillez réessayer.';
                   document.body.appendChild(toast);
                   setTimeout(() => toast.remove(), 4000);
                 }
@@ -1778,29 +1771,21 @@ export default function Home() {
                     e.preventDefault();
                     setEmailSending(true);
                     setEmailError(null);
-                    // ALWAYS send directly to Google Sheets
-                    sendToGoogleSheets({
-                      type: 'contact',
-                      name: emailForm.name,
-                      email: emailForm.email,
-                      subject: emailForm.subject,
-                      message: emailForm.message,
-                      date: new Date().toISOString(),
-                      destination: 'contact@capimind.com',
-                    });
+                    // Send to Google Sheets via API route
                     try {
                       const res = await fetch('/api/contact', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(emailForm),
                       });
-                      if (res.ok || !res.ok) {
-                        // Google Sheets already received data
+                      const result = await res.json();
+                      if (res.ok && result.success) {
                         setEmailSent(true);
+                      } else {
+                        setEmailError(result.error || 'Erreur lors de l\'envoi. Veuillez réessayer.');
                       }
                     } catch {
-                      // Server might be down but Google Sheets already received data
-                      setEmailSent(true);
+                      setEmailError('Erreur de connexion. Veuillez réessayer.');
                     } finally {
                       setEmailSending(false);
                     }
