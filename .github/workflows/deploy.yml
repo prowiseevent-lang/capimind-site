@@ -1,0 +1,77 @@
+# ============================================================
+# CapiMind - Auto Deploy to GitHub Pages (capimind.com)
+# ============================================================
+#
+# Ce workflow se déclenche automatiquement à chaque push sur main.
+# Il construit le site statique et le déploie sur le repo
+# capimind-web (GitHub Pages).
+#
+# CONFIGURATION ONE-TIME:
+#   1. Créez un Personal Access Token (PAT) sur GitHub:
+#      Settings → Developer settings → Personal access tokens → Tokens (classic)
+#      Permissions: repo (full), workflow
+#
+#   2. Ajoutez-le comme secret dans ce repo:
+#      Settings → Secrets and variables → Actions → New repository secret
+#      Name: DEPLOY_TOKEN
+#      Value: ghp_xxxxxxxxxxxx
+#
+#   3. Push votre code → le déploiement se lance automatiquement !
+#
+# ============================================================
+
+name: Deploy CapiMind to capimind.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # permet de déclencher manuellement depuis GitHub
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # ── Checkout le code source ──
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      # ── Installer Bun ──
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # ── Installer les dépendances ──
+      - name: Install dependencies
+        run: bun install --frozen-lockfile 2>/dev/null || bun install
+
+      # ── Construire le site statique ──
+      - name: Build static site
+        run: |
+          rm -rf out .next
+          DEPLOY_TARGET=custom-domain bun run build:static
+
+      # ── Déployer sur le repo capimind-web (GitHub Pages) ──
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.DEPLOY_TOKEN }}
+          external_repository: mohamedbenkacem95-boop/capimind-web
+          publish_branch: main
+          publish_dir: ./out
+          force_orphan: true
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
+          user_name: "CapiMind Deploy Bot"
+          user_email: "deploy@capimind.com"
+
+      # ── Vérifier le déploiement ──
+      - name: Deployment info
+        run: |
+          echo "✅ Site déployé !"
+          echo "🌐 https://capimind.com"
+          echo "📅 $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
