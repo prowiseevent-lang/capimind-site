@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { courses, Course } from '@/lib/courses';
+import { submitToSheet } from '@/lib/submit-to-sheet';
 import { CourseCard } from '@/components/course-card';
 import { CourseDetailDialog } from '@/components/course-detail-dialog';
 import { EnrollmentDialog } from '@/components/enrollment-dialog';
@@ -1368,38 +1369,25 @@ export default function Home() {
               onSubmit={async (e) => {
                 e.preventDefault();
                 const form = e.target as HTMLFormElement;
-                const formData = new FormData(form);
-                const payload = {
-                  name: formData.get('name') as string,
-                  email: formData.get('email') as string,
-                  subject: formData.get('subject') as string,
-                  message: formData.get('message') as string,
-                };
-                try {
-                  const res = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                  });
-                  if (res.ok) {
-                    form.reset();
-                    const toast = document.createElement('div');
-                    toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                    toast.innerHTML = '✓ Bien Reçu !';
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 4000);
-                  } else {
-                    const errData = await res.json().catch(() => ({}));
-                    const toast = document.createElement('div');
-                    toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                    toast.innerHTML = '✗ ' + (errData.error || 'Erreur lors de l\'envoi du message');
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 4000);
-                  }
-                } catch (err) {
+                const fd = new FormData(form);
+                const result = await submitToSheet('/api/contact', 'contact', {
+                  name: fd.get('name') as string,
+                  email: fd.get('email') as string,
+                  subject: fd.get('subject') as string,
+                  message: fd.get('message') as string,
+                  destination: 'contact@capimind.com',
+                });
+                if (result.ok) {
+                  form.reset();
+                  const toast = document.createElement('div');
+                  toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+                  toast.innerHTML = '✓ Bien Reçu !';
+                  document.body.appendChild(toast);
+                  setTimeout(() => toast.remove(), 4000);
+                } else {
                   const toast = document.createElement('div');
                   toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                  toast.innerHTML = '✗ Erreur réseau. Vérifiez votre connexion.';
+                  toast.innerHTML = '✗ ' + (result.message || 'Erreur lors de l\'envoi');
                   document.body.appendChild(toast);
                   setTimeout(() => toast.remove(), 4000);
                 }
@@ -1771,20 +1759,14 @@ export default function Home() {
                     e.preventDefault();
                     setEmailSending(true);
                     setEmailError(null);
-                    try {
-                      const res = await fetch('/api/contact', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(emailForm),
-                      });
-                      if (res.ok) {
-                        setEmailSent(true);
-                      } else {
-                        const errData = await res.json().catch(() => ({}));
-                        setEmailError(errData.error || 'Erreur lors de l\'envoi. Réessayez.');
-                      }
-                    } catch (err) {
-                      setEmailError('Erreur réseau. Vérifiez votre connexion.');
+                    const result = await submitToSheet('/api/contact', 'contact', {
+                      ...emailForm,
+                      destination: 'contact@capimind.com',
+                    });
+                    if (result.ok) {
+                      setEmailSent(true);
+                    } else {
+                      setEmailError(result.message || 'Erreur lors de l\'envoi. Réessayez.');
                     }
                     setEmailSending(false);
                   }}

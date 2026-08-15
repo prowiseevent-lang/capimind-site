@@ -26,6 +26,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useState } from 'react';
+import { submitToSheet } from '@/lib/submit-to-sheet';
 
 const iconMap: Record<string, React.ElementType> = {
   Brain,
@@ -66,32 +67,28 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
     setLoading(true);
     setError(null);
 
-    try {
-      const res = await fetch('/api/enroll', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          courseId: course.id,
-          courseTitle: course.title,
-        }),
-      });
+    const result = await submitToSheet('/api/enroll', 'inscription', {
+      name: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      company: formData.company,
+      course: course.title,
+      message: formData.message,
+      courseId: course.id,
+      courseTitle: course.title,
+      destination: 'contact@capimind.com',
+    });
 
-      if (res.ok) {
-        setSuccess(true);
-        setLoading(false);
-        setTimeout(() => {
-          setSuccess(false);
-          setFormData({ fullName: '', email: '', phone: '', company: '', message: '' });
-          onClose();
-        }, 2500);
-      } else {
-        const data = await res.json().catch(() => ({}));
-        setError(data.error || 'Erreur lors de l\'inscription. Veuillez réessayer.');
-        setLoading(false);
-      }
-    } catch (err) {
-      setError('Erreur réseau. Vérifiez votre connexion et réessayez.');
+    if (result.ok) {
+      setSuccess(true);
+      setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setFormData({ fullName: '', email: '', phone: '', company: '', message: '' });
+        onClose();
+      }, 2500);
+    } else {
+      setError(result.message || 'Erreur lors de l\'inscription. Veuillez réessayer.');
       setLoading(false);
     }
   };
