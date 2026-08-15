@@ -6,3 +6,5 @@ dev.log
 .vercel
 out/
 tool-results/
+.deploy-token
+capimind-deploy.zip

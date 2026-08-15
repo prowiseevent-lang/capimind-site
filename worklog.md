@@ -48,3 +48,26 @@ Stage Summary:
 - All 3 forms (enrollment, contact, floating email) verified working
 - Google Sheets confirmed receiving data in "Inscriptions" and "Contacts" tabs
 - Cannot push to GitHub (no credentials) - user needs to deploy manually
+---
+Task ID: 3
+Agent: Main
+Task: Add GitHub token-based deployment support
+
+Work Log:
+- Updated deploy-capimind.sh to support GITHUB_TOKEN env variable
+  - Token resolution order: GITHUB_TOKEN env → git remote URL → .deploy-token file
+  - Validates token against GitHub API before proceeding (curl /api.github.com/user)
+  - Shows connected GitHub username
+  - Masks token in output (shows first 4 and last 4 chars only)
+  - Sed-replaces token from git push output to avoid leaking in logs
+- Updated scripts/deploy-pages.sh with same token support
+- Added .deploy-token and capimind-deploy.zip to .gitignore
+- Shell script syntax validated (bash -n)
+- Lint passes
+
+Stage Summary:
+- Deploy now works via token: GITHUB_TOKEN=ghp_xxxx bash deploy-capimind.sh
+- 3 ways to provide the token: env var, .deploy-token file, or git remote URL
+- Token is validated before deployment starts
+- Token is masked in all console output
+- .deploy-token is gitignored for security
