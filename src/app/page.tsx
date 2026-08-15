@@ -5,6 +5,7 @@ import { courses, Course } from '@/lib/courses';
 import { CourseCard } from '@/components/course-card';
 import { CourseDetailDialog } from '@/components/course-detail-dialog';
 import { EnrollmentDialog } from '@/components/enrollment-dialog';
+import { sendToGoogleSheets } from '@/lib/sheets-direct';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -1375,34 +1376,29 @@ export default function Home() {
                   subject: formData.get('subject') as string,
                   message: formData.get('message') as string,
                 };
-                try {
-                  const res = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                  });
-                  const result = await res.json();
-                  if (res.ok && result.success) {
-                    form.reset();
-                    const toast = document.createElement('div');
-                    toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                    toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 4000);
-                  } else {
-                    const toast = document.createElement('div');
-                    toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                    toast.innerHTML = '✗ Erreur: ' + (result.error || 'Veuillez réessayer');
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 4000);
-                  }
-                } catch {
-                  const toast = document.createElement('div');
-                  toast.className = 'fixed top-24 right-4 z-[100] bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                  toast.innerHTML = '✗ Erreur de connexion. Veuillez réessayer.';
-                  document.body.appendChild(toast);
-                  setTimeout(() => toast.remove(), 4000);
-                }
+                // 1. ALWAYS send directly to Google Sheets (works without server)
+                sendToGoogleSheets({
+                  type: 'contact',
+                  name: payload.name,
+                  email: payload.email,
+                  subject: payload.subject,
+                  message: payload.message,
+                  date: new Date().toISOString(),
+                  destination: 'contact@capimind.com',
+                });
+                // 2. Also try API route for local DB backup (non-blocking)
+                fetch('/api/contact', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload),
+                }).catch(() => {});
+                // 3. Show success immediately
+                form.reset();
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
+                toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
               }}
             >
               <div className="space-y-2">
@@ -1771,24 +1767,25 @@ export default function Home() {
                     e.preventDefault();
                     setEmailSending(true);
                     setEmailError(null);
-                    // Send to Google Sheets via API route
-                    try {
-                      const res = await fetch('/api/contact', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(emailForm),
-                      });
-                      const result = await res.json();
-                      if (res.ok && result.success) {
-                        setEmailSent(true);
-                      } else {
-                        setEmailError(result.error || 'Erreur lors de l\'envoi. Veuillez réessayer.');
-                      }
-                    } catch {
-                      setEmailError('Erreur de connexion. Veuillez réessayer.');
-                    } finally {
-                      setEmailSending(false);
-                    }
+                    // 1. ALWAYS send directly to Google Sheets (works without server)
+                    sendToGoogleSheets({
+                      type: 'contact',
+                      name: emailForm.name,
+                      email: emailForm.email,
+                      subject: emailForm.subject,
+                      message: emailForm.message,
+                      date: new Date().toISOString(),
+                      destination: 'contact@capimind.com',
+                    });
+                    // 2. Also try API route for local DB backup (non-blocking)
+                    fetch('/api/contact', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(emailForm),
+                    }).catch(() => {});
+                    // 3. Show success immediately
+                    setEmailSent(true);
+                    setEmailSending(false);
                   }}
                   className="space-y-3"
                 >

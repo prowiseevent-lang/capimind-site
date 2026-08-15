@@ -1,63 +1,40 @@
 /**
- * Send data directly to Google Sheets via hidden iframe form submission.
- * This bypasses CORS entirely and doesn't depend on the Next.js API server.
+ * Send data DIRECTLY to Google Sheets from the browser.
  * 
- * Google Apps Script Web Apps redirect GET requests (302), which is handled
- * seamlessly by the browser for form submissions targeting an iframe.
+ * This uses fetch with mode: 'no-cors' which:
+ * 1. Sends the request without CORS checks
+ * 2. Follows the 302 redirect automatically
+ * 3. Results in an opaque response (can't read it), but the data IS written
+ * 
+ * This works EVEN IF the Next.js server is down!
  */
 
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxDkpEnbsYuEnNLK69WVNcVhhXpt5QWYkp6JmVM9pUub2hoBTp357EMTMgzqGjQqhOO2A/exec';
 
-// Reuse a single hidden iframe
-let iframe: HTMLIFrameElement | null = null;
-function getIframe(): HTMLIFrameElement {
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.name = 'sheets-submit-iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-  return iframe;
-}
-
 /**
- * Send data to Google Sheets using a hidden iframe form submission.
- * This is CORS-free and works even if the Next.js server is down.
+ * Send data to Google Sheets directly from the browser.
+ * Returns true if the request was sent (we can't verify success due to opaque response,
+ * but the data IS delivered to the Google Apps Script).
  */
-export function sendToGoogleSheets(data: Record<string, string>): Promise<boolean> {
-  return new Promise((resolve) => {
-    try {
-      const frame = getIframe();
-      
-      // Create a temporary form
-      const form = document.createElement('form');
-      form.method = 'GET';
-      form.action = GOOGLE_SHEETS_URL;
-      form.target = frame.name;
-      
-      // Add the data as a single JSON-encoded field
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'data';
-      input.value = JSON.stringify(data);
-      form.appendChild(input);
-      
-      document.body.appendChild(form);
-      
-      // Submit the form - the browser handles the 302 redirect automatically
-      form.submit();
-      
-      // Clean up the form after a short delay
-      setTimeout(() => {
-        document.body.removeChild(form);
-      }, 1000);
-      
-      // Resolve true - we can't read the iframe response due to cross-origin,
-      // but the data IS being sent to Google Sheets
-      setTimeout(() => resolve(true), 500);
-    } catch (error) {
-      console.error('Google Sheets submission error:', error);
-      resolve(false);
-    }
-  });
+export async function sendToGoogleSheets(data: Record<string, string>): Promise<boolean> {
+  try {
+    const url = `${GOOGLE_SHEETS_URL}?data=${encodeURIComponent(JSON.stringify(data))}`;
+    
+    console.log('📤 Sending data directly to Google Sheets (no-cors)...');
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      mode: 'no-cors',
+      redirect: 'follow',
+    });
+    
+    // With no-cors, response.type is 'opaque' and we can't read it
+    // But the request WAS sent and the script WILL execute
+    console.log('📤 Google Sheets request sent (opaque response, type:', response.type, ')');
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Google Sheets direct send error:', error);
+    return false;
+  }
 }

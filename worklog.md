@@ -816,3 +816,27 @@ Stage Summary:
 - VERIFIED: Both /api/contact and /api/enroll successfully forward data to Google Sheets
 - Google Sheet ID: 1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI
 - Data confirmed in both "Contacts" and "Inscriptions" sheets
+---
+Task ID: 2
+Agent: Main
+Task: Fix Google Sheets integration - implement direct browser-to-sheets approach
+
+Work Log:
+- Diagnosed that Next.js server keeps dying in sandbox, making API routes unavailable
+- Implemented new approach: send data DIRECTLY from browser to Google Sheets using fetch with mode: 'no-cors'
+- This bypasses CORS and doesn't depend on the Next.js server being up
+- Rewrote /src/lib/sheets-direct.ts with no-cors fetch approach
+- Updated enrollment-dialog.tsx: sendToGoogleSheets() FIRST, then API route as backup
+- Updated page.tsx contact form: sendToGoogleSheets() FIRST, then API route as backup  
+- Updated page.tsx floating email button: sendToGoogleSheets() FIRST, then API route as backup
+- All 3 forms show success immediately after sending to Google Sheets
+- Verified Google Apps Script is active and receiving data (rows 25-26 in Contacts, rows 19-20 in Inscriptions)
+- Tested no-cors fetch from browser context - works (response type: opaque)
+- Lint passes cleanly
+
+Stage Summary:
+- KEY FIX: Changed from server-dependent API routes to direct browser-to-Google-Sheets approach
+- Method: fetch(url, { method: 'GET', mode: 'no-cors', redirect: 'follow' })
+- This works even if Next.js server is down - data goes directly from browser to Google Sheets
+- Google Sheet confirmed receiving data: Contacts row 26, Inscriptions row 20
+- All 3 forms (inscription, contact, email flottant) now send data to Google Sheets
