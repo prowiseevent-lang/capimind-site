@@ -1,82 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Hardcoded fallback URL — used if env var is missing
-const FALLBACK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDkpEnbsYuEnNLK69WVNcVhhXpt5QWYkp6JmVM9pUub2hoBTp357EMTMgzqGjQqhOO2A/exec';
-
-function getScriptUrl(): string {
-  const envUrl = process.env.GOOGLE_SHEETS_SCRIPT_URL;
-  if (envUrl && envUrl.length > 10) {
-    console.log('📋 Using GOOGLE_SHEETS_SCRIPT_URL from env');
-    return envUrl;
-  }
-  console.log('📋 Env URL missing/empty — using hardcoded fallback URL');
-  return FALLBACK_SCRIPT_URL;
-}
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDkpEnbsYuEnNLK69WVNcVhhXpt5QWYkp6JmVM9pUub2hoBTp357EMTMgzqGjQqhOO2A/exec';
 
 /**
- * Send data to Google Apps Script Web App via GET + redirect bypass.
- *
- * Google Apps Script web apps redirect GET requests (302) to
- * script.googleusercontent.com. We must:
- * 1. Send GET with data in URL query param + redirect: 'manual'
- * 2. Read the Location header from the 302 response
- * 3. Follow the redirect manually to execute the script
+ * Send data to Google Sheets via simple POST.
+ * Uses redirect:'follow' (default) so fetch handles the 302 automatically.
+ * 5s timeout to keep the server lightweight.
  */
 async function sendToGoogleSheets(data: Record<string, string>): Promise<boolean> {
-  const scriptUrl = getScriptUrl();
-  console.log('📤 Sending enrollment data to Google Sheets...');
-
+  const url = process.env.GOOGLE_SHEETS_SCRIPT_URL || SCRIPT_URL;
   try {
-    // Step 1: Request with data in URL, get the redirect location
-    const urlWithData = `${scriptUrl}?data=${encodeURIComponent(JSON.stringify(data))}`;
-    console.log('🔗 Request URL (first 200 chars):', urlWithData.substring(0, 200));
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
 
-    const controller1 = new AbortController();
-    const timeout1 = setTimeout(() => controller1.abort(), 15000); // 15s timeout
-    const redirectRes = await fetch(urlWithData, {
-      method: 'GET',
-      redirect: 'manual',
-      signal: controller1.signal,
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data),
+      redirect: 'follow',
+      signal: controller.signal,
     });
-    clearTimeout(timeout1);
+    clearTimeout(timeout);
 
-    console.log('📡 Redirect response status:', redirectRes.status);
-    const location = redirectRes.headers.get('location');
-    console.log('📡 Location header:', location ? location.substring(0, 100) + '...' : 'null');
-
-    if (!location) {
-      // No redirect — try reading the response directly
-      if (redirectRes.ok) {
-        const text = await redirectRes.text();
-        console.log('✅ Google Sheets response (no redirect):', text.substring(0, 200));
-        return true;
-      }
-      console.error('❌ Google Sheets request failed, no redirect, status:', redirectRes.status);
-      return false;
-    }
-
-    // Step 2: Follow the redirect to execute the script
-    const controller2 = new AbortController();
-    const timeout2 = setTimeout(() => controller2.abort(), 15000); // 15s timeout
-    const execRes = await fetch(location, {
-      method: 'GET',
-      signal: controller2.signal,
-    });
-    clearTimeout(timeout2);
-
-    console.log('📡 Execution response status:', execRes.status);
-
-    if (execRes.ok) {
-      const text = await execRes.text();
-      console.log('✅ Data forwarded to Google Sheets:', text.substring(0, 300));
+    if (res.ok) {
+      const text = await res.text();
+      console.log('✅ Google Sheets OK:', text.substring(0, 150));
       return true;
-    } else {
-      const errorText = await execRes.text();
-      console.error('❌ Google Sheets execution failed:', execRes.status, errorText.substring(0, 200));
-      return false;
     }
+    console.error('❌ Google Sheets status:', res.status);
+    return false;
   } catch (err) {
-    console.error('❌ Google Sheets forwarding error:', err);
+    // Timeout or network error — don't crash, just log
+    console.error('❌ Google Sheets error:', (err as Error).message || err);
     return false;
   }
 }
@@ -88,14 +43,12 @@ export async function POST(request: NextRequest) {
 
     if (!fullName || !email || !phone || !courseId) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Champs obligatoires manquants' },
         { status: 400 }
       );
     }
 
-    const enrollmentId = 'enr_' + Date.now();
-
-    // Save to database locally (if available)
+    // Save to local DB (best-effort)
     try {
       const { db } = await import('@/lib/db');
       await db.enrollment.create({
@@ -109,12 +62,12 @@ export async function POST(request: NextRequest) {
           courseTitle,
         },
       });
-      console.log('✅ Enrollment saved to local DB');
+      console.log('✅ Inscription sauvegardée en DB locale');
     } catch {
-      console.warn('⚠️ Local DB not available — Google Sheets only');
+      console.warn('⚠️ DB locale indisponible');
     }
 
-    // Forward to Google Sheets in background (don't block the response)
+    // Forward to Google Sheets in background — don't block the response
     const sheetData = {
       type: 'inscription',
       name: fullName,
@@ -126,25 +79,20 @@ export async function POST(request: NextRequest) {
       date: new Date().toISOString(),
       destination: 'contact@capimind.com',
     };
-    console.log('📋 Enrollment data to send:', JSON.stringify(sheetData));
 
     sendToGoogleSheets(sheetData)
-      .then((ok) => console.log(ok ? '✅ Google Sheets forwarding complete' : '❌ Google Sheets forwarding failed'))
-      .catch((err) => console.error('❌ Background Google Sheets forwarding error:', err));
+      .then(ok => console.log(ok ? '✅ Google Sheets: inscription envoyée' : '❌ Google Sheets: échec'))
+      .catch(() => console.error('❌ Google Sheets: erreur'));
 
-    // Respond immediately
-    return NextResponse.json(
-      {
-        success: true,
-        message: 'Inscription réussie! Vous recevrez une confirmation à votre email.',
-        id: enrollmentId,
-      },
-      { status: 200 }
-    );
+    // Respond immediately — client doesn't wait for Google Sheets
+    return NextResponse.json({
+      success: true,
+      message: 'Inscription réussie ! Vous recevrez un email de confirmation.',
+    });
   } catch (error) {
     console.error('Enrollment error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Erreur serveur. Veuillez réessayer.' },
       { status: 500 }
     );
   }

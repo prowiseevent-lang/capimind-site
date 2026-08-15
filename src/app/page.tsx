@@ -1385,7 +1385,7 @@ export default function Home() {
                     form.reset();
                     const toast = document.createElement('div');
                     toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                    toast.innerHTML = '✓ Message envoyé avec succès à contact@capimind.com';
+                    toast.innerHTML = '✓ Bien Reçu ! Votre message a été transmis à contact@capimind.com';
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 4000);
                   } else {
@@ -1754,9 +1754,9 @@ export default function Home() {
                   <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle2 className="h-7 w-7 text-emerald-600" />
                   </div>
-                  <p className="font-semibold text-lg mb-1">Message envoyé !</p>
+                  <p className="font-semibold text-lg mb-1">Bien Reçu !</p>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Votre email a été transmis à contact@capimind.com
+                    Votre message a été transmis à contact@capimind.com
                   </p>
                   <button
                     onClick={() => { setEmailSent(false); setEmailForm({ name: '', email: '', subject: '', message: '' }); }}

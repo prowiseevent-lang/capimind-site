@@ -38,6 +38,12 @@ const nextConfig: NextConfig = {
   images: isStaticExport ? { unoptimized: true } : undefined,
   // Trailing slashes make GitHub Pages routing more reliable.
   trailingSlash: isStaticExport,
+  // Allow cross-origin requests in dev mode (browser may access via 127.0.0.1 or localhost)
+  allowedDevOrigins: [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://0.0.0.0:3000",
+  ],
   typescript: {
     ignoreBuildErrors: true,
   },
