@@ -1385,7 +1385,7 @@ export default function Home() {
                     form.reset();
                     const toast = document.createElement('div');
                     toast.className = 'fixed top-24 right-4 z-[100] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium animate-in fade-in slide-in-from-right duration-300';
-                    toast.innerHTML = '✓ Bien Reçu ! Votre message a été transmis à contact@capimind.com';
+                    toast.innerHTML = '✓ Bien Reçu !';
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 4000);
                   } else {

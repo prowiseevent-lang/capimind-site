@@ -1,81 +1,78 @@
 /**
  * ============================================================
- * GOOGLE APPS SCRIPT - CapiMind Google Sheets Integration
+ * GOOGLE APPS SCRIPT - CapiMind CRM Integration v3
  * ============================================================
  * 
- * VERSION 2 - Corrigé et robuste
+ * ⚠️ INSTRUCTIONS DE DÉPLOIEMENT (IMPORTANT!) ⚠️
  * 
- * Ce script reçoit les données du site CapiMind et les écrit
- * dans le Google Sheet CapiMind - CRM.
+ * 1. Ouvrez votre Google Sheet :
+ *    https://docs.google.com/spreadsheets/d/1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI/edit
  * 
- * IMPORTANT: Ce script utilise l'ID EXPLICITE du spreadsheet
- * au lieu de getActiveSpreadsheet() pour garantir que les
- * données arrivent dans le bon fichier.
- * 
- * INSTRUCTIONS:
- * 1. Ouvrez votre Google Sheet: https://docs.google.com/spreadsheets/d/1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI/edit
  * 2. Cliquez sur "Extensions" > "Apps Script"
- * 3. Collez TOUT ce code dans l'éditeur (remplacez tout ce qui existe)
- * 4. Cliquez sur "Déployer" > "Nouvelle deployment" :
+ * 
+ * 3. Supprimez TOUT le code existant dans l'éditeur
+ * 
+ * 4. Collez TOUT ce code à la place
+ * 
+ * 5. Cliquez sur "Déployer" > "Nouvelle deployment" :
  *    - Type : "Application Web"
  *    - Exécuter en tant que : "Moi" (VOTRE compte Google)
  *    - Qui a accès : "Tout le monde"
- * 5. Copiez la nouvelle URL et envoyez-la moi
+ * 
+ * 6. Cliquez sur "Déployer"
+ * 
+ * 7. Copiez l'URL du Web App (elle ressemble à :
+ *    https://script.google.com/macros/s/AKfycb.../exec)
+ * 
+ * 8. Envoyez-moi cette URL pour que je puisse la configurer
+ * 
+ * ⚠️ Si vous aviez une ancienne deployment, elle peut être 
+ *    EXPIRÉE. Créez TOUJOURS une NOUVELLE deployment.
+ * ⚠️ Ne mettez PAS à jour une deployment existante - 
+ *    créez-en une NOUVELLE à chaque fois.
  * ============================================================
  */
 
-// ID EXPLICITE du spreadsheet CapiMind - CRM (nouveau fichier)
 var SPREADSHEET_ID = '1kfrMKBmdTmcVhskgGn69CdcShsv07-L_7xCKEH-JxjI';
 
-// Handle GET requests
+// ===== TRAITEMENT DES REQUÊTES GET =====
 function doGet(e) {
   try {
-    var dataStr = e.parameter.data;
-    
-    if (!dataStr) {
-      // Ping/test - returns sheet info
-      var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-      return ContentService
-        .createTextOutput(JSON.stringify({ 
-          status: 'ok', 
-          message: 'CapiMind CRM Integration v2 active',
-          sheetId: SPREADSHEET_ID,
-          sheetName: ss.getName(),
-          sheets: ss.getSheets().map(function(s) { return s.getName(); })
-        }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    var data = JSON.parse(dataStr);
-    var result = writeDataToSheet(data);
-    
+    // Test de connectivité (sans paramètres)
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     return ContentService
-      .createTextOutput(JSON.stringify(result))
+      .createTextOutput(JSON.stringify({ 
+        status: 'ok', 
+        version: 'v3',
+        message: 'CapiMind CRM Integration active',
+        spreadsheet: ss.getName(),
+        sheets: ss.getSheets().map(function(s) { return s.getName(); })
+      }))
       .setMimeType(ContentService.MimeType.JSON);
-      
   } catch (error) {
     return ContentService
       .createTextOutput(JSON.stringify({ 
         success: false, 
-        error: error.toString(),
-        stack: error.stack
+        error: error.toString()
       }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Handle POST requests
+// ===== TRAITEMENT DES REQUÊTES POST =====
 function doPost(e) {
   try {
+    // Extraire les données du POST body
     var data;
     if (e.postData && e.postData.contents) {
       data = JSON.parse(e.postData.contents);
     } else if (e.parameter.data) {
       data = JSON.parse(e.parameter.data);
     } else {
-      throw new Error('No data received');
+      throw new Error('Aucune donnée reçue');
     }
     
+    // Écrire dans le sheet
     var result = writeDataToSheet(data);
     
     return ContentService
@@ -87,31 +84,31 @@ function doPost(e) {
       .createTextOutput(JSON.stringify({ 
         success: false, 
         error: error.toString(),
-        stack: error.stack
+        stack: error.stack ? error.stack.toString() : ''
       }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Core function: writes data to the appropriate sheet
+// ===== FONCTION PRINCIPALE : ÉCRITURE DANS LE SHEET =====
 function writeDataToSheet(data) {
-  // Open the spreadsheet by EXPLICIT ID (not getActive which can be wrong)
+  // Ouvrir le spreadsheet par ID explicite
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   
-  // Determine which sheet to write to based on the type
+  // Déterminer le sheet cible selon le type
   var sheetName = data.type === 'inscription' ? 'Inscriptions' : 'Contacts';
   var sheet = ss.getSheetByName(sheetName);
   
-  // Create sheet if it doesn't exist
+  // Créer le sheet s'il n'existe pas
   if (!sheet) {
     sheet = ss.insertSheet(sheetName);
   }
   
-  // Check if headers exist (row 1 should have content)
+  // Vérifier si les en-têtes existent (ligne 1)
   var hasHeaders = sheet.getRange(1, 1).getValue() !== '';
   
   if (!hasHeaders) {
-    // Add headers based on type
+    // Ajouter les en-têtes selon le type
     if (data.type === 'inscription') {
       sheet.getRange(1, 1, 1, 9).setValues([[
         'Date', 'Type', 'Nom complet', 'Email', 'Téléphone', 
@@ -123,23 +120,23 @@ function writeDataToSheet(data) {
       ]]);
     }
     
-    // Format headers
+    // Formater les en-têtes (teal + blanc gras)
     var headerRange = sheet.getRange(1, 1, 1, sheet.getLastColumn());
     headerRange.setFontWeight('bold');
     headerRange.setBackground('#0d9488');
     headerRange.setFontColor('#ffffff');
   }
   
-  // Format date
+  // Formater la date
   var date = data.date ? new Date(data.date) : new Date();
   var formattedDate = Utilities.formatDate(date, 'Africa/Casablanca', 'yyyy-MM-dd HH:mm:ss');
   
-  // Build row data
+  // Construire la ligne de données
   var rowData;
   if (data.type === 'inscription') {
     rowData = [
       formattedDate,
-      data.type || 'inscription',
+      'inscription',
       data.name || '',
       data.email || '',
       data.phone || '',
@@ -151,7 +148,7 @@ function writeDataToSheet(data) {
   } else {
     rowData = [
       formattedDate,
-      data.type || 'contact',
+      'contact',
       data.name || '',
       data.email || '',
       data.subject || '',
@@ -160,19 +157,19 @@ function writeDataToSheet(data) {
     ];
   }
   
-  // Append the row
+  // Ajouter la ligne
   sheet.appendRow(rowData);
   
-  // CRITICAL: Force flush to ensure data is written immediately
+  // Forcer l'écriture immédiate
   SpreadsheetApp.flush();
   
-  // Verify the write by reading back the last row
+  // Vérifier l'écriture
   var lastRow = sheet.getLastRow();
   var writtenData = sheet.getRange(lastRow, 1, 1, rowData.length).getValues()[0];
   
   return {
     success: true,
-    message: 'Enregistré dans ' + sheetName,
+    message: 'Données enregistrées dans ' + sheetName,
     sheet: sheetName,
     row: lastRow,
     verified: writtenData[0] === formattedDate,

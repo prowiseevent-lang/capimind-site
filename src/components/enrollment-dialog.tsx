@@ -112,9 +112,9 @@ export function EnrollmentDialog({ course, open, onClose }: EnrollmentDialogProp
             <div className="h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
               <CheckCircle2 className="h-10 w-10 text-emerald-600" />
             </div>
-            <h3 className="text-xl font-bold text-center">Inscription réussie !</h3>
+            <h3 className="text-xl font-bold text-center">Demande d'inscription bien reçue !</h3>
             <p className="text-muted-foreground text-center">
-              Vous recevrez un email de confirmation pour la formation &laquo; {course.title} &raquo;.
+              Vous recevrez une confirmation pour la formation &laquo; {course.title} &raquo;.
             </p>
           </div>
         ) : (
