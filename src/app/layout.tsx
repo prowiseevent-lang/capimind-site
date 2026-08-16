@@ -61,10 +61,16 @@ export const metadata: Metadata = {
   category: "education",
   icons: {
     icon: [
-      { url: "/images/logo.webp", type: "image/webp" },
-      { url: "/images/logo.png", type: "image/png" },
+      { url: "/favicon-48x48.png", type: "image/png", sizes: "48x48" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { url: "/favicon.ico", type: "image/x-icon", sizes: "32x32" },
     ],
-    apple: "/images/logo.png",
+    apple: "/apple-touch-icon.png",
+    other: [
+      { url: "/android-chrome-192x192.png", type: "image/png", sizes: "192x192" },
+      { url: "/android-chrome-512x512.png", type: "image/png", sizes: "512x512" },
+    ],
   },
   manifest: undefined,
   alternates: {
@@ -80,9 +86,9 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     images: [
       {
-        url: "/images/hero-banner.png",
-        width: 2816,
-        height: 1374,
+        url: "/images/og-logo.png",
+        width: 1200,
+        height: 630,
         alt: "CapiMind — Plateforme de formation e-learning premium au Maroc",
       },
     ],
@@ -92,7 +98,7 @@ export const metadata: Metadata = {
     title: SITE_TITLE,
     description:
       "CapiMind est la plateforme de formation premium au Maroc et en Afrique. IA, Data, Cybersécurité, Business et Innovation : développez les compétences les plus recherchées.",
-    images: ["/images/hero-banner.png"],
+    images: ["/images/og-logo.png"],
   },
   robots: {
     index: true,
