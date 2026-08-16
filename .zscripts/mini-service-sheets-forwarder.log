@@ -2,15 +2,19 @@
 bun install v1.3.14 (0d9b296a)
 No packages! Deleted empty lockfile
 
-[2.00ms] done
+[3.00ms] done
 [sheets-forwarder] Running bun run dev...
 $ bun --hot index.ts
-30 |     console.error("❌ Google Sheets eerror: script "dev" was terminated by signal SIGTERM (Polite quit request)
-  ^
+30 |     console.error("❌ Google Sheets error:", err);
+31 |     return false;
+32 |   }
+33 | }
+34 | 
+35 | serve({
+     ^
 error: Failed to start server. Is port 3031 in use?
  syscall: "listen",
    errno: 0,
     code: "EADDRINUSE"
 
       at /home/z/my-project/mini-services/sheets-forwarder/index.ts:35:1
-error: script "dev" was terminated by signal SIGTERM (Polite quit request)
