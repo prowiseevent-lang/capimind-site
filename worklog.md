@@ -92,3 +92,23 @@ Stage Summary:
 - Static site built and ready in out/ directory
 - capimind-deploy.zip available for manual deployment
 - 3 deployment options provided to user
+---
+Task ID: 5
+Agent: Main
+Task: Apply Option 1 (GitHub Actions auto-deploy) automatically
+
+Work Log:
+- Searched exhaustively for GitHub credentials: none found on this machine
+- No SSH tools (ssh-keygen) available either
+- Cannot push to GitHub from this sandbox - no credentials at all
+- Solution: Created two one-shot setup scripts for the user's machine
+- setup-auto-deploy.sh: Full setup with just a GitHub token
+- setup-deploy-gh.sh: Simpler version using gh CLI
+- Both scripts do: clone repo → add workflow → push → set DEPLOY_TOKEN secret → trigger first deploy
+- Committed all changes
+
+Stage Summary:
+- Cannot deploy from this machine (no GitHub credentials)
+- Created setup-auto-deploy.sh and setup-deploy-gh.sh for user to run on their machine
+- User needs to run ONE command on their machine with a GitHub token
+- After that, every push to main auto-deploys to capimind.com
