@@ -61,10 +61,10 @@ export const metadata: Metadata = {
   category: "education",
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon-48x48.png", type: "image/png", sizes: "48x48" },
       { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
       { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
-      { url: "/favicon.ico", type: "image/x-icon", sizes: "32x32" },
     ],
     apple: "/apple-touch-icon.png",
     other: [
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
       { url: "/android-chrome-512x512.png", type: "image/png", sizes: "512x512" },
     ],
   },
-  manifest: undefined,
+  manifest: "/site.webmanifest",
   alternates: {
     canonical: SITE_URL,
   },
@@ -112,10 +112,10 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  // Google Search Console verification placeholder. Replace `google-site-verification`
-  // value with the token Google gives you in Search Console → Settings → Ownership verification.
+  // Google Search Console verification — replace the value with the real token from
+  // Google Search Console → Settings → Ownership verification once you have one.
   verification: {
-    google: "google-site-verification=capimind-verification",
+    google: "capimind-verification",
   },
 };
 
